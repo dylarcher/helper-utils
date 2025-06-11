@@ -1,11 +1,15 @@
 /**
  * Creates a new DOM element with optional attributes and children.
  * @param {string} tagName - The tag name for the element.
- * @param {object} [attributes={}] - An object of attributes to set on the element.
+ * @param {Record<string, string>} [attributes={}] - An object of attributes to set on the element.
  * @param {(string|Node|Array<string|Node>)} [children=[]] - Content to append (text, a DOM node, or an array of these).
  * @returns {Element} The created DOM element.
  */
-export function createElement(tagName, attributes = {}, children = []) {
+export function createElement(
+	tagName,
+	attributes = /** @type {Record<string, string>} */ ({}),
+	children = []
+) {
 	const element = document.createElement(tagName);
 
 	for (const key in attributes) {
@@ -14,7 +18,16 @@ export function createElement(tagName, attributes = {}, children = []) {
 		}
 	}
 
-	const appendChild = child => {
+	Array.isArray(children)
+		? appendChildren(children)
+		: appendChild(children)
+
+	/**
+	 * Appends a child (string or Node) to the element.
+	 * @param {string | Node} child
+	 * @returns {void}
+	 */
+	function appendChild(child) {
 		if (typeof child === "string") {
 			element.appendChild(document.createTextNode(child));
 		} else if (child instanceof Node) {
@@ -22,9 +35,16 @@ export function createElement(tagName, attributes = {}, children = []) {
 		}
 	};
 
-	Array.isArray(children)
-		? children.forEach(appendChild)
-		: appendChild(children);
+	/**
+	 * Appends multiple children (string or Node) to the element.
+	 * @param {Array<string | Node>} children
+	 * @returns {void}
+	 */
+	function appendChildren(children) {
+		for (const child of children) {
+			appendChild(child)
+		}
+	}
 
 	return element;
 }

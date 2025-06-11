@@ -15,9 +15,8 @@ pluginSearchDirs:
   - ./.github/linters
 plugins:
   - prettier-plugin-properties
-  - prettier-plugin-jsonata
+  - "@stedi/prettier-plugin-jsonata"
   - prettier-plugin-glsl
-  - prettier-plugin-yaml
 printWidth: 80
 proseWrap: always
 quoteProps: as-needed

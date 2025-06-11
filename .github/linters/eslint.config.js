@@ -6,6 +6,9 @@ import globals from "globals";
 
 export default [
 	{
+		ignores: ["**/*.yml", "**/*.yaml", "dist/**", "node_modules/**"],
+	},
+	{
 		languageOptions: {
 			ecmaVersion: "latest",
 			sourceType: "module",
@@ -17,7 +20,7 @@ export default [
 		},
 	},
 	pluginJs.configs.recommended,
-	eslintPluginMarkdown.configs.recommended,
+	...eslintPluginMarkdown.configs.recommended,
 	{
 		plugins: {
 			yaml: eslintPluginYaml,

@@ -14,8 +14,8 @@
 		"prettier-plugin-properties": "0.3.0"
 	},
 	"engines": {
-		"node": ">=16",
-		"npm": ">=8"
+		"node": ">=18.20.8",
+		"npm": ">=10.9.2"
 	},
 	"exports": {
 		".": {
@@ -46,7 +46,7 @@
 	"license": "MIT",
 	"main": "./dist/index.js",
 	"name": "js-helpers",
-	"packageManager": "npm@8.19.4",
+	"packageManager": "npm@10.9.2",
 	"private": false,
 	"repository": {
 		"type": "git",
@@ -61,8 +61,8 @@
 		"format:check": "npm run prettier --check",
 		"format": "npm run prettier --write",
 		"eslint": "npx eslint . --config=./.github/linters/eslint.config.js --ext .js --report-unused-disable-directives",
-		"lint:check": "npm run eslint --dry-run",
-		"lint": "npm run eslint --fix",
+		"lint:check": "npm run eslint",
+		"lint": "npm run eslint -- --fix",
 		"prepare": "npm dedupe && npm prune",
 		"prebuild": "npm run lint:check && npm run format:check",
 		"prepublishOnly": "npm run build && npm run dts",
