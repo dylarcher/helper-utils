@@ -1,22 +1,45 @@
-name: Publish NPM Library
+name: Publish # this workflow is setup to be self-contained
 
 on:
   release:
-    types: [created]
+    types:
+      - published
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Setup
+        uses: actions/setup-node@v3
         with:
           node-version: 18.x
           registry-url: https://registry.npmjs.org
           cache: npm
-      - run: npm ci
-      - run: npm run build
-      - run: npm run bundle
-      - run: npm publish --access public
+
+      - name: Install
+        run: |
+          npm install typescript dts-bundle-generator @types/node c8 \
+            eslint eslint-config-prettier eslint-plugin-markdown \
+            eslint-plugin-prettier eslint-plugin-yaml@1.0.3 prettier \
+            prettier-plugin-properties @stedi/prettier-plugin-jsonata \
+          && npm clean-install \
+
+      - name: Build
+        run: |
+          tsc --minify
+
+      - name: Bundle
+        run: |
+          dts-bundle-generator --config=./.github/linters/dts.config.js \
+
+      - name: Release
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          npm publish --access public \
