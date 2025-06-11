@@ -6,20 +6,21 @@
  * @returns {Element} The created DOM element.
  */
 export function createElement(tagName, attributes = {}, children = []) {
-    const element = document.createElement(tagName);
-    for (const key in attributes) {
-        if (Object.prototype.hasOwnProperty.call(attributes, key)) {
-            element.setAttribute(key, attributes[key]);
-        }
-    }
-    const appendChild = (child) => {
-        if (typeof child === 'string') {
-            element.appendChild(document.createTextNode(child));
-        }
-        else if (child instanceof Node) {
-            element.appendChild(child);
-        }
-    };
-    Array.isArray(children) ? children.forEach(appendChild) : appendChild(children);
-    return element;
+	const element = document.createElement(tagName);
+	for (const key in attributes) {
+		if (Object.prototype.hasOwnProperty.call(attributes, key)) {
+			element.setAttribute(key, attributes[key]);
+		}
+	}
+	const appendChild = child => {
+		if (typeof child === "string") {
+			element.appendChild(document.createTextNode(child));
+		} else if (child instanceof Node) {
+			element.appendChild(child);
+		}
+	};
+	Array.isArray(children)
+		? children.forEach(appendChild)
+		: appendChild(children);
+	return element;
 }

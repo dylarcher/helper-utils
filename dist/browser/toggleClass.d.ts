@@ -5,4 +5,8 @@
  * @param {string} className - The CSS class to toggle.
  * @param {boolean} [force] - If true, adds the class; if false, removes it.
  */
-export function toggleClass(element: Element, className: string, force?: boolean): void;
+export function toggleClass(
+	element: Element,
+	className: string,
+	force?: boolean,
+): void;

@@ -5,9 +5,9 @@
  * @example
  * hideElement(document.getElementById('tooltip'));
  */
-function hideElement(element) {
-    if (element?.style) {
-        element.style.setProperty('display', 'none')
-    }
+export function hideElement(element) {
+	if (element?.style) {
+		element.style.setProperty("display", "none");
+	}
 }
 // Similar for getStyle, showElement

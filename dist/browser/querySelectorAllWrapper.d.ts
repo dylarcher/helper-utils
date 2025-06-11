@@ -7,4 +7,7 @@
  * const allImages = querySelectorAllWrapper('img');
  * const listItems = querySelectorAllWrapper('li', document.getElementById('myList'));
  */
-declare function querySelectorAllWrapper(selector: string, parent?: Element | Document): Element;
+declare function querySelectorAllWrapper(
+	selector: string,
+	parent?: Element | Document,
+): Element;

@@ -1,4 +1,4 @@
-import fs from 'node:fs/promises'
+import fs from "node:fs/promises";
 
 /**
  * Lists the contents of a directory.
@@ -6,5 +6,5 @@ import fs from 'node:fs/promises'
  * @returns {Promise<string[]>} A promise that resolves with an array of filenames.
  */
 export async function listDirectoryContents(dirPath) {
-    return fs.readdir(dirPath)
+	return fs.readdir(dirPath);
 }

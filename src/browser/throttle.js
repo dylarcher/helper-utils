@@ -9,15 +9,21 @@
  *   console.log('Scrolled (throttled)');
  * }, 100));
  */
-function throttle(func, limit) {
-    let inThrottle = false
-    return function(...args) {
-        if (!inThrottle) {
-            func.apply(this, args)
-            inThrottle = true
-            setTimeout(() => {
-                inThrottle = false
-            }, limit)
-        }
-    }
+export function throttle(func, limit) {
+	let inThrottle = false;
+	/**
+	 * @description Executes the provided function if not currently throttled, then prevents further execution until the limit has passed.
+	 * @this {Function}
+	 * @param {any[]} args - Arguments to pass to the throttled function.
+	 * @returns {void}
+	 */
+	return function (...args) {
+		if (!inThrottle) {
+			func.apply(this, args);
+			inThrottle = true;
+			setTimeout(() => {
+				inThrottle = false;
+			}, limit);
+		}
+	};
 }

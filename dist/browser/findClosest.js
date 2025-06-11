@@ -8,6 +8,6 @@
  * const formElement = findClosest(document.getElementById('submitButton'), 'form');
  */
 function findClosest(element, selector) {
-    return element ? element.closest(selector) : null;
+	return element ? element.closest(selector) : null;
 }
 // Similar for getParent, getChildren, siblings

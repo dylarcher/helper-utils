@@ -7,8 +7,8 @@
  * hideElement(document.getElementById('tooltip'));
  */
 function hideElement(element) {
-    if (element === null || element === void 0 ? void 0 : element.style) {
-        element.style.setProperty('display', 'none');
-    }
+	if (element === null || element === void 0 ? void 0 : element.style) {
+		element.style.setProperty("display", "none");
+	}
 }
 // Similar for getStyle, showElement

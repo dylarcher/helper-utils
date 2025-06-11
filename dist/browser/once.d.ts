@@ -5,4 +5,9 @@
  * @param {Function} listener - The event listener function.
  * @param {boolean|object} [options] - Optional event listener options.
  */
-export function once(element: EventTarget, eventType: string, listener: Function, options?: boolean | object): void;
+export function once(
+	element: EventTarget,
+	eventType: string,
+	listener: Function,
+	options?: boolean | object,
+): void;

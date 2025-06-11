@@ -1,5 +1,5 @@
-import { exec } from 'node:child_process';
-import { promisify } from 'node:util';
+import { exec } from "node:child_process";
+import { promisify } from "node:util";
 const execPromise = promisify(exec);
 /**
  * Executes a shell command asynchronously.
@@ -8,5 +8,5 @@ const execPromise = promisify(exec);
  * @returns {Promise<{stdout: string, stderr: string}>} A promise that resolves with stdout and stderr.
  */
 export async function execAsync(command, options) {
-    return execPromise(command, options);
+	return execPromise(command, options);
 }

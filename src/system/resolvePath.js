@@ -1,4 +1,4 @@
-import path from 'node:path'
+import path from "node:path";
 
 /**
  * Resolves a sequence of paths or path segments into an absolute path.
@@ -6,5 +6,5 @@ import path from 'node:path'
  * @returns {string} The resolved absolute path.
  */
 export function resolvePath(...paths) {
-    return path.resolve(...paths)
+	return path.resolve(...paths);
 }

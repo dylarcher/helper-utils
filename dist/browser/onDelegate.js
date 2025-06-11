@@ -7,12 +7,27 @@
  * @param {Function} callback - The function to call when the event occurs on a matching target.
  * @param {boolean|object} [options] - Optional event listener options.
  */
-export function onDelegate(parentElement, eventType, selector, callback, options) {
-    if (!parentElement)
-        return;
-    parentElement.addEventListener(eventType, (event) => {
-        if (event.target && typeof event.target.matches === 'function' && event.target.matches(selector)) {
-            callback.call(event.target, event); // `this` inside callback will be the matched element
-        }
-    }, options);
+export function onDelegate(
+	parentElement,
+	eventType,
+	selector,
+	callback,
+	options,
+) {
+	if (!parentElement) {
+		return;
+	}
+	parentElement.addEventListener(
+		eventType,
+		event => {
+			if (
+				event.target &&
+				typeof event.target.matches === "function" &&
+				event.target.matches(selector)
+			) {
+				callback.call(event.target, event); // `this` inside callback will be the matched element
+			}
+		},
+		options,
+	);
 }

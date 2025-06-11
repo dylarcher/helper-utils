@@ -1,4 +1,4 @@
-import fs from 'node:fs/promises';
+import fs from "node:fs/promises";
 /**
  * Creates a directory.
  * @param {string} dirPath - The path of the directory to create.
@@ -6,5 +6,5 @@ import fs from 'node:fs/promises';
  * @returns {Promise<string | undefined>} A promise that resolves with the first directory path created if recursive, or undefined.
  */
 export async function createDirectory(dirPath, options = { recursive: true }) {
-    return fs.mkdir(dirPath, options);
+	return fs.mkdir(dirPath, options);
 }

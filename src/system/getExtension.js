@@ -1,4 +1,4 @@
-import path from 'node:path'
+import path from "node:path";
 
 /**
  * Gets the extension of a path.
@@ -6,5 +6,5 @@ import path from 'node:path'
  * @returns {string} The extension of the path (e.g., '.js').
  */
 export function getExtension(p) {
-    return path.extname(p)
+	return path.extname(p);
 }

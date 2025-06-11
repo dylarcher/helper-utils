@@ -5,11 +5,14 @@
  * @returns {boolean} True if successful, false otherwise.
  */
 export function setLocalStorageJSON(key, value) {
-    try {
-        localStorage.setItem(key, JSON.stringify(value))
-        return true
-    } catch (error) {
-        console.error(`Error setting JSON in localStorage for key "${key}":`, error)
-        return false
-    }
+	try {
+		localStorage.setItem(key, JSON.stringify(value));
+		return true;
+	} catch (error) {
+		console.error(
+			`Error setting JSON in localStorage for key "${key}":`,
+			error,
+		);
+		return false;
+	}
 }

@@ -6,4 +6,7 @@
  * @example
  * const formElement = findClosest(document.getElementById('submitButton'), 'form');
  */
-declare function findClosest(element: Element, selector: string): Element | null;
+declare function findClosest(
+	element: Element,
+	selector: string,
+): Element | null;

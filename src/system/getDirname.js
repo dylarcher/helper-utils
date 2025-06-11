@@ -1,4 +1,4 @@
-import path from 'node:path'
+import path from "node:path";
 
 /**
  * Gets the directory name of a path.
@@ -6,5 +6,5 @@ import path from 'node:path'
  * @returns {string} The directory name.
  */
 export function getDirname(p) {
-    return path.dirname(p)
+	return path.dirname(p);
 }

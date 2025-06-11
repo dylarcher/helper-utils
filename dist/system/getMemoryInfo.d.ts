@@ -3,6 +3,6 @@
  * @returns {{totalMemory: number, freeMemory: number}} Total and free system memory in bytes.
  */
 export function getMemoryInfo(): {
-    totalMemory: number;
-    freeMemory: number;
+	totalMemory: number;
+	freeMemory: number;
 };

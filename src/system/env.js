@@ -5,9 +5,9 @@
  * @returns {*} The value of the environment variable or the default value.
  */
 export function env(key, defaultValue) {
-    const value = process.env[key]
-    if (value === undefined) {
-        return defaultValue
-    }
-    return value
+	const value = process.env[key];
+	if (value === undefined) {
+		return defaultValue;
+	}
+	return value;
 }

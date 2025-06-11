@@ -7,4 +7,10 @@
  * @param {Function} callback - The function to call when the event occurs on a matching target.
  * @param {boolean|object} [options] - Optional event listener options.
  */
-export function onDelegate(parentElement: Element, eventType: string, selector: string, callback: Function, options?: boolean | object): void;
+export function onDelegate(
+	parentElement: Element,
+	eventType: string,
+	selector: string,
+	callback: Function,
+	options?: boolean | object,
+): void;

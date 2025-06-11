@@ -4,12 +4,14 @@
  * @returns {*|null} The parsed JSON object, or null if key not found or parsing fails.
  */
 export function getLocalStorageJSON(key) {
-    try {
-        const item = localStorage.getItem(key);
-        return item ? JSON.parse(item) : null;
-    }
-    catch (error) {
-        console.error(`Error getting JSON from localStorage for key "${key}":`, error);
-        return null;
-    }
+	try {
+		const item = localStorage.getItem(key);
+		return item ? JSON.parse(item) : null;
+	} catch (error) {
+		console.error(
+			`Error getting JSON from localStorage for key "${key}":`,
+			error,
+		);
+		return null;
+	}
 }

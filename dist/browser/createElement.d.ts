@@ -5,4 +5,8 @@
  * @param {(string|Node|Array<string|Node>)} [children=[]] - Content to append (text, a DOM node, or an array of these).
  * @returns {Element} The created DOM element.
  */
-export function createElement(tagName: string, attributes?: object, children?: (string | Node | Array<string | Node>)): Element;
+export function createElement(
+	tagName: string,
+	attributes?: object,
+	children?: string | Node | Array<string | Node>,
+): Element;

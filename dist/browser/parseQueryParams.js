@@ -5,10 +5,10 @@
  * @returns {object} An object representation of the query parameters.
  */
 export function parseQueryParams(queryString = window.location.search) {
-    const params = new URLSearchParams(queryString);
-    const result = {};
-    for (const [key, value] of params.entries()) {
-        result[key] = value;
-    }
-    return result;
+	const params = new URLSearchParams(queryString);
+	const result = {};
+	for (const [key, value] of params.entries()) {
+		result[key] = value;
+	}
+	return result;
 }

@@ -4,18 +4,29 @@
         "url": "https://github.com/dylarcher/js.helper-utils/issues"
     },
     "description": "Reusable javascript helper utility methods.",
+    "devDependencies": {
+        "dts-bundle-generator": "9.5.1",
+        "eslint": "9.28.0",
+        "eslint-config-prettier": "10.1.5",
+        "eslint-plugin-markdown": "5.1.0",
+        "eslint-plugin-prettier": "5.4.1",
+        "eslint-plugin-yaml": "1.0.3",
+        "prettier": "3.5.3"
+    },
     "engines": {
         "node": ">=16",
         "npm": ">=8"
     },
     "exports": {
         ".": {
-            "import": "./dist/index.mjs",
-            "require": "./dist/index.cjs"
+            "import": "./dist/index.js",
+            "require": "./dist/index.js",
+            "types": "./dist/types.d.ts"
         },
         "./*": {
-            "import": "./dist/*.mjs",
-            "require": "./dist/*.cjs"
+            "import": "./dist/*.js",
+            "require": "./dist/*.js",
+            "types": "./dist/types.d.ts"
         }
     },
     "files": [
@@ -41,11 +52,28 @@
         "type": "git",
         "url": "git+https://github.com/dylarcher/js.helper-utils.git"
     },
+    "type": "module",
     "scripts": {
-        "build": "tsc",
+        "build": "tsc --minify",
+        "dts": "dts-bundle-generator --config dts-bundle-generator.config.js",
+        "dts:watch": "dts-bundle-generator --config dts-bundle-generator.config.js --watch",
+        "format": "prettier --write .",
+        "format:check": "prettier --check .",
         "lint": "eslint . --ext .js",
         "lint:fix": "eslint . --ext .js --fix",
-        "test": "jest"
+        "prebuild": "npm run lint && npm run format:check",
+        "prepublishOnly": "npm run build && npm run dts",
+        "pretest": "npm run build && npm run dts",
+        "test": "node test -r=spec **/*.test.js",
+        "test:coverage": "c8 -r=html -r=text -r=lcov -- npm test",
+        "test:coverage:debug": "c8 -r=html -r=text -r=lcov -- node --loader ts-node/esm --no-warnings --experimental-specifier-resolution=node --inspect-brk test -r=spec **/*.test.js",
+        "test:coverage:debug:watch": "c8 -r=html -r=text -r=lcov -- node --loader ts-node/esm --no-warnings --experimental-specifier-resolution=node --inspect-brk test -r=spec **/*.test.js --watch",
+        "test:coverage:watch": "c8 -r=html -r=text -r=lcov -- node --loader ts-node/esm --no-warnings --experimental-specifier-resolution=node test -r=spec **/*.test.js --watch",
+        "test:debug": "node --loader ts-node/esm --no-warnings --experimental-specifier-resolution=node --inspect-brk test -r=spec **/*.test.js",
+        "test:debug:coverage": "c8 -r=html -r=text -r=lcov -- node --loader ts-node/esm --no-warnings --experimental-specifier-resolution=node --inspect-brk test -r=spec **/*.test.js",
+        "test:debug:coverage:watch": "c8 -r=html -r=text -r=lcov -- node --loader ts-node/esm --no-warnings --experimental-specifier-resolution=node --inspect-brk test -r=spec **/*.test.js --watch",
+        "test:debug:watch": "node --loader ts-node/esm --no-warnings --experimental-specifier-resolution=node --inspect-brk test -r=spec **/*.test.js --watch",
+        "test:watch": "node --loader ts-node/esm --no-warnings --experimental-specifier-resolution=node test -r=spec **/*.test.js"
     },
     "types": "dist/types.d.ts",
     "version": "0.0.1"

@@ -5,7 +5,7 @@
  * @param {string} value - The value to set for the attribute.
  */
 export function setAttribute(element, attributeName, value) {
-    if (element && typeof element.setAttribute === 'function' && attributeName) {
-        element.setAttribute(attributeName, value)
-    }
+	if (element && typeof element.setAttribute === "function" && attributeName) {
+		element.setAttribute(attributeName, value);
+	}
 }

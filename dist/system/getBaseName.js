@@ -1,4 +1,4 @@
-import path from 'node:path';
+import path from "node:path";
 /**
  * Gets the filename part of a path.
  * @param {string} p - The path to evaluate.
@@ -6,5 +6,5 @@ import path from 'node:path';
  * @returns {string} The basename of the path.
  */
 export function getBasename(p, ext) {
-    return path.basename(p, ext);
+	return path.basename(p, ext);
 }

@@ -6,7 +6,7 @@
  * @param {boolean} [force] - If true, adds the class; if false, removes it.
  */
 export function toggleClass(element, className, force) {
-    if (element?.classList && className) {
-        element.classList.toggle(className, force)
-    }
+	if (element?.classList && className) {
+		element.classList.toggle(className, force);
+	}
 }

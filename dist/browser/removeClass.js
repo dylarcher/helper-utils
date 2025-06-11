@@ -4,7 +4,7 @@
  * @param {...string} classNames - The CSS class(es) to remove.
  */
 export function removeClass(element, ...classNames) {
-    if (element === null || element === void 0 ? void 0 : element.classList) {
-        element.classList.remove(...classNames.filter(Boolean));
-    }
+	if (element === null || element === void 0 ? void 0 : element.classList) {
+		element.classList.remove(...classNames.filter(Boolean));
+	}
 }

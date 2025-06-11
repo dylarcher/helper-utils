@@ -5,6 +5,8 @@
  * @returns {CSSStyleDeclaration|null} The computed style declaration object, or null if element is not valid.
  */
 export function getStyle(element, pseudoElt) {
-    if (!element || typeof window.getComputedStyle !== 'function') return null
-    return window.getComputedStyle(element, pseudoElt)
+	if (!element || typeof window.getComputedStyle !== "function") {
+		return null;
+	}
+	return window.getComputedStyle(element, pseudoElt);
 }

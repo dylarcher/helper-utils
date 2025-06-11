@@ -9,5 +9,5 @@
  * const listItems = querySelectorAllWrapper('li', document.getElementById('myList'));
  */
 function querySelectorAllWrapper(selector, parent = document) {
-    return Array.from(parent.querySelectorAll(selector));
+	return Array.from(parent.querySelectorAll(selector));
 }

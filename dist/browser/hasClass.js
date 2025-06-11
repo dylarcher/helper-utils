@@ -5,5 +5,9 @@
  * @returns {boolean} True if the element has the class, false otherwise.
  */
 export function hasClass(element, className) {
-    return !!((element === null || element === void 0 ? void 0 : element.classList) && className && element.classList.contains(className));
+	return !!(
+		(element === null || element === void 0 ? void 0 : element.classList) &&
+		className &&
+		element.classList.contains(className)
+	);
 }

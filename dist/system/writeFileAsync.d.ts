@@ -5,4 +5,8 @@
  * @param {string} [encoding='utf8'] - The file encoding.
  * @returns {Promise<void>} A promise that resolves when the file has been written.
  */
-export function writeFileAsync(filePath: string, data: string | Buffer, encoding?: string): Promise<void>;
+export function writeFileAsync(
+	filePath: string,
+	data: string | Buffer,
+	encoding?: string,
+): Promise<void>;

@@ -9,12 +9,20 @@
  *   console.log('Window resized (debounced)');
  * }, 250));
  */
-function debounce(func, delay) {
-    let timeoutId
-    return function(...args) {
-        clearTimeout(timeoutId)
-        timeoutId = setTimeout(() => {
-            func.apply(this, args)
-        }, delay)
-    }
+export function debounce(func, delay) {
+	/** @type {ReturnType<typeof setTimeout> | undefined} */
+	let timeoutId;
+
+	/**
+	 * @description The debounced function that will be returned.
+	 * @this {Function}
+	 * @param {any[]} args - Arguments to pass to the debounced function.
+	 * @returns {void}
+	 */
+	return function (...args) {
+		clearTimeout(timeoutId);
+		timeoutId = setTimeout(() => {
+			func.apply(this, args);
+		}, delay);
+	};
 }

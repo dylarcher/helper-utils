@@ -4,7 +4,7 @@
  * @param {...string} classNames - The CSS class(es) to add.
  */
 export function addClass(element, ...classNames) {
-    if (element?.classList) {
-        element.classList.add(...classNames.filter(Boolean))
-    }
+	if (element?.classList) {
+		element.classList.add(...classNames.filter(Boolean));
+	}
 }

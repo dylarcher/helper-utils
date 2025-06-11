@@ -5,6 +5,8 @@
  * @returns {Element[]} An array of matching elements.
  */
 export function querySelectorAllWrapper(selector, parent = document) {
-    if (!parent || typeof parent.querySelectorAll !== 'function') return []
-    return Array.from(parent.querySelectorAll(selector))
+	if (!parent || typeof parent.querySelectorAll !== "function") {
+		return [];
+	}
+	return Array.from(parent.querySelectorAll(selector));
 }

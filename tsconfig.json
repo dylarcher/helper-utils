@@ -1,22 +1,17 @@
 {
-    "compilerOptions": {
-        "allowJs": true,
-        "checkJs": true,
-        "declaration": true,
-        "lib": [
-            "ES2020",
-            "DOM"
-        ],
-        "module": "esnext",
-        "moduleResolution": "node",
-        "outDir": "dist",
-        "strict": true,
-        "target": "es2018"
-    },
-    "typeAcquisition": {
-        "enable": true,
-        "include": [
-            "node"
-        ]
-    }
+	"compilerOptions": {
+		"allowJs": true,
+		"checkJs": true,
+		"declaration": true,
+		"lib": ["esnext", "dom"],
+		"module": "esnext",
+		"moduleResolution": "bundler",
+		"outDir": "dist",
+		"strict": true,
+		"target": "esnext"
+	},
+	"typeAcquisition": {
+		"enable": true,
+		"include": ["node", "eslint", "prettier", "dts-bundle-generator", "c8"]
+	}
 }
