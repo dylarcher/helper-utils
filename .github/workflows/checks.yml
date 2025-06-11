@@ -13,7 +13,7 @@ on:
 
 jobs:
   checks:
-    name: Audit
+    name: Lint > Format > Test > Build > Bundle
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -39,24 +39,24 @@ jobs:
 
       - name: Lint
         run: |
-          eslint --config=./.github/linters/eslint.config.js ./**/*.{js,md,yml,json} \
+          npx eslint --config=./.github/linters/eslint.config.js ./**/*.{js,md,yml,json} \
           --report-unused-disable-directives --continue-on-error \
 
       - name: Format
         run: |
-          prettier --config=./.github/linters/.prettierrc.yml ./**/*.{js,md,yml,json} \
+          npx prettier --config=./.github/linters/.prettierrc.yml ./**/*.{js,md,yml,json} \
           --check --ignore-unknown --no-error-on-unmatched-pattern \
 
       - name: Test
         run: |
-          c8 --config=./.github/linters/.c8rc.json -- \
+          npx c8 --config=./.github/linters/.c8rc.json -- \
           node --no-warnings --experimental-specifier-resolution=node --inspect-brk \
           test --reporter=spec ./**/*.test.js ./**/*.spec.js \
 
       - name: Build
         run: |
-          tsc --minify
+          npx tsc --minify
 
       - name: Bundle
         run: |
-          dts-bundle-generator --config=./.github/linters/dts.config.js \
+          npx dts-bundle-generator --config=./.github/linters/dts.config.js \

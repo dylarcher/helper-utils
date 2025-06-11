@@ -7,6 +7,7 @@ on:
 
 jobs:
   publish:
+    name:  Build > Bundle > Release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -32,11 +33,11 @@ jobs:
 
       - name: Build
         run: |
-          tsc --minify
+          npx tsc --minify
 
       - name: Bundle
         run: |
-          dts-bundle-generator --config=./.github/linters/dts.config.js \
+          npx dts-bundle-generator --config=./.github/linters/dts.config.js \
 
       - name: Release
         env:
