@@ -21,21 +21,40 @@ jobs:
         with:
           fetch-depth: 0
           submodules: true
+
       - name: Setup
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
+
       - name: Install
         run: |
-          npm install prettier typescript c8 dts-bundle-generator \
+          npm install typescript dts-bundle-generator @types/node c8 \
             eslint eslint-config-prettier eslint-plugin-markdown \
-            eslint-plugin-prettier eslint-plugin-yaml@1.0.3 \
-          && npm clean-install
+            eslint-plugin-prettier eslint-plugin-yaml@1.0.3 prettier \
+            prettier-plugin-properties @stedi/prettier-plugin-jsonata \
+          && npm clean-install \
+
       - name: Lint
-        run: eslint . --config=./.github/linters/eslint.config.js --ext .js --report-unused-disable-directives
+        run: |
+          eslint --config=./.github/linters/eslint.config.js ./**/*.{js,md,yml,json} \
+          --report-unused-disable-directives --continue-on-error \
+
       - name: Format
-        run: prettier --config=./.github/linters/.prettierrc.yml . --check --ignore-unknown
+        run: |
+          prettier --config=./.github/linters/.prettierrc.yml ./**/*.{js,md,yml,json} \
+          --check --ignore-unknown --no-error-on-unmatched-pattern \
+
       - name: Test
-        run: node --no-warnings --experimental-specifier-resolution=node --inspect-brk test --reporter=spec ./**/*.test.js
+        run: |
+          c8 --config=./.github/linters/.c8rc.json -- \
+          node --no-warnings --experimental-specifier-resolution=node --inspect-brk \
+          test --reporter=spec ./**/*.test.js ./**/*.spec.js \
+
       - name: Build
-        run: tsc
+        run: |
+          tsc --minify
+
+      - name: Bundle
+        run: |
+          dts-bundle-generator --config=./.github/linters/dts.config.js \
