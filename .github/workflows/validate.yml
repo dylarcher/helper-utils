@@ -21,17 +21,16 @@ jobs:
         with:
           node-version: 18.x
       - name: Install
-        run:
-          npm install c8@7 dts-bundle-generator@9.5.1 eslint@9.28
-          eslint-config-prettier@10.1.5 eslint-plugin-markdown@5.1
-          eslint-plugin-prettier@5.4.1 eslint-plugin-yaml@1.0.3 prettier@3.1
-          semantic-release@20.0.2 typescript@5.8.3 @types/node@24 && npm
-          clean-install
+        run: |
+          npm install prettier typescript c8 dts-bundle-generator \
+            eslint eslint-config-prettier eslint-plugin-markdown \
+            eslint-plugin-prettier eslint-plugin-yaml@1.0.3 \
+          && npm clean-install
       - name: Lint
-        run: npx eslint . --ext .js --fix
+        run: eslint . --config=./.github/linters/eslint.config.js --ext .js --report-unused-disable-directives
       - name: Format
-        run: npx prettier --write src/**/*.js
+        run: prettier --config=./.github/linters/.prettierrc.yml . --check --ignore-unknown
       - name: Test
-        run: npx c8 -- node test --reporter=spec src/**/*.test.js test/**/*.js
+        run: node --no-warnings --experimental-specifier-resolution=node --inspect-brk test --reporter=spec ./**/*.test.js
       - name: Build
         run: tsc
