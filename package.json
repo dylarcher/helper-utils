@@ -1,0 +1,52 @@
+{
+    "author": "dylarcher",
+    "bugs": {
+        "url": "https://github.com/dylarcher/js.helper-utils/issues"
+    },
+    "description": "Reusable javascript helper utility methods.",
+    "engines": {
+        "node": ">=16",
+        "npm": ">=8"
+    },
+    "exports": {
+        ".": {
+            "import": "./dist/index.mjs",
+            "require": "./dist/index.cjs"
+        },
+        "./*": {
+            "import": "./dist/*.mjs",
+            "require": "./dist/*.cjs"
+        }
+    },
+    "files": [
+        "dist",
+        "src"
+    ],
+    "homepage": "https://dylarcher.github.io/js.helper-utils/",
+    "keywords": [
+        "helper",
+        "utils",
+        "utilities",
+        "javascript",
+        "library",
+        "methods",
+        "functions"
+    ],
+    "license": "MIT",
+    "main": "dist/index.js",
+    "name": "js-helpers",
+    "packageManager": "npm@8.19.4",
+    "private": false,
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/dylarcher/js.helper-utils.git"
+    },
+    "scripts": {
+        "build": "tsc",
+        "lint": "eslint . --ext .js",
+        "lint:fix": "eslint . --ext .js --fix",
+        "test": "jest"
+    },
+    "types": "dist/types.d.ts",
+    "version": "0.0.1"
+}
