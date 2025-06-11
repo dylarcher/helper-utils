@@ -1,65 +1,83 @@
 {
-    "[javascript]": {
-        "editor.codeActionsOnSave": {
-            "source.fixAll.eslint": "explicit",
-            "source.fixAll.prettier": "explicit"
-        },
-        "editor.defaultFormatter": "vscode.typescript-language-features"
-    },
-    "[typescript]": {
-        "editor.codeActionsOnSave": {
-            "source.fixAll.eslint": "explicit",
-            "source.fixAll.prettier": "explicit"
-        },
-        "editor.defaultFormatter": "vscode.typescript-language-features"
-    },
-    "[json]": {
-        "editor.codeActionsOnSave": {
-            "source.fixAll.eslint": "explicit",
-            "source.fixAll.prettier": "explicit"
-        },
-        "editor.defaultFormatter": "vscode.json-language-features"
-    },
-    "[markdown]": {
-        "editor.codeActionsOnSave": {
-            "source.fixAll.eslint": "explicit",
-            "source.fixAll.prettier": "explicit"
-        },
-        "editor.defaultFormatter": "vscode.markdown-language-features"
-    },
-    "[yaml]": {
-        "editor.codeActionsOnSave": {
-            "source.fixAll.eslint": "explicit",
-            "source.fixAll.prettier": "explicit"
-        },
-        "editor.defaultFormatter": "redhat.vscode-yaml"
-    },
-    "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": "explicit"
-    },
-    "editor.formatOnSave": true,
-    "eslint.validate": [
-        "javascript",
-        "typescript"
-    ],
-    "javascript.format.enable": false,
-    "typescript.format.enable": false,
-    "javascript.validate.enable": false,
-    "typescript.validate.enable": false,
-    "json.format.enable": false,
-    "json.validate.enable": false,
-    "yaml.format.enable": false,
-    "yaml.validate": false,
-    "js/ts.implicitProjectConfig.allowJs": true,
-    "js/ts.implicitProjectConfig.checkJs": true,
-    "js/ts.implicitProjectConfig.experimentalDecorators": true,
-    "js/ts.implicitProjectConfig.module": "ESNext",
-    "js/ts.implicitProjectConfig.noImplicitAny": true,
-    "js/ts.implicitProjectConfig.noImplicitThis": true,
-    "js/ts.implicitProjectConfig.strict": true,
-    "js/ts.implicitProjectConfig.strictBindCallApply": true,
-    "js/ts.implicitProjectConfig.strictFunctionTypes": true,
-    "js/ts.implicitProjectConfig.strictNullChecks": true,
-    "js/ts.implicitProjectConfig.strictPropertyInitialization": true,
-    "js/ts.implicitProjectConfig.target": "ESNext"
+	"[javascript]": {
+		"editor.codeActionsOnSave": {
+			"source.fixAll.eslint": "explicit",
+			"source.fixAll.prettier": "explicit"
+		},
+		"editor.defaultFormatter": "vscode.typescript-language-features"
+	},
+	"[json]": {
+		"editor.codeActionsOnSave": {
+			"source.fixAll.eslint": "explicit",
+			"source.fixAll.prettier": "explicit"
+		},
+		"editor.defaultFormatter": "vscode.json-language-features"
+	},
+	"[markdown]": {
+		"editor.codeActionsOnSave": {
+			"source.fixAll.eslint": "explicit",
+			"source.fixAll.prettier": "explicit"
+		},
+		"editor.defaultFormatter": "vscode.markdown-language-features"
+	},
+	"[typescript]": {
+		"editor.codeActionsOnSave": {
+			"source.fixAll.eslint": "explicit",
+			"source.fixAll.prettier": "explicit"
+		},
+		"editor.defaultFormatter": "vscode.typescript-language-features"
+	},
+	"[yaml]": {
+		"editor.codeActionsOnSave": {
+			"source.fixAll.eslint": "explicit",
+			"source.fixAll.prettier": "explicit"
+		},
+		"editor.defaultFormatter": "redhat.vscode-yaml"
+	},
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": "explicit"
+	},
+	"editor.formatOnSave": true,
+	"eslint.format.enable": true,
+	"eslint.lintTask.args": [
+		"--ext",
+		".js,.ts,.json,.md,.yml",
+		"--fix",
+		"${workspaceRoot}"
+	],
+	"eslint.lintTask.enable": true,
+	"eslint.lintTask.run": "onType",
+	"eslint.nodePath": "${workspaceRoot}/node_modules/.bin/eslint",
+	"eslint.useFlatConfig": true,
+	"eslint.validate": ["javascript", "typescript"],
+	"eslint.workingDirectories": [
+		{
+			"mode": "auto"
+		}
+	],
+	"javascript.format.enable": false,
+	"javascript.validate.enable": false,
+	"js/ts.implicitProjectConfig.allowJs": true,
+	"js/ts.implicitProjectConfig.checkJs": true,
+	"js/ts.implicitProjectConfig.experimentalDecorators": true,
+	"js/ts.implicitProjectConfig.module": "ESNext",
+	"js/ts.implicitProjectConfig.noImplicitAny": true,
+	"js/ts.implicitProjectConfig.noImplicitThis": true,
+	"js/ts.implicitProjectConfig.strict": true,
+	"js/ts.implicitProjectConfig.strictBindCallApply": true,
+	"js/ts.implicitProjectConfig.strictFunctionTypes": true,
+	"js/ts.implicitProjectConfig.strictNullChecks": true,
+	"js/ts.implicitProjectConfig.strictPropertyInitialization": true,
+	"js/ts.implicitProjectConfig.target": "ESNext",
+	"json.format.enable": false,
+	"json.validate.enable": false,
+	"prettier.configPath": "${workspaceRoot}/.prettierrc.yml",
+	"prettier.enable": true,
+	"prettier.prettierPath": "${workspaceRoot}/node_modules/.bin/prettier",
+	"prettier.useEditorConfig": true,
+	"prettier.withNodeModules": false,
+	"typescript.format.enable": false,
+	"typescript.validate.enable": false,
+	"yaml.format.enable": false,
+	"yaml.validate": false
 }

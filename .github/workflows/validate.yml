@@ -1,0 +1,37 @@
+---
+name: Validate
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate:
+    name: Analyze
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          submodules: true
+      - name: Setup
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+      - name: Install
+        run:
+          npm install c8@7 dts-bundle-generator@9.5.1 eslint@9.28
+          eslint-config-prettier@10.1.5 eslint-plugin-markdown@5.1
+          eslint-plugin-prettier@5.4.1 eslint-plugin-yaml@1.0.3 prettier@3.1
+          semantic-release@20.0.2 typescript@5.8.3 @types/node@24 && npm
+          clean-install
+      - name: Lint
+        run: npx eslint . --ext .js --fix
+      - name: Format
+        run: npx prettier --write src/**/*.js
+      - name: Test
+        run: npx c8 -- node test --reporter=spec src/**/*.test.js test/**/*.js
+      - name: Build
+        run: tsc

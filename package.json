@@ -1,80 +1,77 @@
 {
-    "author": "Dylan Archer <dylarcher@gmail.com> (@dylarcher)",
-    "bugs": {
-        "url": "https://github.com/dylarcher/js.helper-utils/issues"
-    },
-    "description": "Reusable javascript helper utility methods.",
-    "devDependencies": {
-        "dts-bundle-generator": "9.5.1",
-        "eslint": "9.28.0",
-        "eslint-config-prettier": "10.1.5",
-        "eslint-plugin-markdown": "5.1.0",
-        "eslint-plugin-prettier": "5.4.1",
-        "eslint-plugin-yaml": "1.0.3",
-        "prettier": "3.5.3"
-    },
-    "engines": {
-        "node": ">=16",
-        "npm": ">=8"
-    },
-    "exports": {
-        ".": {
-            "import": "./dist/index.js",
-            "require": "./dist/index.js",
-            "types": "./dist/types.d.ts"
-        },
-        "./*": {
-            "import": "./dist/*.js",
-            "require": "./dist/*.js",
-            "types": "./dist/types.d.ts"
-        }
-    },
-    "files": [
-        "dist",
-        "src"
-    ],
-    "homepage": "https://dylarcher.github.io/js.helper-utils/",
-    "keywords": [
-        "helper",
-        "utils",
-        "utilities",
-        "javascript",
-        "library",
-        "methods",
-        "functions"
-    ],
-    "license": "MIT",
-    "main": "dist/index.js",
-    "name": "js-helpers",
-    "packageManager": "npm@8.19.4",
-    "private": false,
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/dylarcher/js.helper-utils.git"
-    },
-    "type": "module",
-    "scripts": {
-        "build": "tsc --minify",
-        "dts": "dts-bundle-generator --config dts-bundle-generator.config.js",
-        "dts:watch": "dts-bundle-generator --config dts-bundle-generator.config.js --watch",
-        "format": "prettier --write .",
-        "format:check": "prettier --check .",
-        "lint": "eslint . --ext .js",
-        "lint:fix": "eslint . --ext .js --fix",
-        "prebuild": "npm run lint && npm run format:check",
-        "prepublishOnly": "npm run build && npm run dts",
-        "pretest": "npm run build && npm run dts",
-        "test": "node test -r=spec **/*.test.js",
-        "test:coverage": "c8 -r=html -r=text -r=lcov -- npm test",
-        "test:coverage:debug": "c8 -r=html -r=text -r=lcov -- node --loader ts-node/esm --no-warnings --experimental-specifier-resolution=node --inspect-brk test -r=spec **/*.test.js",
-        "test:coverage:debug:watch": "c8 -r=html -r=text -r=lcov -- node --loader ts-node/esm --no-warnings --experimental-specifier-resolution=node --inspect-brk test -r=spec **/*.test.js --watch",
-        "test:coverage:watch": "c8 -r=html -r=text -r=lcov -- node --loader ts-node/esm --no-warnings --experimental-specifier-resolution=node test -r=spec **/*.test.js --watch",
-        "test:debug": "node --loader ts-node/esm --no-warnings --experimental-specifier-resolution=node --inspect-brk test -r=spec **/*.test.js",
-        "test:debug:coverage": "c8 -r=html -r=text -r=lcov -- node --loader ts-node/esm --no-warnings --experimental-specifier-resolution=node --inspect-brk test -r=spec **/*.test.js",
-        "test:debug:coverage:watch": "c8 -r=html -r=text -r=lcov -- node --loader ts-node/esm --no-warnings --experimental-specifier-resolution=node --inspect-brk test -r=spec **/*.test.js --watch",
-        "test:debug:watch": "node --loader ts-node/esm --no-warnings --experimental-specifier-resolution=node --inspect-brk test -r=spec **/*.test.js --watch",
-        "test:watch": "node --loader ts-node/esm --no-warnings --experimental-specifier-resolution=node test -r=spec **/*.test.js"
-    },
-    "types": "dist/types.d.ts",
-    "version": "0.0.1"
+	"author": "Dylan Archer <dylarcher@gmail.com> (@dylarcher)",
+	"bugs": {
+		"url": "https://github.com/dylarcher/js.helper-utils/issues"
+	},
+	"description": "Reusable javascript helper utility methods.",
+	"optionalDependencies": {
+		"eslint-config-prettier": "10.1.5",
+		"eslint-plugin-markdown": "5.1.0",
+		"eslint-plugin-prettier": "5.4.1",
+		"eslint-plugin-yaml": "1.0.3",
+		"@stedi/prettier-plugin-jsonata": "2.1.3",
+		"prettier-plugin-glsl": "0.2.1",
+		"prettier-plugin-properties": "0.3.0"
+	},
+	"engines": {
+		"node": ">=16",
+		"npm": ">=8"
+	},
+	"exports": {
+		".": {
+			"import": "./dist/index.js",
+			"require": "./dist/index.js",
+			"types": "./dist/types.d.ts"
+		},
+		"./*": {
+			"import": "./dist/*.js",
+			"require": "./dist/*.js",
+			"types": "./dist/types.d.ts"
+		}
+	},
+	"files": [
+		"dist",
+		"src"
+	],
+	"homepage": "https://dylarcher.github.io/js.helper-utils/",
+	"keywords": [
+		"helper",
+		"utils",
+		"utilities",
+		"javascript",
+		"library",
+		"methods",
+		"functions"
+	],
+	"license": "MIT",
+	"main": "./dist/index.js",
+	"name": "js-helpers",
+	"packageManager": "npm@8.19.4",
+	"private": false,
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/dylarcher/js.helper-utils.git"
+	},
+	"type": "module",
+	"scripts": {
+		"build": "npx tsc --minify",
+		"bundle": "npx dts-bundle-generator --config=./.github/linters/dts.config.js",
+		"bundle:watch": "npm run bundle --watch",
+		"prettier": "npx prettier --config=./.github/linters/.prettierrc.yml . --ignore-unknown",
+		"format:check": "npm run prettier --check",
+		"format": "npm run prettier --write",
+		"eslint": "npx eslint . --config=./.github/linters/eslint.config.js --ext .js --report-unused-disable-directives",
+		"lint:check": "npm run eslint --dry-run",
+		"lint": "npm run eslint --fix",
+		"prepare": "npm dedupe && npm prune",
+		"prebuild": "npm run lint:check && npm run format:check",
+		"prepublishOnly": "npm run build && npm run dts",
+		"pretest": "npm run build && npm run dts",
+		"test": "node --no-warnings --experimental-specifier-resolution=node --inspect-brk test --reporter=spec ./**/*.test.js",
+		"c8": "npx c8 --config=./.github/linters/.c8rc.json",
+		"test:coverage": "npm run c8 -- npm test",
+		"test:watch": "npm test --watch"
+	},
+	"types": "./dist/types.d.ts",
+	"version": "0.0.1"
 }
