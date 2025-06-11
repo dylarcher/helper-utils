@@ -3,6 +3,7 @@
 		"allowJs": true,
 		"checkJs": true,
 		"baseUrl": ".",
+		"rootDir": "src",
 		"esModuleInterop": true,
 		"experimentalDecorators": true,
 		"forceConsistentCasingInFileNames": true,
@@ -15,6 +16,8 @@
 		"strict": true,
 		"target": "esnext"
 	},
+	"exclude": ["node_modules", "dist", "docs", ".*"],
+	"include": ["src"],
 	"typeAcquisition": {
 		"enable": true,
 		"include": ["node", "eslint", "prettier", "dts-bundle-generator", "c8"]

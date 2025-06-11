@@ -1,4 +1,4 @@
-name: Publish # this workflow is setup to be self-contained
+name: Publish
 
 on:
   release:
@@ -7,40 +7,34 @@ on:
 
 jobs:
   publish:
-    name:  Build > Bundle > Release
+    name: Build > Bundle > Release
+    strategy:
+      fail-fast: true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: recursive
 
       - name: Setup
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18.x
           registry-url: https://registry.npmjs.org
           cache: npm
 
       - name: Install
-        run: |
-          npm install typescript dts-bundle-generator @types/node c8 \
-            eslint eslint-config-prettier eslint-plugin-markdown \
-            eslint-plugin-prettier eslint-plugin-yaml@1.0.3 prettier \
-            prettier-plugin-properties @stedi/prettier-plugin-jsonata \
-          && npm clean-install \
+        run: npm clean-install
 
       - name: Build
-        run: |
-          npx tsc --minify
+        run: npm run build
 
       - name: Bundle
-        run: |
-          npx dts-bundle-generator --config=./.github/linters/dts.config.js \
+        run: npm run bundle
 
       - name: Release
+        run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          npm publish --access public \

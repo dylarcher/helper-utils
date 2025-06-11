@@ -19,13 +19,14 @@ export function onDelegate(
 	}
 	parentElement.addEventListener(
 		eventType,
-		event => {
+		(_event) => {
+			const { target } = _event;
 			if (
-				event.target &&
-				typeof event.target.matches === "function" &&
-				event.target.matches(selector)
+				target &&
+				typeof target.matches === "function" &&
+				target.matches(selector)
 			) {
-				callback.call(event.target, event); // `this` inside callback will be the matched element
+				callback.call(target, _event);
 			}
 		},
 		options,
