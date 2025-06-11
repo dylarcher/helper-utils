@@ -1,4 +1,4 @@
-name: Publish Package to NPM Artifactory
+name: Publish NPM Library
 
 on:
   release:
