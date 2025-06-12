@@ -1,4 +1,4 @@
-import crypto from "node:crypto";
+import * as _crypto from "node:crypto";
 
 /**
  * Generate a hash of a string.
@@ -8,5 +8,5 @@ import crypto from "node:crypto";
  * @returns {string} The generated hash.
  */
 export function generateHash(data, algorithm = "sha256", encoding = "hex") {
-	return crypto.createHash(algorithm).update(data).digest(encoding);
+	return _crypto.createHash(algorithm).update(data).digest(encoding);
 }

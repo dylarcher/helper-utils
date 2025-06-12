@@ -1,13 +1,18 @@
 /**
- * Simplified `fetch` for JSON requests/responses.
+ * Simplified fetch for JSON requests/responses.
  * @param {string} url - The URL to fetch.
- * @param {object} [options={}] - Fetch options (method, headers, body, etc.).
- *                                 If body is an object, it's stringified and Content-Type is set to application/json.
- * @returns {Promise<*>} A promise that resolves with the parsed JSON response.
+ * @param {{
+ *  method?: string,
+ *  headers?: Record<string, string>,
+ *  body?: any,
+ *  [key: string]: any
+ * }} [options={}] - Fetch options.
+ * @returns {Promise<any>} A promise that resolves with the parsed JSON response.
  */
 export async function fetchJSON(url, options = {}) {
 	const defaultHeaders = {
 		Accept: "application/json",
+		"Content-Type": undefined,
 	};
 
 	if (
@@ -19,7 +24,7 @@ export async function fetchJSON(url, options = {}) {
 		defaultHeaders["Content-Type"] = "application/json";
 	}
 
-	options.headers = { ...defaultHeaders, ...options.headers };
+	options.headers = { ...defaultHeaders, ...(options.headers || {}) };
 
 	const response = await fetch(url, options);
 

@@ -1,520 +1,748 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta
-			name="viewport"
-			content="width=device-width, initial-scale=1.0" />
-		<title>Infographic: The State of JavaScript Utilities</title>
-		<script src="https://cdn.tailwindcss.com"></script>
-		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-		<link
-			rel="preconnect"
-			href="https://fonts.googleapis.com" />
-		<link
-			rel="preconnect"
-			href="https://fonts.gstatic.com"
-			crossorigin />
-		<link
-			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap"
-			rel="stylesheet" />
-		<style>
-			body {
-				font-family: "Inter", sans-serif;
-				background-color: #f8f9fa;
-			}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infographic: The State of JavaScript Utilities</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <style>
+        :root {
+            --text-color: #1F2937;
+            --bg-color: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --border-color: #E5E7EB;
+            --heading-color-1: #00796B; /* Accessible Teal */
+            --heading-color-2: #D32F2F; /* Accessible Coral */
+            --button-color: #F59E0B;   /* Accessible Yellow */
+            --button-text-color: #1F2937;
+            --accent-color-blue: #3B82F6; /* Accessible Blue */
+        }
 
-			.chart-container {
-				position: relative;
-				width: 100%;
-				margin-left: auto;
-				margin-right: auto;
-				height: 320px;
-				max-height: 400px;
-			}
+        html.dark {
+            --text-color: #E5E7EB;
+            --bg-color: #111827;
+            --card-bg: #1F2937;
+            --border-color: #374151;
+            --heading-color-1: #2DD4BF; /* Vibrant Teal for dark */
+            --heading-color-2: #F87171; /* Vibrant Coral for dark */
+            --button-color: #FBBF24;   /* Vibrant Yellow for dark */
+            --button-text-color: #1F2937;
+            --accent-color-blue: #60A5FA; /* Accessible Blue for dark */
+        }
 
-			@media (min-width: 768px) {
-				.chart-container {
-					height: 350px;
-				}
-			}
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .text-shadow {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .github-icon path {
+            transition: fill 0.3s ease;
+            fill: var(--text-color);
+        }
+        .utility-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 4px 8px;
+            border-radius: 0.5rem;
+            transition: background-color 0.2s ease;
+        }
+        .utility-item:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        html.dark .utility-item:hover {
+             background-color: rgba(255, 255, 255, 0.08);
+        }
+        .explain-btn {
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .utility-item:hover .explain-btn,
+        .utility-item:focus-within .explain-btn {
+            opacity: 0.6;
+        }
+        .explain-btn:hover {
+             opacity: 1 !important;
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
 
-			.text-shadow {
-				text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-			}
-		</style>
-	</head>
+    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
 
-	<body class="text-gray-800">
-		<div class="container mx-auto p-4 md:p-8 max-w-7xl">
-			<header class="text-center py-8 md:py-12">
-				<h1 class="text-4xl md:text-6xl font-black text-[#00A6A6] text-shadow">
-					The State of JavaScript Utilities
-				</h1>
-				<p class="mt-4 text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
-					A deep dive into the trends, tools, and best practices shaping modern
-					development, based on comprehensive analysis of helper libraries.
-				</p>
-			</header>
+        <header class="text-center pt-8 pb-12 md:pt-12 md:pb-16 relative">
+            <div class="absolute top-4 right-4 flex items-center space-x-4">
+                 <button id="download-btn" class="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none" aria-label="Download or clone library">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                </button>
+                 <a href="https://github.com/dylarcher/js.helper-utils" target="_blank" rel="noopener noreferrer" aria-label="View source code on GitHub" title="View on GitHub">
+                    <svg class="github-icon w-6 h-6" viewBox="0 0 16 16" version="1.1" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                </a>
+                <button id="theme-toggle" class="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none" aria-label="Toggle theme">
+                    <svg id="theme-icon-light" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                    <svg id="theme-icon-dark" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 16.464A1 1 0 106.465 15.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm-1.414-2.121a1 1 0 011.414 0l.707.707a1 1 0 11-1.414 1.414l-.707-.707a1 1 0 010-1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path></svg>
+                </button>
+            </div>
+            <h1 class="text-4xl md:text-6xl font-black text-shadow" style="color: var(--heading-color-1);">The State of JavaScript Utilities</h1>
+            <p class="mt-4 text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">A deep dive into the trends, tools, and best practices shaping modern development, with AI-powered insights.</p>
+        </header>
 
-			<main class="space-y-12 md:space-y-20">
-				<section
-					class="bg-white rounded-2xl shadow-lg p-6 md:p-10 text-center md:col-span-2">
-					<h2 class="text-3xl font-bold text-[#F25F5C] mb-4">
-						The Vanilla JS Renaissance
-					</h2>
-					<p class="text-gray-700 mb-6 max-w-4xl mx-auto">
-						Modern ECMAScript has armed developers with powerful native
-						features, reducing dependency on large utility libraries. This shift
-						prioritizes performance, smaller bundle sizes, and a deeper
-						understanding of the language's core.
-					</p>
-					<div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-						<div class="bg-gray-50 rounded-xl p-6">
-							<h3 class="text-2xl font-bold text-gray-800">
-								The Decline of Legacy Wrappers
-							</h3>
-							<p class="text-gray-600 mt-2 mb-4">
-								The market has seen a significant shift away from
-								all-encompassing libraries like jQuery towards more modular,
-								vanilla-centric approaches. While libraries like Lodash remain
-								popular for their pure data-manipulation functions, the need for
-								DOM abstraction has diminished.
-							</p>
-							<div class="chart-container mx-auto max-w-lg">
-								<canvas id="vanillaTrendChart"></canvas>
-							</div>
-						</div>
-						<div class="flex flex-col items-center justify-center space-y-6">
-							<div
-								class="text-center p-6 bg-[#00A6A6] text-white rounded-2xl shadow-md w-full">
-								<h3 class="text-xl font-semibold">Native Performance Boost</h3>
-								<p class="text-7xl md:text-8xl font-black my-2">~35%</p>
-								<p class="font-medium">
-									Faster execution on average for common tasks like DOM
-									selection and array manipulation when using native browser
-									APIs over abstracted library calls.
-								</p>
-							</div>
-							<div
-								class="text-center p-6 bg-white border border-gray-200 rounded-2xl shadow-md w-full">
-								<h3 class="text-xl font-semibold text-gray-800">
-									Key Benefit: Reduced Dependencies
-								</h3>
-								<p class="text-5xl font-bold my-2 text-[#F7B538]">↓</p>
-								<p class="text-gray-600">
-									Fewer dependencies lead to smaller bundles, improved security,
-									and simplified maintenance overhead for development teams.
-								</p>
-							</div>
-						</div>
-					</div>
-				</section>
+        <main class="space-y-12 md:space-y-20">
 
-				<section class="md:col-span-2">
-					<h2 class="text-3xl font-bold text-center text-[#F25F5C] mb-8">
-						The Two Worlds of JavaScript Utilities
-					</h2>
-					<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-						<div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
-							<h3 class="text-2xl font-bold mb-4 flex items-center">
-								<span class="text-3xl mr-3">🌐</span> Browser Environment
-							</h3>
-							<p class="text-gray-700 mb-6">
-								Utilities are focused on user interaction, rendering, and web
-								APIs. The primary concerns are enhancing interactivity, managing
-								the DOM efficiently, and ensuring a smooth user experience.
-							</p>
-							<ul class="space-y-3">
-								<li class="flex items-start">
-									<span class="text-xl text-[#00A6A6] mr-3 font-bold">1.</span>
-									<div>
-										<strong class="text-gray-900">DOM Manipulation:</strong>
-										Simplified element selection, class toggling, and attribute
-										setting.
-									</div>
-								</li>
-								<li class="flex items-start">
-									<span class="text-xl text-[#00A6A6] mr-3 font-bold">2.</span>
-									<div>
-										<strong class="text-gray-900">Event Handling:</strong>
-										Crucial helpers like `debounce` and `throttle` to manage
-										high-frequency events.
-									</div>
-								</li>
-								<li class="flex items-start">
-									<span class="text-xl text-[#00A6A6] mr-3 font-bold">3.</span>
-									<div>
-										<strong class="text-gray-900">Web API Wrappers:</strong>
-										Conveniences for `localStorage`, `fetch`, and the Clipboard
-										API.
-									</div>
-								</li>
-								<li class="flex items-start">
-									<span class="text-xl text-[#00A6A6] mr-3 font-bold">4.</span>
-									<div>
-										<strong class="text-gray-900">URL & Query Params:</strong>
-										Easy parsing and manipulation of URL parameters.
-									</div>
-								</li>
-							</ul>
-						</div>
-						<div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
-							<h3 class="text-2xl font-bold mb-4 flex items-center">
-								<span class="text-3xl mr-3">⚙️</span> Node.js Environment
-							</h3>
-							<p class="text-gray-700 mb-6">
-								Server-side utilities address backend logic, system
-								interactions, and data processing. The focus is on I/O,
-								security, and managing the server environment.
-							</p>
-							<ul class="space-y-3">
-								<li class="flex items-start">
-									<span class="text-xl text-[#F7B538] mr-3 font-bold">1.</span>
-									<div>
-										<strong class="text-gray-900">File System (FS):</strong>
-										Promise-based wrappers for `fs.promises` to handle async
-										file operations.
-									</div>
-								</li>
-								<li class="flex items-start">
-									<span class="text-xl text-[#F7B538] mr-3 font-bold">2.</span>
-									<div>
-										<strong class="text-gray-900">Path Manipulation:</strong>
-										Platform-agnostic path joining and resolution using the
-										`path` module.
-									</div>
-								</li>
-								<li class="flex items-start">
-									<span class="text-xl text-[#F7B538] mr-3 font-bold">3.</span>
-									<div>
-										<strong class="text-gray-900"
-											>Environment Variables:</strong
-										>
-										Safe access to `process.env` with defaults and
-										required-value checks.
-									</div>
-								</li>
-								<li class="flex items-start">
-									<span class="text-xl text-[#F7B538] mr-3 font-bold">4.</span>
-									<div>
-										<strong class="text-gray-900">Child Processes:</strong>
-										Simplified execution of shell commands and external scripts.
-									</div>
-								</li>
-							</ul>
-						</div>
-					</div>
-				</section>
+            <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 md:p-10 text-center md:col-span-2">
+                <h2 class="text-3xl font-bold mb-4" style="color: var(--heading-color-2);">The Vanilla JS Renaissance</h2>
+                <p class="text-gray-700 dark:text-gray-300 mb-6 max-w-4xl mx-auto">Modern ECMAScript has armed developers with powerful native features, reducing dependency on large utility libraries. This shift prioritizes performance, smaller bundle sizes, and a deeper understanding of the language's core.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6">
+                        <h3 class="text-2xl font-bold text-gray-800 dark:text-white">The Decline of Legacy Wrappers</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mt-2 mb-4">The market has seen a significant shift away from all-encompassing libraries like jQuery towards more modular, vanilla-centric approaches.</p>
+                        <div class="chart-container mx-auto max-w-lg">
+                            <canvas id="vanillaTrendChart" role="img" aria-label="Line chart showing the decline of jQuery dependency from 80% in 2018 to 15% in 2024, while Vanilla JS and modern framework usage rose from 45% to 95% in the same period."></canvas>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-center justify-center space-y-6">
+                        <div class="text-center p-6 rounded-2xl shadow-md w-full" style="background-color: var(--heading-color-1);">
+                            <h3 class="text-xl font-semibold text-white">Native Performance Boost</h3>
+                            <p class="text-7xl md:text-8xl font-black my-2 text-white">~35%</p>
+                            <p class="font-medium text-white">Faster execution on average for common tasks like DOM selection and array manipulation.</p>
+                        </div>
+                         <div class="text-center p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-md w-full">
+                            <h3 class="text-xl font-semibold text-gray-800 dark:text-white">Key Benefit: Reduced Dependencies</h3>
+                            <p class="text-5xl font-bold my-2" style="color: var(--button-color);">↓</p>
+                            <p class="text-gray-600 dark:text-gray-400">Fewer dependencies lead to smaller bundles, improved security, and simplified maintenance.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-				<section class="grid grid-cols-1 md:grid-cols-5 gap-8">
-					<div class="bg-white rounded-2xl shadow-lg p-6 md:p-8 md:col-span-3">
-						<h2 class="text-3xl font-bold text-[#F25F5C] mb-2">
-							Most In-Demand Utility Categories
-						</h2>
-						<p class="text-gray-700 mb-6">
-							Analysis of developer needs shows a clear focus on data
-							manipulation and asynchronous helpers, which are fundamental to
-							nearly every application.
-						</p>
-						<div class="chart-container">
-							<canvas id="categoryDemandChart"></canvas>
-						</div>
-					</div>
-					<div class="bg-white rounded-2xl shadow-lg p-6 md:p-8 md:col-span-2">
-						<h2 class="text-3xl font-bold text-[#F25F5C] mb-2">
-							The "Must-Have" Functions
-						</h2>
-						<p class="text-gray-700 mb-6">
-							Across all projects, a few key functions consistently emerge as
-							the most reused, forming the core of any high-impact utility
-							library.
-						</p>
-						<div class="chart-container">
-							<canvas id="topFunctionsChart"></canvas>
-						</div>
-					</div>
-				</section>
+            <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 md:p-10 md:col-span-2">
+                <h2 class="text-3xl font-bold text-center mb-8" style="color: var(--heading-color-2);">Getting Started</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4 text-gray-800 dark:text-white">Installation</h3>
+                        <p class="text-gray-700 dark:text-gray-300 mb-4">You can clone the repository directly or install the package via NPM for easy integration into your build process.</p>
+                        <pre class="bg-gray-100 dark:bg-gray-900 rounded-lg p-4 text-sm text-gray-800 dark:text-gray-200 overflow-x-auto"><code># Clone the repo
+git clone https://github.com/dylarcher/js.helper-utils.git
 
-				<section
-					class="bg-white rounded-2xl shadow-lg p-6 md:p-10 md:col-span-2">
-					<h2 class="text-3xl font-bold text-center text-[#F25F5C] mb-8">
-						The Anatomy of a Great Utility
-					</h2>
-					<p class="text-gray-700 mb-10 max-w-4xl mx-auto text-center">
-						Effective utility functions are more than just code; they are
-						well-designed, documented, and predictable building blocks. The
-						ideal creation process follows a clear path from conception to
-						reliable implementation.
-					</p>
-					<div
-						class="flex flex-col md:flex-row items-center justify-center space-y-6 md:space-y-0 md:space-x-6 text-center">
-						<div class="flex flex-col items-center p-4">
-							<div
-								class="bg-[#70C1B3] text-white w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold shadow-md">
-								1
-							</div>
-							<h4 class="font-bold text-lg mt-4">Purity & Immutability</h4>
-							<p class="text-gray-600 text-sm">
-								Design functions to be pure, avoiding side effects and returning
-								new data structures instead of modifying inputs.
-							</p>
-						</div>
-						<div class="text-3xl text-gray-300 font-light hidden md:block">
-							→
-						</div>
-						<div class="text-3xl text-gray-300 font-light md:hidden">↓</div>
-						<div class="flex flex-col items-center p-4">
-							<div
-								class="bg-[#F7B538] text-white w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold shadow-md">
-								2
-							</div>
-							<h4 class="font-bold text-lg mt-4">Clear Documentation</h4>
-							<p class="text-gray-600 text-sm">
-								Write comprehensive JSDocs with descriptions, parameter types,
-								return values, and examples.
-							</p>
-						</div>
-						<div class="text-3xl text-gray-300 font-light hidden md:block">
-							→
-						</div>
-						<div class="text-3xl text-gray-300 font-light md:hidden">↓</div>
-						<div class="flex flex-col items-center p-4">
-							<div
-								class="bg-[#F25F5C] text-white w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold shadow-md">
-								3
-							</div>
-							<h4 class="font-bold text-lg mt-4">Robust Error Handling</h4>
-							<p class="text-gray-600 text-sm">
-								Throw errors for exceptional failures and return predictable
-								values (`null`, `[]`) for expected empty states.
-							</p>
-						</div>
-						<div class="text-3xl text-gray-300 font-light hidden md:block">
-							→
-						</div>
-						<div class="text-3xl text-gray-300 font-light md:hidden">↓</div>
-						<div class="flex flex-col items-center p-4">
-							<div
-								class="bg-[#00A6A6] text-white w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold shadow-md">
-								4
-							</div>
-							<h4 class="font-bold text-lg mt-4">Thorough Testing</h4>
-							<p class="text-gray-600 text-sm">
-								Implement unit tests to cover common use cases and edge cases,
-								ensuring reliability and preventing regressions.
-							</p>
-						</div>
-					</div>
-				</section>
-			</main>
+# Install with NPM
+npm install @dylarcher/js-helper-utils</code></pre>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4 text-gray-800 dark:text-white">Usage</h3>
+                        <p class="text-gray-700 dark:text-gray-300 mb-4">Import only the functions you need. This allows bundlers to perform tree-shaking and keep your application size minimal.</p>
+                         <pre class="bg-gray-100 dark:bg-gray-900 rounded-lg p-4 text-sm text-gray-800 dark:text-gray-200 overflow-x-auto"><code>import { debounce } from '@dylarcher/js-helper-utils/src/common';
+import { toggleClass } from '@dylarcher/js-helper-utils/src/browser';
 
-			<footer class="text-center mt-12 md:mt-20 py-8 border-t border-gray-200">
-				<p class="text-gray-600">
-					The shift towards lean, vanilla JS utilities is clear. By focusing on
-					pure, well-documented, and environment-specific helpers, developers
-					can build faster, more maintainable applications. This data-driven
-					approach to creating utility libraries is key to modern development
-					efficiency.
-				</p>
-				<p class="text-sm text-gray-400 mt-4">
-					Infographic generated based on the "Crafting High-Impact Vanilla
-					JavaScript Utility Libraries" report.
-				</p>
-			</footer>
-		</div>
+const button = document.querySelector('#my-button');
+button.addEventListener('click', debounce(() => {
+  toggleClass(button, 'active');
+}, 250));</code></pre>
+                    </div>
+                </div>
+            </section>
 
-		<script>
-			const vibrantPalette = {
-				teal: "#00A6A6",
-				lightTeal: "#70C1B3",
-				yellow: "#F7B538",
-				coral: "#F25F5C",
-				lightYellow: "#FFE066",
-				darkGray: "#374151",
-			};
+            <section class="md:col-span-2">
+                 <h2 class="text-3xl font-bold text-center mb-8" style="color: var(--heading-color-2);">Curated Utility Collections</h2>
+                 <p class="text-gray-700 dark:text-gray-300 mb-10 max-w-4xl mx-auto text-center">Below is a sampling of helper functions. Hover over any utility to see its source on GitHub and click the ✨ icon for an AI-generated explanation.</p>
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="utility-collections">
+                     <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 md:p-8">
+                         <h3 class="text-2xl font-bold mb-6 flex items-center"><span aria-hidden="true" class="text-3xl mr-3">🌐</span> Browser Utilities</h3>
+                         <div id="browser-utils-list" class="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-2 text-sm text-gray-600 dark:text-gray-400">
+                         </div>
+                     </div>
+                     <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 md:p-8">
+                         <h3 class="text-2xl font-bold mb-6 flex items-center"><span aria-hidden="true" class="text-3xl mr-3">⚙️</span> System (Node.js) Utilities</h3>
+                         <div id="system-utils-list" class="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-2 text-sm text-gray-600 dark:text-gray-400">
+                         </div>
+                     </div>
+                 </div>
+            </section>
 
-			const chartFont = {
-				family: "Inter",
-				size: 12,
-			};
+            <section id="ai-generator" class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 md:p-10 md:col-span-2">
+                <h2 class="text-3xl font-bold text-center mb-4" style="color: var(--heading-color-2);">✨ Utility Generator</h2>
+                <p class="text-gray-700 dark:text-gray-300 mb-6 max-w-4xl mx-auto text-center">Need a specific helper function? Describe it below, and our AI assistant will generate the code. You can then create a feature request on GitHub to add it to the collection.</p>
+                <div class="max-w-2xl mx-auto">
+                    <label for="generator-prompt" class="sr-only">Utility function description</label>
+                    <textarea id="generator-prompt" aria-label="Utility function description" class="w-full p-3 rounded-lg border bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-[#00A6A6] focus:outline-none" rows="3" placeholder="e.g., a function that converts a string to camelCase"></textarea>
+                    <button id="generate-btn" class="mt-4 w-full hover:bg-opacity-90 font-bold py-3 px-4 rounded-lg transition-colors flex items-center justify-center" style="background-color: var(--button-color); color: var(--button-text-color);">
+                        Generate Code
+                    </button>
+                    <div id="generator-result-container" class="mt-6 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg min-h-[100px] text-left">
+                        <div id="generator-loader" class="hidden justify-center items-center py-8">
+                            <div class="loader"></div>
+                        </div>
+                        <pre id="generator-result" class="text-sm whitespace-pre-wrap dark:text-gray-200"></pre>
+                    </div>
+                    <button id="create-issue-btn" class="hidden mt-4 w-full text-white hover:bg-opacity-90 font-bold py-3 px-4 rounded-lg transition-colors flex items-center justify-center" style="background-color: var(--heading-color-1);">
+                        📝 Create Feature Request on GitHub
+                    </button>
+                </div>
+            </section>
 
-			const sharedTooltipConfig = {
-				backgroundColor: "rgba(0, 0, 0, 0.8)",
-				titleFont: { weight: "bold", size: 14 },
-				bodyFont: { size: 12 },
-				padding: 10,
-				cornerRadius: 4,
-				displayColors: false,
-				callbacks: {
-					title: function (tooltipItems) {
-						const item = tooltipItems[0];
-						let label = item.chart.data.labels[item.dataIndex];
-						if (Array.isArray(label)) {
-							return label.join(" ");
-						} else {
-							return label;
-						}
-					},
-				},
-			};
+            <section class="grid grid-cols-1 md:grid-cols-5 gap-8">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 md:p-8 md:col-span-3">
+                     <h2 class="text-3xl font-bold mb-2" style="color: var(--heading-color-2);">Most In-Demand Utility Categories</h2>
+                     <p class="text-gray-700 dark:text-gray-300 mb-6">Analysis shows a focus on data manipulation and async helpers, fundamental to nearly every application.</p>
+                     <div class="chart-container">
+                        <canvas id="categoryDemandChart" role="img" aria-label="Bar chart displaying the importance of utility categories. Object and Array manipulation are rated highest, followed by Asynchronous Helpers, DOM, String, and Type Checking utilities."></canvas>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 md:p-8 md:col-span-2">
+                    <h2 class="text-3xl font-bold mb-2" style="color: var(--heading-color-2);">The "Must-Have" Functions</h2>
+                     <p class="text-gray-700 dark:text-gray-300 mb-6">A few key functions consistently emerge as the most reused, forming the core of any utility library.</p>
+                    <div class="chart-container">
+                        <canvas id="topFunctionsChart" role="img" aria-label="Doughnut chart showing the most reused functions. Debounce/throttle is the largest slice, followed by deepClone, isEmpty, get nested property, and fetchJSON wrapper."></canvas>
+                    </div>
+                </div>
+            </section>
 
-			const wrapLabel = (label, maxLength = 16) => {
-				if (label.length <= maxLength) return label;
-				const words = label.split(" ");
-				const lines = [];
-				let currentLine = "";
-				for (const word of words) {
-					if ((currentLine + " " + word).trim().length > maxLength) {
-						lines.push(currentLine.trim());
-						currentLine = word;
-					} else {
-						currentLine = (currentLine + " " + word).trim();
-					}
-				}
-				if (currentLine) lines.push(currentLine.trim());
-				return lines;
-			};
+            <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 md:p-10 md:col-span-2">
+                 <h2 class="text-3xl font-bold text-center mb-8" style="color: var(--heading-color-2);">Industry-Leading Libraries</h2>
+                 <p class="text-gray-700 dark:text-gray-300 mb-10 max-w-4xl mx-auto text-center">While building your own utilities is empowering, these battle-tested libraries offer comprehensive, performant solutions that have shaped modern development.</p>
+                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                     <a href="https://lodash.com/" target="_blank" rel="noopener noreferrer" class="block p-6 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:shadow-md transition-shadow">
+                         <h4 class="text-xl font-bold text-gray-800 dark:text-white">Lodash</h4>
+                         <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">The modern standard for data manipulation, providing hundreds of helpers for arrays, objects, and strings.</p>
+                     </a>
+                     <a href="https://underscorejs.org/" target="_blank" rel="noopener noreferrer" class="block p-6 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:shadow-md transition-shadow">
+                         <h4 class="text-xl font-bold text-gray-800 dark:text-white">Underscore.js</h4>
+                         <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">The original utility belt, offering functional helpers like `map`, `filter`, and `invoke` with a focus on simplicity.</p>
+                     </a>
+                      <a href="https://radash-docs.vercel.app/" target="_blank" rel="noopener noreferrer" class="block p-6 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:shadow-md transition-shadow">
+                         <h4 class="text-xl font-bold text-gray-800 dark:text-white">Radash</h4>
+                         <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">A modern, TypeScript-first utility library with zero dependencies, emphasizing functional, composable helpers.</p>
+                     </a>
+                 </div>
+            </section>
 
-			new Chart(document.getElementById("vanillaTrendChart"), {
-				type: "line",
-				data: {
-					labels: ["2018", "2020", "2022", "2024"],
-					datasets: [
-						{
-							label: "Vanilla JS / Modern Frameworks",
-							data: [45, 65, 85, 95],
-							borderColor: vibrantPalette.teal,
-							backgroundColor: "rgba(0, 166, 166, 0.1)",
-							fill: true,
-							tension: 0.4,
-							borderWidth: 3,
-						},
-						{
-							label: "jQuery Dependency",
-							data: [80, 50, 25, 15],
-							borderColor: vibrantPalette.coral,
-							backgroundColor: "rgba(242, 95, 92, 0.1)",
-							fill: true,
-							tension: 0.4,
-							borderWidth: 3,
-						},
-					],
-				},
-				options: {
-					responsive: true,
-					maintainAspectRatio: false,
-					plugins: {
-						legend: { position: "bottom", labels: { font: chartFont } },
-						tooltip: sharedTooltipConfig,
-					},
-					scales: {
-						y: {
-							beginAtZero: true,
-							title: {
-								display: true,
-								text: "Usage Share (%)",
-								font: chartFont,
-							},
-							ticks: { font: chartFont },
-						},
-						x: { ticks: { font: chartFont } },
-					},
-				},
-			});
+            <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 md:p-10 md:col-span-2">
+                <h2 class="text-3xl font-bold text-center mb-8" style="color: var(--heading-color-2);">The Anatomy of a Great Utility</h2>
+                <p class="text-gray-700 dark:text-gray-300 mb-10 max-w-4xl mx-auto text-center">Effective utility functions are well-designed, documented, and predictable building blocks that follow a clear path from conception to reliable implementation.</p>
+                <div class="relative max-w-2xl mx-auto mt-12">
+                    <div class="absolute left-1/2 -translate-x-1/2 w-0.5 h-full" style="background-color: var(--border-color);" aria-hidden="true"></div>
 
-			const categoryLabels = [
-				"Object Manipulation",
-				"Array Manipulation",
-				"Asynchronous Helpers",
-				"DOM Utilities",
-				"String Utilities",
-				"Type Checking",
-				"FS & Path (Node.js)",
-			];
-			new Chart(document.getElementById("categoryDemandChart"), {
-				type: "bar",
-				data: {
-					labels: categoryLabels.map(l => wrapLabel(l)),
-					datasets: [
-						{
-							label: "Developer Importance Rating",
-							data: [90, 88, 85, 75, 70, 68, 65],
-							backgroundColor: [
-								vibrantPalette.teal,
-								vibrantPalette.lightTeal,
-								vibrantPalette.yellow,
-								vibrantPalette.coral,
-								vibrantPalette.lightYellow,
-								"#a0aec0",
-								"#718096",
-							],
-							borderRadius: 4,
-						},
-					],
-				},
-				options: {
-					indexAxis: "y",
-					responsive: true,
-					maintainAspectRatio: false,
-					plugins: {
-						legend: { display: false },
-						tooltip: sharedTooltipConfig,
-					},
-					scales: {
-						x: {
-							beginAtZero: true,
-							title: {
-								display: true,
-								text: "Importance Score",
-								font: chartFont,
-							},
-							ticks: { font: chartFont },
-						},
-						y: { ticks: { font: chartFont } },
-					},
-				},
-			});
+                    <div class="relative mb-12">
+                        <div class="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full flex items-center justify-center text-3xl font-bold shadow-md" style="background-color: var(--accent-color-blue); color: var(--button-text-color);">1</div>
+                        <div class="ml-auto md:ml-0 md:w-1/2 md:pl-16 text-center md:text-left">
+                            <h4 class="font-bold text-xl mt-20 md:mt-0 text-gray-800 dark:text-white">Purity & Immutability</h4>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm mt-2">Design functions to be pure, avoiding side effects and returning new data structures.</p>
+                        </div>
+                    </div>
 
-			new Chart(document.getElementById("topFunctionsChart"), {
-				type: "doughnut",
-				data: {
-					labels: [
-						"debounce/throttle",
-						"deepClone",
-						"isEmpty",
-						"get (nested prop)",
-						"fetchJSON wrapper",
-					],
-					datasets: [
-						{
-							data: [30, 25, 20, 15, 10],
-							backgroundColor: [
-								vibrantPalette.coral,
-								vibrantPalette.yellow,
-								vibrantPalette.teal,
-								vibrantPalette.lightTeal,
-								vibrantPalette.lightYellow,
-							],
-							borderColor: "#F8F9FA",
-							borderWidth: 4,
-							hoverOffset: 8,
-						},
-					],
-				},
-				options: {
-					responsive: true,
-					maintainAspectRatio: false,
-					cutout: "60%",
-					plugins: {
-						legend: {
-							position: "bottom",
-							labels: { font: chartFont, padding: 15 },
-						},
-						tooltip: sharedTooltipConfig,
-					},
-				},
-			});
-		</script>
-	</body>
+                    <div class="relative mb-12">
+                        <div class="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full flex items-center justify-center text-3xl font-bold shadow-md" style="background-color:var(--button-color); color: var(--button-text-color);">2</div>
+                        <div class="w-full md:w-1/2 md:ml-auto md:pl-16 md:text-right text-center">
+                            <h4 class="font-bold text-xl mt-20 md:mt-0 text-gray-800 dark:text-white">Clear Documentation</h4>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm mt-2">Write comprehensive JSDocs with descriptions, types, and examples.</p>
+                        </div>
+                    </div>
+
+                    <div class="relative mb-12">
+                        <div class="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full flex items-center justify-center text-3xl font-bold shadow-md" style="background-color: var(--heading-color-2); color: white;">3</div>
+                         <div class="ml-auto md:ml-0 md:w-1/2 md:pl-16 text-center md:text-left">
+                            <h4 class="font-bold text-xl mt-20 md:mt-0 text-gray-800 dark:text-white">Robust Error Handling</h4>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm mt-2">Throw errors for failures and return predictable values for empty states.</p>
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <div class="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full flex items-center justify-center text-3xl font-bold shadow-md" style="background-color: var(--heading-color-1); color: white;">4</div>
+                        <div class="w-full md:w-1/2 md:ml-auto md:pl-16 md:text-right text-center">
+                            <h4 class="font-bold text-xl mt-20 md:mt-0 text-gray-800 dark:text-white">Thorough Testing</h4>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm mt-2">Implement unit tests for common use cases and edge cases to ensure reliability.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="text-center mt-12 md:mt-20 py-8 border-t" style="border-color: var(--border-color);">
+            <p class="text-gray-600 dark:text-gray-400">The shift towards lean, vanilla JS utilities is clear. By focusing on pure, well-documented, and environment-specific helpers, developers can build faster, more maintainable applications.</p>
+            <p class="text-sm text-gray-500 dark:text-gray-500 mt-4">Infographic generated based on the "Crafting High-Impact Vanilla JavaScript Utility Libraries" report.</p>
+        </footer>
+    </div>
+
+    <!-- Explanation Modal -->
+    <div id="explanation-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6 border-b dark:border-gray-700 flex justify-between items-center" style="border-color: var(--border-color);">
+                <h3 id="modal-title" class="text-xl font-bold sr-only">Explanation</h3>
+                <button id="modal-close-btn" class="text-2xl font-bold leading-none p-1" aria-label="Close modal">&times;</button>
+            </div>
+            <div id="modal-content" class="p-6">
+                 <div id="modal-loader" class="flex justify-center items-center py-8">
+                    <div class="loader"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Download Modal -->
+    <div id="download-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="download-modal-title">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6 border-b dark:border-gray-700 flex justify-between items-center" style="border-color: var(--border-color);">
+                <h3 id="download-modal-title" class="text-xl font-bold">Download & Clone</h3>
+                <button id="download-modal-close-btn" class="text-2xl font-bold leading-none p-1" aria-label="Close download modal">&times;</button>
+            </div>
+            <div class="p-6 space-y-6">
+                <div>
+                    <h4 class="font-semibold mb-2 text-gray-800 dark:text-gray-200">Clone with...</h4>
+                    <div class="space-y-2">
+                        <div class="relative flex items-center">
+                            <label for="clone-https" class="sr-only">HTTPS Clone URL</label>
+                            <input readonly id="clone-https" value="https://github.com/dylarcher/js.helper-utils.git" class="w-full bg-gray-100 dark:bg-gray-700 p-2 rounded-l-md border border-r-0 border-gray-300 dark:border-gray-600 text-sm">
+                            <button class="copy-btn p-2 bg-gray-200 dark:bg-gray-600 rounded-r-md hover:bg-gray-300 dark:hover:bg-gray-500" data-clipboard-target="#clone-https" aria-label="Copy HTTPS clone URL">Copy</button>
+                        </div>
+                        <div class="relative flex items-center">
+                             <label for="clone-ssh" class="sr-only">SSH Clone URL</label>
+                            <input readonly id="clone-ssh" value="git@github.com:dylarcher/js.helper-utils.git" class="w-full bg-gray-100 dark:bg-gray-700 p-2 rounded-l-md border border-r-0 border-gray-300 dark:border-gray-600 text-sm">
+                            <button class="copy-btn p-2 bg-gray-200 dark:bg-gray-600 rounded-r-md hover:bg-gray-300 dark:hover:bg-gray-500" data-clipboard-target="#clone-ssh" aria-label="Copy SSH clone URL">Copy</button>
+                        </div>
+                        <div class="relative flex items-center">
+                            <label for="clone-cli" class="sr-only">GitHub CLI Clone Command</label>
+                            <input readonly id="clone-cli" value="gh repo clone dylarcher/js.helper-utils" class="w-full bg-gray-100 dark:bg-gray-700 p-2 rounded-l-md border border-r-0 border-gray-300 dark:border-gray-600 text-sm">
+                            <button class="copy-btn p-2 bg-gray-200 dark:bg-gray-600 rounded-r-md hover:bg-gray-300 dark:hover:bg-gray-500" data-clipboard-target="#clone-cli" aria-label="Copy GitHub CLI clone command">Copy</button>
+                        </div>
+                    </div>
+                </div>
+                 <div>
+                    <h4 class="font-semibold mb-2 text-gray-800 dark:text-gray-200">Open & Download</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <a href="https://github.com/dylarcher/js.helper-utils/releases" target="_blank" rel="noopener noreferrer" class="block text-center p-3 rounded-md font-semibold text-white hover:bg-opacity-90" style="background-color: var(--heading-color-1);">View Releases</a>
+                        <a href="https://github.com/dylarcher/js.helper-utils/archive/refs/heads/main.zip" target="_blank" rel="noopener noreferrer" class="block text-center p-3 rounded-md font-semibold text-white hover:bg-opacity-90" style="background-color: var(--accent-color-blue);">Download .ZIP</a>
+                        <a href="github-windows://openRepo/https://github.com/dylarcher/js.helper-utils" class="block text-center p-3 rounded-md font-semibold bg-gray-800 text-white hover:bg-black dark:bg-gray-200 dark:text-gray-800 dark:hover:bg-white">Open in Desktop</a>
+                        <a href="https://github.dev/dylarcher/js.helper-utils" target="_blank" rel="noopener noreferrer" class="block text-center p-3 rounded-md font-semibold bg-gray-800 text-white hover:bg-black dark:bg-gray-200 dark:text-gray-800 dark:hover:bg-white">Open in VS Code</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIconLight = document.getElementById('theme-icon-light');
+        const themeIconDark = document.getElementById('theme-icon-dark');
+        const docElement = document.documentElement;
+
+        let lastFocusedElement;
+
+        const applyTheme = (theme) => {
+            if (theme === 'dark') {
+                docElement.classList.add('dark');
+                themeIconDark.classList.remove('hidden');
+                themeIconLight.classList.add('hidden');
+                themeToggle.setAttribute('aria-label', 'Switch to light mode');
+
+            } else {
+                docElement.classList.remove('dark');
+                themeIconLight.classList.remove('hidden');
+                themeIconDark.classList.add('hidden');
+                themeToggle.setAttribute('aria-label', 'Switch to dark mode');
+            }
+        };
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = docElement.classList.contains('dark') ? 'dark' : 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', newTheme);
+            applyTheme(newTheme);
+            updateAllChartsTheme(newTheme);
+        });
+
+        const storedTheme = localStorage.getItem('theme');
+        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        const initialTheme = storedTheme || systemTheme;
+        applyTheme(initialTheme);
+
+        const lightPalette = {
+            teal: '#00796B',
+            blue: '#3B82F6',
+            yellow: '#FBC02D',
+            coral: '#D32F2F',
+            lightYellow: '#FFEE58',
+        };
+        const darkPalette = {
+            teal: '#2DD4BF',
+            blue: '#60A5FA',
+            yellow: '#FBBF24',
+            coral: '#F87171',
+            lightYellow: '#FEF08A',
+        };
+
+        const getChartOptions = (theme) => {
+            const isDark = theme === 'dark';
+            const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+            const textColor = isDark ? '#E5E7EB' : '#374151';
+
+            return {
+                font: { family: 'Inter', size: 12, color: textColor },
+                grid: { color: gridColor, borderColor: gridColor, drawBorder: false },
+                ticks: { color: textColor },
+                title: { color: textColor },
+                legend: { labels: { color: textColor, font: { family: 'Inter', size: 12 } } }
+            };
+        };
+
+        const sharedTooltipConfig = (theme) => ({
+            backgroundColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.9)' : 'rgba(0, 0, 0, 0.8)',
+            titleColor: theme === 'dark' ? '#111827' : '#FFFFFF',
+            bodyColor: theme === 'dark' ? '#111827' : '#FFFFFF',
+            titleFont: { weight: 'bold', size: 14, family: 'Inter' },
+            bodyFont: { size: 12, family: 'Inter' },
+            padding: 10, cornerRadius: 4, displayColors: false,
+            callbacks: {
+                title: function(tooltipItems) {
+                    const item = tooltipItems[0];
+                    let label = item.chart.data.labels[item.dataIndex];
+                    if (Array.isArray(label)) return label.join(' ');
+                    return label;
+                }
+            }
+        });
+
+        const wrapLabel = (label, maxLength = 16) => {
+            if (label.length <= maxLength) return label;
+            const words = label.split(' ');
+            const lines = [];
+            let currentLine = '';
+            for (const word of words) {
+                if ((currentLine + ' ' + word).trim().length > maxLength) {
+                    lines.push(currentLine.trim());
+                    currentLine = word;
+                } else {
+                    currentLine = (currentLine + ' ' + word).trim();
+                }
+            }
+            if (currentLine) lines.push(currentLine.trim());
+            return lines;
+        };
+
+        let charts = [];
+
+        function createCharts(theme) {
+            const chartOptions = getChartOptions(theme);
+            const palette = theme === 'dark' ? darkPalette : lightPalette;
+
+            const vanillaTrendChart = new Chart(document.getElementById('vanillaTrendChart'), {
+                type: 'line',
+                data: {
+                    labels: ['2018', '2020', '2022', '2024'],
+                    datasets: [{
+                        label: 'Vanilla JS / Modern Frameworks',
+                        data: [45, 65, 85, 95],
+                        borderColor: palette.teal, backgroundColor: 'rgba(0, 166, 166, 0.1)', fill: true, tension: 0.4, borderWidth: 3
+                    }, {
+                        label: 'jQuery Dependency',
+                        data: [80, 50, 25, 15],
+                        borderColor: palette.coral, backgroundColor: 'rgba(242, 95, 92, 0.1)', fill: true, tension: 0.4, borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { ...chartOptions.legend, position: 'bottom' }, tooltip: sharedTooltipConfig(theme) },
+                    scales: {
+                        y: { grid: chartOptions.grid, ticks: chartOptions.ticks, title: { ...chartOptions.title, display: true, text: 'Usage Share (%)' }},
+                        x: { grid: chartOptions.grid, ticks: chartOptions.ticks }
+                    }
+                }
+            });
+
+            const categoryLabels = ['Object Manipulation', 'Array Manipulation', 'Asynchronous Helpers', 'DOM Utilities', 'String Utilities', 'Type Checking', 'FS & Path (Node.js)'];
+            const categoryDemandChart = new Chart(document.getElementById('categoryDemandChart'), {
+                type: 'bar',
+                data: {
+                    labels: categoryLabels.map(l => wrapLabel(l)),
+                    datasets: [{
+                        label: 'Developer Importance Rating',
+                        data: [90, 88, 85, 75, 70, 68, 65],
+                        backgroundColor: [palette.teal, palette.blue, palette.yellow, palette.coral, palette.lightYellow, '#a0aec0', '#718096'],
+                        borderRadius: 4,
+                    }]
+                },
+                options: {
+                    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: sharedTooltipConfig(theme) },
+                    scales: {
+                        x: { grid: chartOptions.grid, ticks: chartOptions.ticks, title: { ...chartOptions.title, display: true, text: 'Importance Score' } },
+                        y: { grid: { drawOnChartArea: false }, ticks: chartOptions.ticks }
+                    }
+                }
+            });
+
+            const topFunctionsChart = new Chart(document.getElementById('topFunctionsChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['debounce/throttle', 'deepClone', 'isEmpty', 'get (nested prop)', 'fetchJSON wrapper'],
+                    datasets: [{
+                        data: [30, 25, 20, 15, 10],
+                        backgroundColor: [palette.coral, palette.yellow, palette.teal, palette.blue, palette.lightYellow],
+                        borderColor: theme === 'dark' ? '#1F2937' : '#F8F9FA',
+                        borderWidth: 4, hoverOffset: 8
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false, cutout: '60%',
+                    plugins: { legend: { ...chartOptions.legend, position: 'bottom', labels: { ...chartOptions.legend.labels, padding: 15 }}, tooltip: sharedTooltipConfig(theme) }
+                }
+            });
+
+            charts.push(vanillaTrendChart, categoryDemandChart, topFunctionsChart);
+        }
+
+        function updateAllChartsTheme(theme) {
+             const chartOptions = getChartOptions(theme);
+             const palette = theme === 'dark' ? darkPalette : lightPalette;
+             charts.forEach(chart => {
+                chart.options.plugins.tooltip = sharedTooltipConfig(theme);
+                chart.data.datasets.forEach(dataset => {
+                    if (dataset.borderColor && dataset.label && (dataset.label.includes('Vanilla') || dataset.label.includes('jQuery'))) {
+                       dataset.borderColor = dataset.label.includes('Vanilla') ? palette.teal : palette.coral;
+                    }
+                    if(chart.config.type === 'bar') dataset.backgroundColor = [palette.teal, palette.blue, palette.yellow, palette.coral, palette.lightYellow, '#a0aec0', '#718096'];
+                    if(chart.config.type === 'doughnut') dataset.backgroundColor = [palette.coral, palette.yellow, palette.teal, palette.blue, palette.lightYellow];
+                });
+
+                if (chart.options.scales.x) {
+                    chart.options.scales.x.grid = chartOptions.grid; chart.options.scales.x.ticks.color = chartOptions.ticks.color;
+                    if(chart.options.scales.x.title) chart.options.scales.x.title.color = chartOptions.title.color;
+                }
+                if (chart.options.scales.y) {
+                    chart.options.scales.y.grid = chartOptions.grid; chart.options.scales.y.ticks.color = chartOptions.ticks.color;
+                    if(chart.options.scales.y.title) chart.options.scales.y.title.color = chartOptions.title.color;
+                }
+                 if(chart.config.type === 'doughnut') { chart.data.datasets[0].borderColor = theme === 'dark' ? '#1F2937' : '#F8F9FA'; }
+                chart.options.plugins.legend.labels.color = chartOptions.legend.labels.color;
+                chart.update();
+            });
+        }
+
+        createCharts(initialTheme);
+
+        // Modals & Dynamic Content
+        const explanationModal = document.getElementById('explanation-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalContent = document.getElementById('modal-content');
+        const modalLoader = document.getElementById('modal-loader');
+        const modalCloseBtn = document.getElementById('modal-close-btn');
+        const utilityCollections = document.getElementById('utility-collections');
+
+        const downloadBtn = document.getElementById('download-btn');
+        const downloadModal = document.getElementById('download-modal');
+        const downloadModalCloseBtn = document.getElementById('download-modal-close-btn');
+
+        const generatorPrompt = document.getElementById('generator-prompt');
+        const generateBtn = document.getElementById('generate-btn');
+        const generatorResult = document.getElementById('generator-result');
+        const generatorLoader = document.getElementById('generator-loader');
+        const createIssueBtn = document.getElementById('create-issue-btn');
+
+        const browserUtilsList = document.getElementById('browser-utils-list');
+        const systemUtilsList = document.getElementById('system-utils-list');
+
+        const browserUtils = ['addClass.js', 'copyToClipboardAsync.js', 'createElement.js', 'debounce.js', 'fetchJSON.js', 'getCookie.js', 'getLocalStorageJSON.js', 'hasClass.js', 'once.js', 'onDelegate.js', 'parseQueryParams.js', 'removeClass.js', 'throttle.js', 'toggleClass.js', 'uuid.js'];
+        const systemUtils = ['createDirectory.js', 'decrypt.js', 'encrypt.js', 'env.js', 'execAsync.js', 'fileExists.js', 'generateHash.js', 'isDirectory.js', 'joinPaths.js', 'readFileAsync.js', 'resolvePath.js', 'writeFileAsync.js'];
+
+        const createUtilityLink = (fileName, type) => {
+            const name = fileName.replace('.js', '');
+            const repoPath = type === 'browser' ? 'browser' : 'system';
+            const url = `https://github.com/dylarcher/js.helper-utils/blob/main/src/${repoPath}/${fileName}`;
+            const dataName = type === 'system' ? `${name} (Node.js)` : name;
+
+            return `
+                <div class="utility-item">
+                    <a href="${url}" target="_blank" rel="noopener noreferrer" class="hover:underline focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white rounded">${name}</a>
+                    <button class="explain-btn" data-utility-name="${dataName}" aria-label="Explain ${name}">✨</button>
+                </div>
+            `;
+        };
+
+        browserUtilsList.innerHTML = browserUtils.map(u => createUtilityLink(u, 'browser')).join('');
+        systemUtilsList.innerHTML = systemUtils.map(u => createUtilityLink(u, 'system')).join('');
+
+        const callGeminiAPI = async (prompt) => {
+            const apiKey = "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+            const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!response.ok) throw new Error(`API error: ${response.statusText}`);
+                const result = await response.json();
+                if (result.candidates?.[0]?.content?.parts?.[0]?.text) {
+                    return result.candidates[0].content.parts[0].text;
+                } else {
+                    return "Sorry, I couldn't generate a response. The model's output was empty.";
+                }
+            } catch (error) {
+                console.error("Gemini API call failed:", error);
+                return `An error occurred while contacting the AI model: ${error.message}. Please check the console for details.`;
+            }
+        };
+
+        const setupModal = (modal, openBtn, closeBtn) => {
+            const open = () => {
+                lastFocusedElement = document.activeElement;
+                modal.classList.replace('hidden', 'flex');
+                closeBtn.focus();
+            };
+            const close = () => {
+                modal.classList.replace('flex', 'hidden');
+                if(lastFocusedElement) lastFocusedElement.focus();
+            };
+
+            openBtn.addEventListener('click', open);
+            closeBtn.addEventListener('click', close);
+            modal.addEventListener('click', e => e.target === modal && close());
+            modal.addEventListener('keydown', e => {
+                if (e.key === 'Escape') close();
+                if (e.key === 'Tab') {
+                    const focusable = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+                    const first = focusable[0];
+                    const last = focusable[focusable.length - 1];
+                    if (e.shiftKey) {
+                        if (document.activeElement === first) { last.focus(); e.preventDefault(); }
+                    } else {
+                        if (document.activeElement === last) { first.focus(); e.preventDefault(); }
+                    }
+                }
+            });
+            return { open, close };
+        };
+
+        const { open: openExplanationModal } = setupModal(explanationModal, utilityCollections, modalCloseBtn);
+        setupModal(downloadModal, downloadBtn, downloadModalCloseBtn);
+
+        utilityCollections.addEventListener('click', async (e) => {
+            const explainBtn = e.target.closest('.explain-btn');
+            if (explainBtn) {
+                const utilityName = explainBtn.dataset.utilityName;
+                modalTitle.textContent = utilityName;
+                modalContent.innerHTML = '';
+                modalContent.appendChild(modalLoader);
+                modalLoader.style.display = 'flex';
+                openExplanationModal();
+
+                const prompt = `As an expert developer providing documentation, explain the JavaScript utility function named '${utilityName}'.
+                1. Start with a clear, concise one-paragraph summary of what it does.
+                2. Provide a complete, modern vanilla JavaScript code example for the function itself. Include JSDoc comments.
+                3. Provide a simple, clear example of how to use the function.
+                Format the entire response in clean, semantic HTML using only p, h4, and pre > code tags. Do not include html, head, or body tags. The code blocks should be nicely formatted.`;
+
+                const explanation = await callGeminiAPI(prompt);
+                modalLoader.style.display = 'none';
+                modalContent.innerHTML = explanation;
+            }
+        });
+
+        generateBtn.addEventListener('click', async () => {
+            createIssueBtn.classList.add('hidden');
+            const description = generatorPrompt.value.trim();
+            if (!description) {
+                generatorResult.textContent = 'Please enter a description for the utility you want to generate.';
+                return;
+            }
+
+            generatorResult.textContent = '';
+            generatorLoader.style.display = 'flex';
+            generateBtn.disabled = true;
+            generateBtn.classList.add('opacity-50');
+
+            const prompt = `Generate a complete, single, pure vanilla JavaScript utility function based on this description: "${description}".
+            - The function must have no external dependencies.
+            - It must include detailed JSDoc comments explaining its purpose, parameters (with types), and return value (with type).
+            - The function name should be descriptive and in camelCase.
+            - Provide only the JavaScript code for the function, wrapped in markdown format (\`\`\`javascript). Do not add any extra explanations outside of the code block.`;
+
+            let generatedCode = await callGeminiAPI(prompt);
+            generatedCode = generatedCode.replace(/```javascript/g, '').replace(/```/g, '').trim();
+
+            generatorLoader.style.display = 'none';
+            generatorResult.textContent = generatedCode;
+            generateBtn.disabled = false;
+            generateBtn.classList.remove('opacity-50');
+
+            if (generatedCode && !generatedCode.startsWith('An error occurred')) {
+                 createIssueBtn.dataset.prompt = description;
+                 createIssueBtn.dataset.code = generatedCode;
+                 createIssueBtn.classList.remove('hidden');
+            }
+        });
+
+        createIssueBtn.addEventListener('click', () => {
+            const userPrompt = createIssueBtn.dataset.prompt;
+            const generatedCode = createIssueBtn.dataset.code;
+            if (!userPrompt || !generatedCode) return;
+            const title = encodeURIComponent(`[FEAT] New Utility from AI Generator`);
+            const descriptionParam = encodeURIComponent(`A user requested a new utility function with the following prompt:\n\n> ${userPrompt}`);
+            const solutionParam = encodeURIComponent(`The AI assistant generated the following code as a proposed solution:\n\n\`\`\`javascript\n${generatedCode}\n\`\`\``);
+            const issueUrl = `https://github.com/dylarcher/js.helper-utils/issues/new?template=feature_request.yml&title=${title}&description=${descriptionParam}&solution=${solutionParam}`;
+            window.open(issueUrl, '_blank');
+        });
+
+        document.querySelectorAll('.copy-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const target = document.querySelector(button.dataset.clipboardTarget);
+                const originalText = button.textContent;
+
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(target.value)
+                    .then(() => {
+                        button.textContent = 'Copied!';
+                        setTimeout(() => button.textContent = originalText, 2000);
+                    });
+                } else {
+                    // Fallback for insecure contexts
+                    target.select();
+                    document.execCommand('copy');
+                    button.textContent = 'Copied!';
+                    setTimeout(() => button.textContent = originalText, 2000);
+                }
+            });
+        });
+    </script>
+</body>
 </html>

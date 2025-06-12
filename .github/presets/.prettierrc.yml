@@ -1,0 +1,26 @@
+---
+arrowParens: avoid
+bracketSameLine: true
+bracketSpacing: true
+embeddedLanguageFormatting: auto
+endOfLine: lf
+htmlWhitespaceSensitivity: css
+insertPragma: false
+jsxSingleQuote: false
+overrides:
+  - files: LICENSE
+    options:
+      parser: markdown
+# pluginSearchDirs: []
+# plugins: []
+printWidth: 80
+proseWrap: always
+quoteProps: as-needed
+requirePragma: false
+semi: true
+singleAttributePerLine: true
+singleQuote: false
+tabWidth: 2
+trailingComma: all
+useTabs: true
+vueIndentScriptAndStyle: false

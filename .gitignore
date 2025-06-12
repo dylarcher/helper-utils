@@ -1,0 +1,4 @@
+.DS_Store
+.node-version
+dist
+node_modules
