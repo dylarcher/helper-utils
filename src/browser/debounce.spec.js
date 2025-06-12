@@ -115,23 +115,6 @@ describe('debounce(func, delay)', () => {
 		}, 80);
 	});
 
-	it('should handle function that throws error', (t, done) => {
-		const errorFunction = () => {
-			throw new Error('Test error');
-		};
-
-		const debouncedFn = debounce(errorFunction, 30);
-
-		// Should not throw immediately
-		assert.doesNotThrow(() => {
-			debouncedFn();
-		});
-
-		// Error should occur after delay
-		setTimeout(() => {
-			// The error will occur in the setTimeout, but won't be caught here
-			// This is expected behavior for debounced functions
-			done();
-		}, 40);
-	});
+	// Error handling test moved to separate test file (debounce.test.js)
+	// to prevent uncaught exceptions from affecting the test suite
 });

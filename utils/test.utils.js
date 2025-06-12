@@ -458,6 +458,7 @@ export function setupBrowserMocks() {
 	mockGlobal('history', mockWindow.history);
 	mockGlobal('HTMLElement', class HTMLElement {});
 	mockGlobal('Element', class Element {});
+	mockGlobal('Node', class Node {});
 	mockGlobal(
 		'Event',
 		class Event {

@@ -15,9 +15,15 @@ export function decrypt(encryptedTextWithIv, key) {
 			'Invalid encrypted text format. Expected ivHex:encryptedHex',
 		);
 	}
-	const iv = Buffer.from(ivHex, 'hex');
-	const decipher = _crypto.createDecipheriv(ALGORITHM, key, iv);
-	let decrypted = decipher.update(encryptedText, 'hex', 'utf8');
-	decrypted += decipher.final('utf8');
-	return decrypted;
+	
+	try {
+		const iv = Buffer.from(ivHex, 'hex');
+		const decipher = _crypto.createDecipheriv(ALGORITHM, key, iv);
+		let decrypted = decipher.update(encryptedText, 'hex', 'utf8');
+		decrypted += decipher.final('utf8');
+		return decrypted;
+	} catch (error) {
+		// Rethrow any crypto errors, which would include wrong key errors
+		throw new Error(`Decryption failed: ${error.message}`);
+	}
 }

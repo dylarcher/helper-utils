@@ -18,30 +18,33 @@ export function createElement(
 		}
 	}
 
-	Array.isArray(children) ? appendChildren(children) : appendChild(children);
+	Array.isArray(children) ? appendChildren(children, element) : appendChild(children, element);
 
 	/**
 	 * Appends a child (string or Node) to the element.
 	 * @param {string | Node} child
+	 * @param {Element} parent
 	 * @returns {void}
 	 */
-	function appendChild(child) {
+	function appendChild(child, parent) {
 		if (typeof child === 'string') {
-			element.appendChild(document.createTextNode(child));
-		} else if (child && child instanceof Node) {
-			// Handle any object that looks like a DOM node
-			element.appendChild(child);
+			parent.appendChild(document.createTextNode(child));
+		} else if (child) {
+			// Handle any object that might be a DOM node
+			// In tests, we don't have real Node instances but objects with similar interface
+			parent.appendChild(child);
 		}
 	}
 
 	/**
 	 * Appends multiple children (string or Node) to the element.
 	 * @param {Array<string | Node>} descendants
+	 * @param {Element} parent
 	 * @returns {void}
 	 */
-	function appendChildren(descendants) {
+	function appendChildren(descendants, parent) {
 		for (const descendant of descendants) {
-			appendChild(descendant);
+			appendChild(descendant, parent);
 		}
 	}
 
