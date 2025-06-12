@@ -7,7 +7,7 @@ export async function copyToClipboardAsync(text) {
 	if (!navigator.clipboard) {
 		return Promise.reject(
 			new Error(
-				"Clipboard API not available. Use a fallback or ensure secure context (HTTPS).",
+				'Clipboard API not available. Use a fallback or ensure secure context (HTTPS).',
 			),
 		);
 	}

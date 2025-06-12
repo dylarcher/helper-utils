@@ -1,4 +1,4 @@
-import path from "node:path";
+import path from 'node:path';
 
 /**
  * Resolves a sequence of paths or path segments into an absolute path.

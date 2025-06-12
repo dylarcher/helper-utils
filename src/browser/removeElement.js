@@ -8,7 +8,7 @@ export function removeElement(element) {
 	}
 
 	try {
-		if (typeof element.parentNode.removeChild === "function") {
+		if (typeof element.parentNode.removeChild === 'function') {
 			element.parentNode.removeChild(element);
 		}
 	} catch (error) {

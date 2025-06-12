@@ -4,19 +4,19 @@
  * @returns {string|null} The cookie value, or null if not found.
  */
 export function getCookie(alias) {
-	if (typeof document === "undefined" || !document.cookie) {
+	if (typeof document === 'undefined' || !document.cookie) {
 		return null;
 	}
 
 	const nameEQ = `${alias}=`;
-	const ca = document.cookie.split(";");
+	const ca = document.cookie.split(';');
 	for (let i = 0; i < ca.length; i++) {
 		const c = ca[i].trimStart();
 		// Handle spaces around equals sign
-		if (c.includes("=")) {
-			const parts = c.split("=");
+		if (c.includes('=')) {
+			const parts = c.split('=');
 			const cookieName = parts[0].trim();
-			const cookieValue = parts.slice(1).join("=").trim();
+			const cookieValue = parts.slice(1).join('=').trim();
 			if (cookieName === alias) {
 				return cookieValue;
 			}

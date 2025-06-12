@@ -7,8 +7,8 @@
 export function getStyle(element, pseudoElt) {
 	if (
 		!element ||
-		typeof window === "undefined" ||
-		typeof window.getComputedStyle !== "function"
+		typeof window === 'undefined' ||
+		typeof window.getComputedStyle !== 'function'
 	) {
 		return null;
 	}

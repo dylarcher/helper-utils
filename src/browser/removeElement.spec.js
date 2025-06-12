@@ -1,10 +1,10 @@
-import { describe, it, beforeEach } from "node:test";
-import assert from "node:assert/strict";
-import { removeElement } from "./removeElement.js";
+import { describe, it, beforeEach } from 'node:test';
+import assert from 'node:assert/strict';
+import { removeElement } from './removeElement.js';
 
 // Mock Element and Node classes for testing
 class MockElement {
-	constructor(tagName, id = "") {
+	constructor(tagName, id = '') {
 		this.tagName = tagName.toLowerCase();
 		this.id = id;
 		this.parentNode = null;
@@ -30,17 +30,17 @@ class MockElement {
 	}
 }
 
-describe("removeElement(element)", () => {
+describe('removeElement(element)', () => {
 	let parentElement;
 	let childElement;
 
 	beforeEach(() => {
-		parentElement = new MockElement("div", "parent");
-		childElement = new MockElement("span", "child");
+		parentElement = new MockElement('div', 'parent');
+		childElement = new MockElement('span', 'child');
 		parentElement.appendChild(childElement);
 	});
 
-	it("should remove element from its parent", () => {
+	it('should remove element from its parent', () => {
 		assert.ok(parentElement.contains(childElement));
 		assert.strictEqual(childElement.parentNode, parentElement);
 
@@ -50,28 +50,28 @@ describe("removeElement(element)", () => {
 		assert.strictEqual(childElement.parentNode, null);
 	});
 
-	it("should not throw for null element", () => {
+	it('should not throw for null element', () => {
 		assert.doesNotThrow(() => {
 			removeElement(null);
 		});
 	});
 
-	it("should not throw for undefined element", () => {
+	it('should not throw for undefined element', () => {
 		assert.doesNotThrow(() => {
 			removeElement(undefined);
 		});
 	});
 
-	it("should not throw for element without parentNode", () => {
-		const orphanElement = new MockElement("p", "orphan");
+	it('should not throw for element without parentNode', () => {
+		const orphanElement = new MockElement('p', 'orphan');
 
 		assert.doesNotThrow(() => {
 			removeElement(orphanElement);
 		});
 	});
 
-	it("should not throw for element with null parentNode", () => {
-		const elementWithNullParent = new MockElement("div");
+	it('should not throw for element with null parentNode', () => {
+		const elementWithNullParent = new MockElement('div');
 		elementWithNullParent.parentNode = null;
 
 		assert.doesNotThrow(() => {
@@ -79,7 +79,7 @@ describe("removeElement(element)", () => {
 		});
 	});
 
-	it("should handle element whose parent lacks removeChild method", () => {
+	it('should handle element whose parent lacks removeChild method', () => {
 		const brokenParent = {};
 		childElement.parentNode = brokenParent;
 
@@ -88,10 +88,10 @@ describe("removeElement(element)", () => {
 		});
 	});
 
-	it("should handle nested element removal", () => {
-		const grandParent = new MockElement("div", "grandparent");
-		const parent = new MockElement("div", "parent");
-		const child = new MockElement("span", "child");
+	it('should handle nested element removal', () => {
+		const grandParent = new MockElement('div', 'grandparent');
+		const parent = new MockElement('div', 'parent');
+		const child = new MockElement('span', 'child');
 
 		grandParent.appendChild(parent);
 		parent.appendChild(child);
@@ -107,10 +107,10 @@ describe("removeElement(element)", () => {
 		assert.ok(parent.contains(child));
 	});
 
-	it("should handle multiple children removal", () => {
-		const child1 = new MockElement("span", "child1");
-		const child2 = new MockElement("span", "child2");
-		const child3 = new MockElement("span", "child3");
+	it('should handle multiple children removal', () => {
+		const child1 = new MockElement('span', 'child1');
+		const child2 = new MockElement('span', 'child2');
+		const child3 = new MockElement('span', 'child3');
 
 		parentElement.appendChild(child1);
 		parentElement.appendChild(child2);
@@ -127,7 +127,7 @@ describe("removeElement(element)", () => {
 		assert.ok(!parentElement.contains(child3));
 	});
 
-	it("should handle element already removed", () => {
+	it('should handle element already removed', () => {
 		removeElement(childElement);
 
 		// Try to remove again
@@ -138,13 +138,13 @@ describe("removeElement(element)", () => {
 		assert.strictEqual(childElement.parentNode, null);
 	});
 
-	it("should work with different element types", () => {
+	it('should work with different element types', () => {
 		const elements = [
-			new MockElement("div", "test-div"),
-			new MockElement("span", "test-span"),
-			new MockElement("p", "test-p"),
-			new MockElement("button", "test-button"),
-			new MockElement("input", "test-input"),
+			new MockElement('div', 'test-div'),
+			new MockElement('span', 'test-span'),
+			new MockElement('p', 'test-p'),
+			new MockElement('button', 'test-button'),
+			new MockElement('input', 'test-input'),
 		];
 
 		elements.forEach((element) => {
@@ -160,7 +160,7 @@ describe("removeElement(element)", () => {
 		assert.strictEqual(parentElement.children.length, 1); // only original child remains
 	});
 
-	it("should handle parent with custom removeChild implementation", () => {
+	it('should handle parent with custom removeChild implementation', () => {
 		let removeChildCalled = false;
 		const customParent = {
 			removeChild: (child) => {
@@ -170,7 +170,7 @@ describe("removeElement(element)", () => {
 			},
 		};
 
-		const element = new MockElement("div");
+		const element = new MockElement('div');
 		element.parentNode = customParent;
 
 		removeElement(element);
@@ -179,10 +179,10 @@ describe("removeElement(element)", () => {
 		assert.strictEqual(element.parentNode, null);
 	});
 
-	it("should handle removeChild throwing error", () => {
+	it('should handle removeChild throwing error', () => {
 		const errorParent = {
 			removeChild: () => {
-				throw new Error("removeChild failed");
+				throw new Error('removeChild failed');
 			},
 		};
 
@@ -194,10 +194,10 @@ describe("removeElement(element)", () => {
 		});
 	});
 
-	it("should preserve sibling relationships", () => {
-		const sibling1 = new MockElement("div", "sibling1");
-		const sibling2 = new MockElement("div", "sibling2");
-		const sibling3 = new MockElement("div", "sibling3");
+	it('should preserve sibling relationships', () => {
+		const sibling1 = new MockElement('div', 'sibling1');
+		const sibling2 = new MockElement('div', 'sibling2');
+		const sibling3 = new MockElement('div', 'sibling3');
 
 		parentElement.appendChild(sibling1);
 		parentElement.appendChild(sibling2);
@@ -211,7 +211,7 @@ describe("removeElement(element)", () => {
 		assert.strictEqual(parentElement.children.length, 3); // original + sibling1 + sibling3
 	});
 
-	it("should handle element with complex parent structure", () => {
+	it('should handle element with complex parent structure', () => {
 		const complexParent = {
 			children: [],
 			removeChild: function (child) {
@@ -224,7 +224,7 @@ describe("removeElement(element)", () => {
 			},
 		};
 
-		const element = new MockElement("div");
+		const element = new MockElement('div');
 		element.parentNode = complexParent;
 		complexParent.children.push(element);
 
@@ -234,14 +234,14 @@ describe("removeElement(element)", () => {
 		assert.strictEqual(element.parentNode, null);
 	});
 
-	it("should work in DOM-like environment", () => {
+	it('should work in DOM-like environment', () => {
 		// Simulate more realistic DOM behavior
 		const mockDocument = {
 			createElement: (tagName) => new MockElement(tagName),
 		};
 
-		const container = mockDocument.createElement("div");
-		const item = mockDocument.createElement("span");
+		const container = mockDocument.createElement('div');
+		const item = mockDocument.createElement('span');
 
 		container.appendChild(item);
 		assert.ok(container.contains(item));

@@ -1,8 +1,8 @@
-import { describe, it, beforeEach } from "node:test";
-import assert from "node:assert/strict";
-import { debounce } from "./debounce.js";
+import { describe, it, beforeEach } from 'node:test';
+import assert from 'node:assert/strict';
+import { debounce } from './debounce.js';
 
-describe("debounce(func, delay)", () => {
+describe('debounce(func, delay)', () => {
 	let callCount;
 	let lastArgs;
 	let testFunction;
@@ -16,35 +16,35 @@ describe("debounce(func, delay)", () => {
 		};
 	});
 
-	it("should delay function execution", (t, done) => {
+	it('should delay function execution', (t, done) => {
 		const debouncedFn = debounce(testFunction, 50);
 
-		debouncedFn("test");
+		debouncedFn('test');
 		assert.strictEqual(callCount, 0); // Should not be called immediately
 
 		setTimeout(() => {
 			assert.strictEqual(callCount, 1); // Should be called after delay
-			assert.deepStrictEqual(lastArgs, ["test"]);
+			assert.deepStrictEqual(lastArgs, ['test']);
 			done();
 		}, 60);
 	});
 
-	it("should cancel previous calls when called multiple times rapidly", (t, done) => {
+	it('should cancel previous calls when called multiple times rapidly', (t, done) => {
 		const debouncedFn = debounce(testFunction, 50);
 
-		debouncedFn("first");
-		debouncedFn("second");
-		debouncedFn("third");
+		debouncedFn('first');
+		debouncedFn('second');
+		debouncedFn('third');
 
 		setTimeout(() => {
 			assert.strictEqual(callCount, 1); // Should only be called once
-			assert.deepStrictEqual(lastArgs, ["third"]); // With the last arguments
+			assert.deepStrictEqual(lastArgs, ['third']); // With the last arguments
 			done();
 		}, 60);
 	});
 
-	it("should preserve function context (this)", (t, done) => {
-		const context = { value: "test-context" };
+	it('should preserve function context (this)', (t, done) => {
+		const context = { value: 'test-context' };
 		let receivedContext;
 
 		const contextFunction = function (...args) {
@@ -53,55 +53,55 @@ describe("debounce(func, delay)", () => {
 		};
 
 		const debouncedFn = debounce(contextFunction, 30);
-		debouncedFn.call(context, "arg1", "arg2");
+		debouncedFn.call(context, 'arg1', 'arg2');
 
 		setTimeout(() => {
 			assert.strictEqual(receivedContext, context);
-			assert.deepStrictEqual(lastArgs, ["arg1", "arg2"]);
+			assert.deepStrictEqual(lastArgs, ['arg1', 'arg2']);
 			done();
 		}, 40);
 	});
 
-	it("should handle multiple arguments correctly", (t, done) => {
+	it('should handle multiple arguments correctly', (t, done) => {
 		const debouncedFn = debounce(testFunction, 30);
 
-		debouncedFn("arg1", "arg2", "arg3", 123, { key: "value" });
+		debouncedFn('arg1', 'arg2', 'arg3', 123, { key: 'value' });
 
 		setTimeout(() => {
 			assert.strictEqual(callCount, 1);
 			assert.deepStrictEqual(lastArgs, [
-				"arg1",
-				"arg2",
-				"arg3",
+				'arg1',
+				'arg2',
+				'arg3',
 				123,
-				{ key: "value" },
+				{ key: 'value' },
 			]);
 			done();
 		}, 40);
 	});
 
-	it("should work with zero delay", (t, done) => {
+	it('should work with zero delay', (t, done) => {
 		const debouncedFn = debounce(testFunction, 0);
 
-		debouncedFn("test");
+		debouncedFn('test');
 
 		// With 0 delay, should still use setTimeout (next tick)
 		assert.strictEqual(callCount, 0);
 
 		setTimeout(() => {
 			assert.strictEqual(callCount, 1);
-			assert.deepStrictEqual(lastArgs, ["test"]);
+			assert.deepStrictEqual(lastArgs, ['test']);
 			done();
 		}, 1);
 	});
 
-	it("should reset timer on each call", (t, done) => {
+	it('should reset timer on each call', (t, done) => {
 		const debouncedFn = debounce(testFunction, 50);
 
-		debouncedFn("first");
+		debouncedFn('first');
 
 		setTimeout(() => {
-			debouncedFn("second"); // Reset timer
+			debouncedFn('second'); // Reset timer
 		}, 25);
 
 		setTimeout(() => {
@@ -110,14 +110,14 @@ describe("debounce(func, delay)", () => {
 
 		setTimeout(() => {
 			assert.strictEqual(callCount, 1); // Should be called with "second"
-			assert.deepStrictEqual(lastArgs, ["second"]);
+			assert.deepStrictEqual(lastArgs, ['second']);
 			done();
 		}, 80);
 	});
 
-	it("should handle function that throws error", (t, done) => {
+	it('should handle function that throws error', (t, done) => {
 		const errorFunction = () => {
-			throw new Error("Test error");
+			throw new Error('Test error');
 		};
 
 		const debouncedFn = debounce(errorFunction, 30);

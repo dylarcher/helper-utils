@@ -1,5 +1,5 @@
-import * as _crypto from "node:crypto";
-const ALGORITHM = "aes-256-cbc";
+import * as _crypto from 'node:crypto';
+const ALGORITHM = 'aes-256-cbc';
 
 /**
  * Decrypts text encrypted with AES-256-CBC.
@@ -9,15 +9,15 @@ const ALGORITHM = "aes-256-cbc";
  * @returns {string} The decrypted text.
  */
 export function decrypt(encryptedTextWithIv, key) {
-	const [ivHex, encryptedText] = encryptedTextWithIv.split(":");
+	const [ivHex, encryptedText] = encryptedTextWithIv.split(':');
 	if (!ivHex || !encryptedText) {
 		throw new Error(
-			"Invalid encrypted text format. Expected ivHex:encryptedHex",
+			'Invalid encrypted text format. Expected ivHex:encryptedHex',
 		);
 	}
-	const iv = Buffer.from(ivHex, "hex");
+	const iv = Buffer.from(ivHex, 'hex');
 	const decipher = _crypto.createDecipheriv(ALGORITHM, key, iv);
-	let decrypted = decipher.update(encryptedText, "hex", "utf8");
-	decrypted += decipher.final("utf8");
+	let decrypted = decipher.update(encryptedText, 'hex', 'utf8');
+	decrypted += decipher.final('utf8');
 	return decrypted;
 }

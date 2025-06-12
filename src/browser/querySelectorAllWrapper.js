@@ -10,11 +10,11 @@
 export function querySelectorAllWrapper(selector, container) {
 	// Use document as fallback only if it exists and container is not provided
 	const targetContainer =
-		container || (typeof document !== "undefined" ? document : null);
+		container || (typeof document !== 'undefined' ? document : null);
 
 	if (
 		!targetContainer ||
-		typeof targetContainer.querySelectorAll !== "function"
+		typeof targetContainer.querySelectorAll !== 'function'
 	) {
 		return [];
 	}

@@ -1,6 +1,6 @@
-import * as _crypto from "node:crypto";
+import * as _crypto from 'node:crypto';
 
-const ALGORITHM = "aes-256-cbc";
+const ALGORITHM = 'aes-256-cbc';
 
 /**
  * Encrypts text using AES-256-CBC.
@@ -11,8 +11,8 @@ const ALGORITHM = "aes-256-cbc";
  */
 export function encrypt(text, key, iv) {
 	const cipher = _crypto.createCipheriv(ALGORITHM, key, iv);
-	let encrypted = cipher.update(text, "utf8", "hex");
-	encrypted += cipher.final("hex");
+	let encrypted = cipher.update(text, 'utf8', 'hex');
+	encrypted += cipher.final('hex');
 	// Prepend IV for use in decryption
-	return `${iv.toString("hex")}:${encrypted}`;
+	return `${iv.toString('hex')}:${encrypted}`;
 }

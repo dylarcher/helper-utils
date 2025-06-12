@@ -1,6 +1,6 @@
-import { describe, it, beforeEach } from "node:test";
-import assert from "node:assert/strict";
-import { addClass } from "./addClass.js";
+import { describe, it, beforeEach } from 'node:test';
+import assert from 'node:assert/strict';
+import { addClass } from './addClass.js';
 
 // Mock Element class for testing environment
 class MockElement {
@@ -11,7 +11,7 @@ class MockElement {
 		// Define classList.add, classList.contains, and className for compatibility
 		this.classList.add = (...names) =>
 			names.forEach((name) => {
-				if (typeof name === "string" && name.trim() !== "") {
+				if (typeof name === 'string' && name.trim() !== '') {
 					setAdd(name); // Use Set's original add method
 				}
 			});
@@ -20,103 +20,103 @@ class MockElement {
 
 	// Getter to simulate the className property
 	get className() {
-		return Array.from(this.classList).join(" ");
+		return Array.from(this.classList).join(' ');
 	}
 }
 
-describe("addClass(element, ...classNames)", () => {
+describe('addClass(element, ...classNames)', () => {
 	let mockElement;
 
 	beforeEach(() => {
 		mockElement = new MockElement();
 	});
 
-	it("should add a single class to an element", () => {
-		addClass(mockElement, "test-class");
+	it('should add a single class to an element', () => {
+		addClass(mockElement, 'test-class');
 		assert.ok(
-			mockElement.classList.has("test-class"),
-			"Class \"test-class\" should be present",
+			mockElement.classList.has('test-class'),
+			'Class "test-class" should be present',
 		);
-		assert.strictEqual(mockElement.className, "test-class");
+		assert.strictEqual(mockElement.className, 'test-class');
 	});
 
-	it("should add multiple classes to an element", () => {
-		addClass(mockElement, "class1", "class2");
+	it('should add multiple classes to an element', () => {
+		addClass(mockElement, 'class1', 'class2');
 		assert.ok(
-			mockElement.classList.has("class1"),
-			"Class \"class1\" should be present",
+			mockElement.classList.has('class1'),
+			'Class "class1" should be present',
 		);
 		assert.ok(
-			mockElement.classList.has("class2"),
-			"Class \"class2\" should be present",
+			mockElement.classList.has('class2'),
+			'Class "class2" should be present',
 		);
-		assert.strictEqual(mockElement.className, "class1 class2"); // Order might vary with Set, check individual classes
+		assert.strictEqual(mockElement.className, 'class1 class2'); // Order might vary with Set, check individual classes
 	});
 
-	it("should not add duplicate classes", () => {
-		addClass(mockElement, "test-class");
-		addClass(mockElement, "test-class");
+	it('should not add duplicate classes', () => {
+		addClass(mockElement, 'test-class');
+		addClass(mockElement, 'test-class');
 		assert.strictEqual(
 			mockElement.className,
-			"test-class",
-			"Duplicate class should not be added",
+			'test-class',
+			'Duplicate class should not be added',
 		);
 		assert.strictEqual(
 			Array.from(mockElement.classList).length,
 			1,
-			"Class list should contain only one class",
+			'Class list should contain only one class',
 		);
 	});
 
-	it("should filter out falsy class names like null, undefined, and empty strings", () => {
-		addClass(mockElement, "class1", null, "class2", undefined, "", "class3");
-		assert.ok(mockElement.classList.has("class1"));
-		assert.ok(mockElement.classList.has("class2"));
-		assert.ok(mockElement.classList.has("class3"));
+	it('should filter out falsy class names like null, undefined, and empty strings', () => {
+		addClass(mockElement, 'class1', null, 'class2', undefined, '', 'class3');
+		assert.ok(mockElement.classList.has('class1'));
+		assert.ok(mockElement.classList.has('class2'));
+		assert.ok(mockElement.classList.has('class3'));
 		assert.strictEqual(Array.from(mockElement.classList).length, 3);
 		// Check className, order might vary
-		const classes = mockElement.className.split(" ");
-		assert.ok(classes.includes("class1"));
-		assert.ok(classes.includes("class2"));
-		assert.ok(classes.includes("class3"));
+		const classes = mockElement.className.split(' ');
+		assert.ok(classes.includes('class1'));
+		assert.ok(classes.includes('class2'));
+		assert.ok(classes.includes('class3'));
 	});
 
-	it("should not throw an error if the element is null", () => {
+	it('should not throw an error if the element is null', () => {
 		assert.doesNotThrow(() => {
-			addClass(null, "test-class");
+			addClass(null, 'test-class');
 		});
 	});
 
-	it("should not throw an error if the element is undefined", () => {
+	it('should not throw an error if the element is undefined', () => {
 		assert.doesNotThrow(() => {
-			addClass(undefined, "test-class");
+			addClass(undefined, 'test-class');
 		});
 	});
 
-	it("should not throw an error or modify if element has no classList property", () => {
+	it('should not throw an error or modify if element has no classList property', () => {
 		const plainObject = {};
-		addClass(plainObject, "test-class");
+		addClass(plainObject, 'test-class');
 		assert.strictEqual(
 			Object.keys(plainObject).length,
 			0,
-			"Plain object should not be modified",
+			'Plain object should not be modified',
 		);
 	});
 
-	it("should handle adding a class that already exists with other classes", () => {
-		mockElement.classList.add("existing-class");
-		addClass(mockElement, "new-class", "existing-class");
-		assert.ok(mockElement.classList.has("existing-class"));
-		assert.ok(mockElement.classList.has("new-class"));
+	it('should handle adding a class that already exists with other classes', () => {
+		mockElement.classList.add('existing-class');
+		addClass(mockElement, 'new-class', 'existing-class');
+		assert.ok(mockElement.classList.has('existing-class'));
+		assert.ok(mockElement.classList.has('new-class'));
 		assert.strictEqual(Array.from(mockElement.classList).length, 2);
 	});
 
-	it("should handle adding multiple new classes when some already exist", () => {
-		mockElement.classList.add("class1");
-		addClass(mockElement, "class2", "class1", "class3");
-		assert.ok(mockElement.classList.has("class1"));
-		assert.ok(mockElement.classList.has("class2"));
-		assert.ok(mockElement.classList.has("class3"));
+	it('should handle adding multiple new classes when some already exist', () => {
+		mockElement.classList.add('class1');
+		addClass(mockElement, 'class2', 'class1', 'class3');
+		assert.ok(mockElement.classList.has('class1'));
+		assert.ok(mockElement.classList.has('class2'));
+		assert.ok(mockElement.classList.has('class3'));
 		assert.strictEqual(Array.from(mockElement.classList).length, 3);
 	});
 });

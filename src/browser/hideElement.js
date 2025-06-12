@@ -11,11 +11,11 @@ export function hideElement(element) {
 	}
 
 	try {
-		if (typeof element.style.setProperty === "function") {
-			element.style.setProperty("display", "none");
+		if (typeof element.style.setProperty === 'function') {
+			element.style.setProperty('display', 'none');
 		} else {
 			// Fallback for elements without setProperty method
-			element.style.display = "none";
+			element.style.display = 'none';
 		}
 	} catch (error) {
 		// Silently handle errors when setting style properties

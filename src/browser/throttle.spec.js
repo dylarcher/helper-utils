@@ -1,8 +1,8 @@
-import { describe, it, beforeEach } from "node:test";
-import assert from "node:assert/strict";
-import { throttle } from "./throttle.js";
+import { describe, it, beforeEach } from 'node:test';
+import assert from 'node:assert/strict';
+import { throttle } from './throttle.js';
 
-describe("throttle(func, limit)", () => {
+describe('throttle(func, limit)', () => {
 	let callCount;
 	let lastArgs;
 	let testFunction;
@@ -16,36 +16,36 @@ describe("throttle(func, limit)", () => {
 		};
 	});
 
-	it("should call function immediately on first invocation", () => {
+	it('should call function immediately on first invocation', () => {
 		const throttledFn = throttle(testFunction, 100);
 
-		throttledFn("test");
+		throttledFn('test');
 		assert.strictEqual(callCount, 1);
-		assert.deepStrictEqual(lastArgs, ["test"]);
+		assert.deepStrictEqual(lastArgs, ['test']);
 	});
 
-	it("should throttle subsequent calls within limit period", (t, done) => {
+	it('should throttle subsequent calls within limit period', (t, done) => {
 		const throttledFn = throttle(testFunction, 50);
 
-		throttledFn("first");
-		throttledFn("second");
-		throttledFn("third");
+		throttledFn('first');
+		throttledFn('second');
+		throttledFn('third');
 
 		// Should only be called once immediately
 		assert.strictEqual(callCount, 1);
-		assert.deepStrictEqual(lastArgs, ["first"]);
+		assert.deepStrictEqual(lastArgs, ['first']);
 
 		setTimeout(() => {
 			// Should allow next call after limit period
-			throttledFn("fourth");
+			throttledFn('fourth');
 			assert.strictEqual(callCount, 2);
-			assert.deepStrictEqual(lastArgs, ["fourth"]);
+			assert.deepStrictEqual(lastArgs, ['fourth']);
 			done();
 		}, 60);
 	});
 
-	it("should preserve function context (this)", (t, done) => {
-		const context = { value: "test-context" };
+	it('should preserve function context (this)', (t, done) => {
+		const context = { value: 'test-context' };
 		let receivedContext;
 
 		const contextFunction = function (...args) {
@@ -54,72 +54,72 @@ describe("throttle(func, limit)", () => {
 		};
 
 		const throttledFn = throttle(contextFunction, 30);
-		throttledFn.call(context, "arg1", "arg2");
+		throttledFn.call(context, 'arg1', 'arg2');
 
 		assert.strictEqual(receivedContext, context);
-		assert.deepStrictEqual(lastArgs, ["arg1", "arg2"]);
+		assert.deepStrictEqual(lastArgs, ['arg1', 'arg2']);
 
 		setTimeout(() => {
-			throttledFn.call(context, "arg3", "arg4");
+			throttledFn.call(context, 'arg3', 'arg4');
 			assert.strictEqual(receivedContext, context);
-			assert.deepStrictEqual(lastArgs, ["arg3", "arg4"]);
+			assert.deepStrictEqual(lastArgs, ['arg3', 'arg4']);
 			done();
 		}, 40);
 	});
 
-	it("should handle multiple arguments correctly", () => {
+	it('should handle multiple arguments correctly', () => {
 		const throttledFn = throttle(testFunction, 50);
 
-		throttledFn("arg1", "arg2", "arg3", 123, { key: "value" });
+		throttledFn('arg1', 'arg2', 'arg3', 123, { key: 'value' });
 
 		assert.strictEqual(callCount, 1);
 		assert.deepStrictEqual(lastArgs, [
-			"arg1",
-			"arg2",
-			"arg3",
+			'arg1',
+			'arg2',
+			'arg3',
 			123,
-			{ key: "value" },
+			{ key: 'value' },
 		]);
 	});
 
-	it("should work with zero limit", (t, done) => {
+	it('should work with zero limit', (t, done) => {
 		const throttledFn = throttle(testFunction, 0);
 
-		throttledFn("first");
+		throttledFn('first');
 		assert.strictEqual(callCount, 1);
 
 		// With zero limit, each call should execute immediately without throttling
-		throttledFn("second");
+		throttledFn('second');
 		assert.strictEqual(callCount, 2); // Should execute immediately with zero limit
 
 		setTimeout(() => {
-			throttledFn("third");
+			throttledFn('third');
 			assert.strictEqual(callCount, 3);
 			done();
 		}, 10);
 	});
 
-	it("should reset throttle after limit period", (t, done) => {
+	it('should reset throttle after limit period', (t, done) => {
 		const throttledFn = throttle(testFunction, 30);
 
 		// First call - should execute immediately
-		throttledFn("first");
+		throttledFn('first');
 		assert.strictEqual(callCount, 1);
 
 		// Second call - should be throttled
-		throttledFn("second");
+		throttledFn('second');
 		assert.strictEqual(callCount, 1);
 
 		setTimeout(() => {
 			// Third call - should execute after throttle period
-			throttledFn("third");
+			throttledFn('third');
 			assert.strictEqual(callCount, 2);
-			assert.deepStrictEqual(lastArgs, ["third"]);
+			assert.deepStrictEqual(lastArgs, ['third']);
 			done();
 		}, 35);
 	});
 
-	it("should handle rapid successive calls correctly", (t, done) => {
+	it('should handle rapid successive calls correctly', (t, done) => {
 		const throttledFn = throttle(testFunction, 50);
 
 		// Call multiple times rapidly
@@ -129,21 +129,21 @@ describe("throttle(func, limit)", () => {
 
 		// Should only execute the first call
 		assert.strictEqual(callCount, 1);
-		assert.deepStrictEqual(lastArgs, ["call-0"]);
+		assert.deepStrictEqual(lastArgs, ['call-0']);
 
 		setTimeout(() => {
 			// Should be able to call again after throttle period
-			throttledFn("after-throttle");
+			throttledFn('after-throttle');
 			assert.strictEqual(callCount, 2);
-			assert.deepStrictEqual(lastArgs, ["after-throttle"]);
+			assert.deepStrictEqual(lastArgs, ['after-throttle']);
 			done();
 		}, 60);
 	});
 
-	it("should handle function that throws error", () => {
+	it('should handle function that throws error', () => {
 		const errorFunction = () => {
 			callCount++;
-			throw new Error("Test error");
+			throw new Error('Test error');
 		};
 
 		const throttledFn = throttle(errorFunction, 30);
@@ -164,25 +164,25 @@ describe("throttle(func, limit)", () => {
 		assert.strictEqual(callCount, 1);
 	});
 
-	it("should handle different instances independently", (t, done) => {
+	it('should handle different instances independently', (t, done) => {
 		const throttledFn1 = throttle(testFunction, 50);
 		const throttledFn2 = throttle(testFunction, 50);
 
-		throttledFn1("first-fn1");
-		throttledFn2("first-fn2");
+		throttledFn1('first-fn1');
+		throttledFn2('first-fn2');
 
 		// Both should execute immediately
 		assert.strictEqual(callCount, 2);
 
-		throttledFn1("second-fn1");
-		throttledFn2("second-fn2");
+		throttledFn1('second-fn1');
+		throttledFn2('second-fn2');
 
 		// Should still be 2 (both throttled)
 		assert.strictEqual(callCount, 2);
 
 		setTimeout(() => {
-			throttledFn1("third-fn1");
-			throttledFn2("third-fn2");
+			throttledFn1('third-fn1');
+			throttledFn2('third-fn2');
 
 			// Both should execute again
 			assert.strictEqual(callCount, 4);
@@ -190,24 +190,24 @@ describe("throttle(func, limit)", () => {
 		}, 60);
 	});
 
-	it("should work with async functions", (t, done) => {
+	it('should work with async functions', (t, done) => {
 		let asyncCallCount = 0;
 
 		const asyncFunction = async (...args) => {
 			asyncCallCount++;
 			lastArgs = args;
-			return "async-result";
+			return 'async-result';
 		};
 
 		const throttledAsyncFn = throttle(asyncFunction, 30);
 
-		throttledAsyncFn("async-test");
+		throttledAsyncFn('async-test');
 		assert.strictEqual(asyncCallCount, 1);
 
 		setTimeout(() => {
-			throttledAsyncFn("async-test-2");
+			throttledAsyncFn('async-test-2');
 			assert.strictEqual(asyncCallCount, 2);
-			assert.deepStrictEqual(lastArgs, ["async-test-2"]);
+			assert.deepStrictEqual(lastArgs, ['async-test-2']);
 			done();
 		}, 40);
 	});

@@ -1,4 +1,4 @@
-import path from "node:path";
+import path from 'node:path';
 
 /**
  * Gets the extension of a path.
@@ -6,10 +6,10 @@ import path from "node:path";
  * @returns {string} The extension of the path (e.g., '.js').
  */
 export function getExtension(p) {
-	if (!p || typeof p !== "string") {
-		return "";
+	if (!p || typeof p !== 'string') {
+		return '';
 	}
-	
+
 	// Match Node.js behavior exactly for consistent results
 	// Node.js returns the last extension even in paths that end with a separator
 	// This ensures our function returns identical results to path.extname

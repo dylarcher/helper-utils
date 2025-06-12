@@ -1,9 +1,9 @@
-import { describe, it, beforeEach, afterEach } from "node:test";
-import assert from "node:assert/strict";
-import { copyToClipboardAsync } from "./copyToClipboardAsync.js";
-import { setupBrowserMocks, restoreGlobals } from "../../utils/test.utils.js";
+import { describe, it, beforeEach, afterEach } from 'node:test';
+import assert from 'node:assert/strict';
+import { copyToClipboardAsync } from './copyToClipboardAsync.js';
+import { setupBrowserMocks, restoreGlobals } from '../../utils/test.utils.js';
 
-describe("copyToClipboardAsync(text)", () => {
+describe('copyToClipboardAsync(text)', () => {
 	beforeEach(() => {
 		setupBrowserMocks();
 	});
@@ -12,7 +12,7 @@ describe("copyToClipboardAsync(text)", () => {
 		restoreGlobals();
 	});
 
-	it("should copy text to clipboard successfully", async () => {
+	it('should copy text to clipboard successfully', async () => {
 		// Mock navigator.clipboard
 		global.navigator = {
 			clipboard: {
@@ -23,22 +23,22 @@ describe("copyToClipboardAsync(text)", () => {
 			},
 		};
 
-		await assert.doesNotReject(() => copyToClipboardAsync("test text"));
+		await assert.doesNotReject(() => copyToClipboardAsync('test text'));
 	});
 
-	it("should reject if navigator.clipboard is not available", async () => {
+	it('should reject if navigator.clipboard is not available', async () => {
 		// Mock navigator without clipboard
 		global.navigator = {};
 
-		await assert.rejects(() => copyToClipboardAsync("test text"), {
-			name: "Error",
+		await assert.rejects(() => copyToClipboardAsync('test text'), {
+			name: 'Error',
 			message:
-				"Clipboard API not available. Use a fallback or ensure secure context (HTTPS).",
+				'Clipboard API not available. Use a fallback or ensure secure context (HTTPS).',
 		});
 	});
 
-	it("should reject if clipboard.writeText fails", async () => {
-		const testError = new Error("Clipboard write failed");
+	it('should reject if clipboard.writeText fails', async () => {
+		const testError = new Error('Clipboard write failed');
 
 		// Mock navigator.clipboard with failing writeText
 		global.navigator = {
@@ -49,24 +49,24 @@ describe("copyToClipboardAsync(text)", () => {
 			},
 		};
 
-		await assert.rejects(() => copyToClipboardAsync("test text"), testError);
+		await assert.rejects(() => copyToClipboardAsync('test text'), testError);
 	});
 
-	it("should handle empty string", async () => {
+	it('should handle empty string', async () => {
 		global.navigator = {
 			clipboard: {
 				writeText: async (text) => {
-					assert.strictEqual(text, "");
+					assert.strictEqual(text, '');
 					return Promise.resolve();
 				},
 			},
 		};
 
-		await assert.doesNotReject(() => copyToClipboardAsync(""));
+		await assert.doesNotReject(() => copyToClipboardAsync(''));
 	});
 
-	it("should handle special characters", async () => {
-		const specialText = "Hello\nWorld\t🌟";
+	it('should handle special characters', async () => {
+		const specialText = 'Hello\nWorld\t🌟';
 
 		global.navigator = {
 			clipboard: {

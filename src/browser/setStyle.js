@@ -9,13 +9,17 @@ export function setStyle(element, property, value) {
 		return;
 	}
 
-	if (typeof property === "object" && property !== null) {
+	if (typeof property === 'object' && property !== null) {
 		for (const key of Object.keys(property)) {
-			if (key && typeof key === "string") {
+			if (key && typeof key === 'string') {
 				element.style[key] = property[key];
 			}
 		}
-	} else if (typeof property === "string" && property && typeof value !== "undefined") {
+	} else if (
+		typeof property === 'string' &&
+		property &&
+		typeof value !== 'undefined'
+	) {
 		element.style[property] = value;
 	}
 }

@@ -1,4 +1,4 @@
-import * as _crypto from "node:crypto";
+import * as _crypto from 'node:crypto';
 
 /**
  * Generate a hash of a string.
@@ -7,6 +7,6 @@ import * as _crypto from "node:crypto";
  * @param {crypto.BinaryToTextEncoding} [encoding='hex'] - The output encoding ('hex', 'base64', 'latin1').
  * @returns {string} The generated hash.
  */
-export function generateHash(data, algorithm = "sha256", encoding = "hex") {
+export function generateHash(data, algorithm = 'sha256', encoding = 'hex') {
 	return _crypto.createHash(algorithm).update(data).digest(encoding);
 }

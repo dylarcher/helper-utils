@@ -1,6 +1,6 @@
-import { describe, it, beforeEach } from "node:test";
-import assert from "node:assert/strict";
-import { once } from "./once.js";
+import { describe, it, beforeEach } from 'node:test';
+import assert from 'node:assert/strict';
+import { once } from './once.js';
 
 // Mock EventTarget for testing
 class MockEventTarget {
@@ -18,7 +18,7 @@ class MockEventTarget {
 	dispatchEvent(event) {
 		const listeners = this.listeners.get(event.type) || [];
 		const listenersToRemove = [];
-		
+
 		// Execute all listeners first
 		listeners.forEach(({ listener, options }) => {
 			listener.call(this, event);
@@ -27,9 +27,9 @@ class MockEventTarget {
 				listenersToRemove.push(listener);
 			}
 		});
-		
+
 		// Remove once listeners after execution
-		listenersToRemove.forEach(listener => {
+		listenersToRemove.forEach((listener) => {
 			this.removeEventListener(event.type, listener);
 		});
 	}
@@ -43,7 +43,7 @@ class MockEventTarget {
 	}
 }
 
-describe("once(element, eventType, listener, options)", () => {
+describe('once(element, eventType, listener, options)', () => {
 	let mockElement;
 	let callCount;
 	let lastEvent;
@@ -54,126 +54,126 @@ describe("once(element, eventType, listener, options)", () => {
 		lastEvent = null;
 	});
 
-	it("should add event listener with once option", () => {
+	it('should add event listener with once option', () => {
 		const listener = (event) => {
 			callCount++;
 			lastEvent = event;
 		};
 
-		once(mockElement, "click", listener);
+		once(mockElement, 'click', listener);
 
-		const listeners = mockElement.listeners.get("click");
+		const listeners = mockElement.listeners.get('click');
 		assert.strictEqual(listeners.length, 1);
 		assert.strictEqual(listeners[0].listener, listener);
 		assert.strictEqual(listeners[0].options.once, true);
 	});
 
-	it("should fire listener only once", () => {
+	it('should fire listener only once', () => {
 		const listener = () => {
 			callCount++;
 		};
 
-		once(mockElement, "click", listener);
+		once(mockElement, 'click', listener);
 
 		// First click
-		mockElement.dispatchEvent({ type: "click" });
+		mockElement.dispatchEvent({ type: 'click' });
 		assert.strictEqual(callCount, 1);
 
 		// Second click should not fire
-		mockElement.dispatchEvent({ type: "click" });
+		mockElement.dispatchEvent({ type: 'click' });
 		assert.strictEqual(callCount, 1);
 	});
 
-	it("should preserve existing options and add once", () => {
+	it('should preserve existing options and add once', () => {
 		const listener = () => {
 			callCount++;
 		};
 		const customOptions = { passive: true, capture: false };
 
-		once(mockElement, "scroll", listener, customOptions);
+		once(mockElement, 'scroll', listener, customOptions);
 
-		const listeners = mockElement.listeners.get("scroll");
+		const listeners = mockElement.listeners.get('scroll');
 		assert.strictEqual(listeners[0].options.once, true);
 		assert.strictEqual(listeners[0].options.passive, true);
 		assert.strictEqual(listeners[0].options.capture, false);
 	});
 
-	it("should handle boolean options parameter", () => {
+	it('should handle boolean options parameter', () => {
 		const listener = () => {
 			callCount++;
 		};
 
-		once(mockElement, "keydown", listener, true); // capture = true
+		once(mockElement, 'keydown', listener, true); // capture = true
 
-		const listeners = mockElement.listeners.get("keydown");
+		const listeners = mockElement.listeners.get('keydown');
 		assert.strictEqual(listeners[0].options.once, true);
 	});
 
-	it("should handle undefined options", () => {
+	it('should handle undefined options', () => {
 		const listener = () => {
 			callCount++;
 		};
 
-		once(mockElement, "mouseover", listener);
+		once(mockElement, 'mouseover', listener);
 
-		const listeners = mockElement.listeners.get("mouseover");
+		const listeners = mockElement.listeners.get('mouseover');
 		assert.strictEqual(listeners[0].options.once, true);
 	});
 
-	it("should not throw for null element", () => {
+	it('should not throw for null element', () => {
 		const listener = () => {
 			callCount++;
 		};
 
 		assert.doesNotThrow(() => {
-			once(null, "click", listener);
+			once(null, 'click', listener);
 		});
 
 		assert.strictEqual(callCount, 0);
 	});
 
-	it("should not throw for undefined element", () => {
+	it('should not throw for undefined element', () => {
 		const listener = () => {
 			callCount++;
 		};
 
 		assert.doesNotThrow(() => {
-			once(undefined, "click", listener);
+			once(undefined, 'click', listener);
 		});
 
 		assert.strictEqual(callCount, 0);
 	});
 
-	it("should not throw for element without addEventListener", () => {
+	it('should not throw for element without addEventListener', () => {
 		const brokenElement = {};
 		const listener = () => {
 			callCount++;
 		};
 
 		assert.doesNotThrow(() => {
-			once(brokenElement, "click", listener);
+			once(brokenElement, 'click', listener);
 		});
 
 		assert.strictEqual(callCount, 0);
 	});
 
-	it("should pass event object to listener", () => {
+	it('should pass event object to listener', () => {
 		const listener = (event) => {
 			callCount++;
 			lastEvent = event;
 		};
 
-		once(mockElement, "custom", listener);
+		once(mockElement, 'custom', listener);
 
-		const testEvent = { type: "custom", data: "test" };
+		const testEvent = { type: 'custom', data: 'test' };
 		mockElement.dispatchEvent(testEvent);
 
 		assert.strictEqual(callCount, 1);
 		assert.strictEqual(lastEvent, testEvent);
 	});
 
-	it("should work with different event types", () => {
-		const events = ["click", "mouseover", "keydown", "resize", "scroll"];
+	it('should work with different event types', () => {
+		const events = ['click', 'mouseover', 'keydown', 'resize', 'scroll'];
 		const listeners = events.map(() => () => callCount++);
 
 		events.forEach((eventType, index) => {
@@ -195,37 +195,37 @@ describe("once(element, eventType, listener, options)", () => {
 		assert.strictEqual(callCount, events.length);
 	});
 
-	it("should handle multiple listeners on same event", () => {
+	it('should handle multiple listeners on same event', () => {
 		let count1 = 0,
 			count2 = 0;
 		const listener1 = () => count1++;
 		const listener2 = () => count2++;
 
-		once(mockElement, "test", listener1);
-		once(mockElement, "test", listener2);
+		once(mockElement, 'test', listener1);
+		once(mockElement, 'test', listener2);
 
-		mockElement.dispatchEvent({ type: "test" });
+		mockElement.dispatchEvent({ type: 'test' });
 
 		assert.strictEqual(count1, 1);
 		assert.strictEqual(count2, 1);
 
 		// Second trigger should not fire either
-		mockElement.dispatchEvent({ type: "test" });
+		mockElement.dispatchEvent({ type: 'test' });
 
 		assert.strictEqual(count1, 1);
 		assert.strictEqual(count2, 1);
 	});
 
-	it("should preserve listener context", () => {
-		const context = { value: "test-context" };
+	it('should preserve listener context', () => {
+		const context = { value: 'test-context' };
 		let receivedContext;
 
 		function contextListener() {
 			receivedContext = this;
 		}
 
-		once(mockElement, "context-test", contextListener);
-		mockElement.dispatchEvent({ type: "context-test" });
+		once(mockElement, 'context-test', contextListener);
+		mockElement.dispatchEvent({ type: 'context-test' });
 
 		assert.strictEqual(receivedContext, mockElement);
 	});

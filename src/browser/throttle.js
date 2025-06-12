@@ -22,11 +22,7 @@ export function throttle(func, limit) {
 		// With zero limit, execute immediately without throttling
 		if (limit === 0 || now - lastCall >= limit) {
 			lastCall = now;
-			try {
-				return func.apply(this, args);
-			} catch (error) {
-				throw error;
-			}
+			return func.apply(this, args);
 		}
 		return undefined;
 	};

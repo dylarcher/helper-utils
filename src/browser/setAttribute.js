@@ -8,7 +8,7 @@ export function setAttribute(element, attributeName, value) {
 	if (
 		!element ||
 		!attributeName ||
-		typeof element.setAttribute !== "function"
+		typeof element.setAttribute !== 'function'
 	) {
 		return;
 	}

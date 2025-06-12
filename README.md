@@ -97,7 +97,7 @@ Once installed, you can import and use the utility methods in your project.
 
 ```javascript
 // ESM
-import { exampleMethod } from "js-helpers";
+import { exampleMethod } from 'js-helpers';
 const result = exampleMethod(data);
 console.info(result);
 ```

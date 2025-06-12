@@ -1,129 +1,129 @@
-import { describe, it, beforeEach } from "node:test";
-import assert from "node:assert/strict";
-import { getCookie } from "./getCookie.js";
+import { describe, it, beforeEach } from 'node:test';
+import assert from 'node:assert/strict';
+import { getCookie } from './getCookie.js';
 
-describe("getCookie(alias)", () => {
+describe('getCookie(alias)', () => {
 	let originalDocument;
 
 	beforeEach(() => {
 		originalDocument = global.document;
 	});
 
-	it("should retrieve a simple cookie", () => {
+	it('should retrieve a simple cookie', () => {
 		global.document = {
-			cookie: "testCookie=testValue; anotherCookie=anotherValue",
+			cookie: 'testCookie=testValue; anotherCookie=anotherValue',
 		};
 
-		const result = getCookie("testCookie");
-		assert.strictEqual(result, "testValue");
+		const result = getCookie('testCookie');
+		assert.strictEqual(result, 'testValue');
 	});
 
-	it("should retrieve a cookie with special characters", () => {
+	it('should retrieve a cookie with special characters', () => {
 		global.document = {
-			cookie: "specialCookie=value%20with%20spaces; normalCookie=normal",
+			cookie: 'specialCookie=value%20with%20spaces; normalCookie=normal',
 		};
 
-		const result = getCookie("specialCookie");
-		assert.strictEqual(result, "value%20with%20spaces");
+		const result = getCookie('specialCookie');
+		assert.strictEqual(result, 'value%20with%20spaces');
 	});
 
-	it("should handle cookies with spaces around values", () => {
+	it('should handle cookies with spaces around values', () => {
 		global.document = {
-			cookie: " spacedCookie = spacedValue ; anotherCookie=value",
+			cookie: ' spacedCookie = spacedValue ; anotherCookie=value',
 		};
 
-		const result = getCookie("spacedCookie");
-		assert.strictEqual(result, "spacedValue");
+		const result = getCookie('spacedCookie');
+		assert.strictEqual(result, 'spacedValue');
 	});
 
-	it("should return null for non-existent cookie", () => {
+	it('should return null for non-existent cookie', () => {
 		global.document = {
-			cookie: "existingCookie=value; anotherCookie=anotherValue",
+			cookie: 'existingCookie=value; anotherCookie=anotherValue',
 		};
 
-		const result = getCookie("nonExistentCookie");
+		const result = getCookie('nonExistentCookie');
 		assert.strictEqual(result, null);
 	});
 
-	it("should handle empty cookie string", () => {
+	it('should handle empty cookie string', () => {
 		global.document = {
-			cookie: "",
+			cookie: '',
 		};
 
-		const result = getCookie("anyCookie");
+		const result = getCookie('anyCookie');
 		assert.strictEqual(result, null);
 	});
 
-	it("should handle undefined document", () => {
+	it('should handle undefined document', () => {
 		global.document = undefined;
 
-		const result = getCookie("anyCookie");
+		const result = getCookie('anyCookie');
 		assert.strictEqual(result, null);
 	});
 
-	it("should handle document without cookie property", () => {
+	it('should handle document without cookie property', () => {
 		global.document = {};
 
-		const result = getCookie("anyCookie");
+		const result = getCookie('anyCookie');
 		assert.strictEqual(result, null);
 	});
 
-	it("should handle null document.cookie", () => {
+	it('should handle null document.cookie', () => {
 		global.document = {
 			cookie: null,
 		};
 
-		const result = getCookie("anyCookie");
+		const result = getCookie('anyCookie');
 		assert.strictEqual(result, null);
 	});
 
-	it("should retrieve first cookie when multiple cookies have similar names", () => {
+	it('should retrieve first cookie when multiple cookies have similar names', () => {
 		global.document = {
-			cookie: "user=john; userInfo=detailed; userData=extra",
+			cookie: 'user=john; userInfo=detailed; userData=extra',
 		};
 
-		const result = getCookie("user");
-		assert.strictEqual(result, "john");
+		const result = getCookie('user');
+		assert.strictEqual(result, 'john');
 	});
 
-	it("should handle cookie with equal signs in value", () => {
+	it('should handle cookie with equal signs in value', () => {
 		global.document = {
-			cookie: "encodedData=key=value&another=data; simpleCookie=simple",
+			cookie: 'encodedData=key=value&another=data; simpleCookie=simple',
 		};
 
-		const result = getCookie("encodedData");
-		assert.strictEqual(result, "key=value&another=data");
+		const result = getCookie('encodedData');
+		assert.strictEqual(result, 'key=value&another=data');
 	});
 
-	it("should handle empty cookie value", () => {
+	it('should handle empty cookie value', () => {
 		global.document = {
-			cookie: "emptyCookie=; normalCookie=value",
+			cookie: 'emptyCookie=; normalCookie=value',
 		};
 
-		const result = getCookie("emptyCookie");
-		assert.strictEqual(result, "");
+		const result = getCookie('emptyCookie');
+		assert.strictEqual(result, '');
 	});
 
-	it("should be case sensitive", () => {
+	it('should be case sensitive', () => {
 		global.document = {
-			cookie: "TestCookie=value; testcookie=lowervalue",
+			cookie: 'TestCookie=value; testcookie=lowervalue',
 		};
 
-		const result1 = getCookie("TestCookie");
-		const result2 = getCookie("testcookie");
+		const result1 = getCookie('TestCookie');
+		const result2 = getCookie('testcookie');
 
-		assert.strictEqual(result1, "value");
-		assert.strictEqual(result2, "lowervalue");
+		assert.strictEqual(result1, 'value');
+		assert.strictEqual(result2, 'lowervalue');
 	});
 
-	it("should handle cookies with semicolons in values", () => {
+	it('should handle cookies with semicolons in values', () => {
 		global.document = {
-			cookie: "complexCookie=value;with;semicolons; normalCookie=normal",
+			cookie: 'complexCookie=value;with;semicolons; normalCookie=normal',
 		};
 
 		// Note: This tests the current behavior, though it may not handle semicolons in values perfectly
-		const result = getCookie("complexCookie");
-		assert.strictEqual(result, "value");
+		const result = getCookie('complexCookie');
+		assert.strictEqual(result, 'value');
 	});
 
 	// Cleanup

@@ -78,25 +78,31 @@ export function createMockDocument() {
 				tagName: tagName.toLowerCase(),
 				attributes: {},
 				childNodes: [],
-				textContent: "",
+				textContent: '',
 				style: new Map(),
 				classList: {
 					_classes: new Set(),
 					add(...classes) {
-						classes.forEach(cls => this._classes.add(cls));
+						classes.forEach((cls) => this._classes.add(cls));
 					},
 					remove(...classes) {
-						classes.forEach(cls => this._classes.delete(cls));
+						classes.forEach((cls) => this._classes.delete(cls));
 					},
 					contains(cls) {
 						return this._classes.has(cls);
 					},
 					toggle(cls, force) {
-						if (force === true || (force === undefined && !this._classes.has(cls))) {
+						if (
+							force === true ||
+							(force === undefined && !this._classes.has(cls))
+						) {
 							this._classes.add(cls);
 							return true;
 						}
-						if (force === false || (force === undefined && this._classes.has(cls))) {
+						if (
+							force === false ||
+							(force === undefined && this._classes.has(cls))
+						) {
 							this._classes.delete(cls);
 							return false;
 						}
@@ -104,7 +110,7 @@ export function createMockDocument() {
 					},
 					get length() {
 						return this._classes.size;
-					}
+					},
 				},
 				setAttribute: function (name, value) {
 					this.attributes[name] = value;
@@ -114,10 +120,10 @@ export function createMockDocument() {
 				},
 				appendChild: function (child) {
 					this.childNodes.push(child);
-					if (typeof child === "string") {
+					if (typeof child === 'string') {
 						this.textContent += child;
 					}
-					if (child && typeof child === "object" && child.textContent) {
+					if (child && typeof child === 'object' && child.textContent) {
 						this.textContent += child.textContent;
 						child.parentNode = this;
 					}
@@ -125,48 +131,48 @@ export function createMockDocument() {
 				removeChild: function (child) {
 					const index = this.childNodes.indexOf(child);
 					if (index > -1) {
-					this.childNodes.splice(index, 1);
-					child.parentNode = null;
-				}
-			},
-			matches: function(selector) {
-				// Basic selector matching
-				if (selector.startsWith('.') && this.classList) {
-					return this.classList.contains(selector.slice(1));
-				}
-				if (selector.startsWith('#') && this.id) {
-					return this.id === selector.slice(1);
-				}
-				return this.tagName === selector.toLowerCase();
-			},
-			parentNode: null,
-			id: "",
-			dataset: {},
-			addEventListener: function(event, handler, options) {
-				if (!this._eventListeners) {
-					this._eventListeners = {};
-				}
-				if (!this._eventListeners[event]) {
-					this._eventListeners[event] = [];
-				}
-				this._eventListeners[event].push({ handler, options });
-			},
-			removeEventListener: function(event, handler) {
-				if (!this._eventListeners || !this._eventListeners[event]) {
-					return;
-				}
-				this._eventListeners[event] = this._eventListeners[event].filter(
-					listener => listener.handler !== handler
-				);
+						this.childNodes.splice(index, 1);
+						child.parentNode = null;
+					}
+				},
+				matches: function (selector) {
+					// Basic selector matching
+					if (selector.startsWith('.') && this.classList) {
+						return this.classList.contains(selector.slice(1));
+					}
+					if (selector.startsWith('#') && this.id) {
+						return this.id === selector.slice(1);
+					}
+					return this.tagName === selector.toLowerCase();
+				},
+				parentNode: null,
+				id: '',
+				dataset: {},
+				addEventListener: function (event, handler, options) {
+					if (!this._eventListeners) {
+						this._eventListeners = {};
+					}
+					if (!this._eventListeners[event]) {
+						this._eventListeners[event] = [];
+					}
+					this._eventListeners[event].push({ handler, options });
+				},
+				removeEventListener: function (event, handler) {
+					if (!this._eventListeners || !this._eventListeners[event]) {
+						return;
+					}
+					this._eventListeners[event] = this._eventListeners[event].filter(
+						(listener) => listener.handler !== handler,
+					);
+				},
+			};
+
+			// Store element in document's map
+			if (tagName && tagName.toLowerCase) {
+				elements.set(tagName.toLowerCase(), element);
 			}
-		};
-		
-		// Store element in document's map
-		if (tagName && tagName.toLowerCase) {
-			elements.set(tagName.toLowerCase(), element);
-		}
-		
-		return element;
+
+			return element;
 		},
 		createTextNode: (text) => new MockTextNode(text),
 		querySelector: (selector) => elements.get(selector) || null,
@@ -175,19 +181,21 @@ export function createMockDocument() {
 			if (selector.startsWith('.')) {
 				const className = selector.slice(1);
 				return Array.from(elements.values()).filter(
-					el => el.classList && el.classList.contains(className)
+					(el) => el.classList && el.classList.contains(className),
 				);
 			}
 			if (selector.startsWith('#')) {
 				const id = selector.slice(1);
-				const element = Array.from(elements.values()).find(el => el.id === id);
+				const element = Array.from(elements.values()).find(
+					(el) => el.id === id,
+				);
 				return element ? [element] : [];
 			}
 			return Array.from(elements.values()).filter(
-				el => el.tagName === selector.toLowerCase()
+				(el) => el.tagName === selector.toLowerCase(),
 			);
 		},
-		cookie: "",
+		cookie: '',
 		getElementById: (id) => {
 			for (const el of elements.values()) {
 				if (el.id === id) {
@@ -198,19 +206,19 @@ export function createMockDocument() {
 		},
 		getElementsByClassName: (className) =>
 			Array.from(elements.values()).filter(
-				(el) => el.classList && el.classList.contains(className)
+				(el) => el.classList && el.classList.contains(className),
 			),
 		body: {
-			appendChild: function(child) {
+			appendChild: function (child) {
 				if (!this.childNodes) {
 					this.childNodes = [];
 				}
 				this.childNodes.push(child);
-				if (child && typeof child === "object") {
+				if (child && typeof child === 'object') {
 					child.parentNode = this;
 				}
 			},
-			removeChild: function(child) {
+			removeChild: function (child) {
 				if (!this.childNodes) {
 					return;
 				}
@@ -220,10 +228,10 @@ export function createMockDocument() {
 					child.parentNode = null;
 				}
 			},
-			childNodes: []
-		}
+			childNodes: [],
+		},
 	};
-	
+
 	return mockDocument;
 }
 
@@ -233,6 +241,99 @@ export function createMockDocument() {
 export function createMockWindow() {
 	const mockLocalStorage = createMockLocalStorage();
 	const mockDocument = createMockDocument();
+	let mockWindow = {
+		document: mockDocument,
+		localStorage: mockLocalStorage,
+		location: {
+			search: '?test=value&foo=bar',
+			href: 'https://example.com?test=value&foo=bar',
+			pathname: '/',
+			host: 'example.com',
+			protocol: 'https:',
+			hash: '',
+			origin: 'https://example.com',
+			toString: () => mockWindow.location.href,
+			reload: () => {},
+			replace: (url) => {
+				mockWindow.location.href = url;
+			},
+			assign: (url) => {
+				mockWindow.location.href = url;
+			},
+		},
+		getComputedStyle: (element, pseudoElement) => ({
+			getPropertyValue: (prop) => element.style?.get(prop) || '',
+			color: 'rgb(0, 0, 0)',
+			fontSize: '16px',
+			display: 'block',
+			visibility: 'visible',
+		}),
+		navigator: {
+			clipboard: {
+				writeText: async (text) => Promise.resolve(text),
+				readText: async () => Promise.resolve('Clipboard content'),
+			},
+			userAgent:
+				'Mozilla/5.0 (Mock Browser) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+			language: 'en-US',
+			platform: 'MacIntel',
+		},
+		crypto: {
+			randomUUID: () => '12345678-1234-4000-8000-123456789abc',
+			getRandomValues: (array) => {
+				for (let i = 0; i < array.length; i++) {
+					array[i] = Math.floor(Math.random() * 256);
+				}
+				return array;
+			},
+		},
+		history: null,
+		addEventListener: (event, handler, options) => {
+			if (!mockWindow._eventListeners) {
+				mockWindow._eventListeners = {};
+			}
+			if (!mockWindow._eventListeners[event]) {
+				mockWindow._eventListeners[event] = [];
+			}
+			mockWindow._eventListeners[event].push({ handler, options });
+		},
+		removeEventListener: (event, handler) => {
+			if (!mockWindow._eventListeners || !mockWindow._eventListeners[event]) {
+				return;
+			}
+			mockWindow._eventListeners[event] = mockWindow._eventListeners[
+				event
+			].filter((listener) => listener.handler !== handler);
+		},
+		dispatchEvent: (event) => {
+			if (
+				!mockWindow._eventListeners ||
+				!mockWindow._eventListeners[event.type]
+			) {
+				return true;
+			}
+			mockWindow._eventListeners[event.type].forEach(({ handler }) => {
+				handler(event);
+			});
+			return !event.defaultPrevented;
+		},
+		setTimeout: setTimeout,
+		clearTimeout: clearTimeout,
+		setInterval: setInterval,
+		clearInterval: clearInterval,
+		fetch: async (url, options) => {
+			return {
+				json: async () => ({ success: true, data: 'Mock data' }),
+				text: async () => 'Mock response text',
+				ok: true,
+				status: 200,
+				headers: new Map(),
+			};
+		},
+		console: console,
+		URLSearchParams,
+	};
+
 	const mockHistory = {
 		state: null,
 		pushState: (state, title, url) => {
@@ -245,17 +346,17 @@ export function createMockWindow() {
 		},
 	};
 
-	const mockWindow = {
+	mockWindow = {
 		document: mockDocument,
 		localStorage: mockLocalStorage,
 		location: {
-			search: "?test=value&foo=bar",
-			href: "https://example.com?test=value&foo=bar",
-			pathname: "/",
-			host: "example.com",
-			protocol: "https:",
-			hash: "",
-			origin: "https://example.com",
+			search: '?test=value&foo=bar',
+			href: 'https://example.com?test=value&foo=bar',
+			pathname: '/',
+			host: 'example.com',
+			protocol: 'https:',
+			hash: '',
+			origin: 'https://example.com',
 			toString: () => mockWindow.location.href,
 			reload: () => {},
 			replace: (url) => {
@@ -263,32 +364,33 @@ export function createMockWindow() {
 			},
 			assign: (url) => {
 				mockWindow.location.href = url;
-			}
+			},
 		},
 		getComputedStyle: (element, pseudoElement) => ({
-			getPropertyValue: (prop) => element.style?.get(prop) || "",
-			color: "rgb(0, 0, 0)",
-			fontSize: "16px",
-			display: "block",
-			visibility: "visible",
+			getPropertyValue: (prop) => element.style?.get(prop) || '',
+			color: 'rgb(0, 0, 0)',
+			fontSize: '16px',
+			display: 'block',
+			visibility: 'visible',
 		}),
 		navigator: {
 			clipboard: {
 				writeText: async (text) => Promise.resolve(text),
-				readText: async () => Promise.resolve("Clipboard content")
+				readText: async () => Promise.resolve('Clipboard content'),
 			},
-			userAgent: "Mozilla/5.0 (Mock Browser) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-			language: "en-US",
-			platform: "MacIntel"
+			userAgent:
+				'Mozilla/5.0 (Mock Browser) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+			language: 'en-US',
+			platform: 'MacIntel',
 		},
 		crypto: {
-			randomUUID: () => "12345678-1234-4000-8000-123456789abc",
+			randomUUID: () => '12345678-1234-4000-8000-123456789abc',
 			getRandomValues: (array) => {
 				for (let i = 0; i < array.length; i++) {
 					array[i] = Math.floor(Math.random() * 256);
 				}
 				return array;
-			}
+			},
 		},
 		history: mockHistory,
 		addEventListener: (event, handler, options) => {
@@ -304,12 +406,15 @@ export function createMockWindow() {
 			if (!mockWindow._eventListeners || !mockWindow._eventListeners[event]) {
 				return;
 			}
-			mockWindow._eventListeners[event] = mockWindow._eventListeners[event].filter(
-				listener => listener.handler !== handler
-			);
+			mockWindow._eventListeners[event] = mockWindow._eventListeners[
+				event
+			].filter((listener) => listener.handler !== handler);
 		},
 		dispatchEvent: (event) => {
-			if (!mockWindow._eventListeners || !mockWindow._eventListeners[event.type]) {
+			if (
+				!mockWindow._eventListeners ||
+				!mockWindow._eventListeners[event.type]
+			) {
 				return true;
 			}
 			mockWindow._eventListeners[event.type].forEach(({ handler }) => {
@@ -323,17 +428,17 @@ export function createMockWindow() {
 		clearInterval: clearInterval,
 		fetch: async (url, options) => {
 			return {
-				json: async () => ({ success: true, data: "Mock data" }),
-				text: async () => "Mock response text",
+				json: async () => ({ success: true, data: 'Mock data' }),
+				text: async () => 'Mock response text',
 				ok: true,
 				status: 200,
 				headers: new Map(),
 			};
 		},
 		console: console,
-		URLSearchParams
+		URLSearchParams,
 	};
-	
+
 	return mockWindow;
 }
 
@@ -344,33 +449,36 @@ export function setupBrowserMocks() {
 	const mockWindow = createMockWindow();
 
 	// Mock all browser globals
-	mockGlobal("window", mockWindow);
-	mockGlobal("document", mockWindow.document);
-	mockGlobal("localStorage", mockWindow.localStorage);
-	mockGlobal("navigator", mockWindow.navigator);
-	mockGlobal("crypto", mockWindow.crypto);
-	mockGlobal("location", mockWindow.location);
-	mockGlobal("history", mockWindow.history);
-	mockGlobal("HTMLElement", class HTMLElement {});
-	mockGlobal("Element", class Element {});
-	mockGlobal("Event", class Event {
-		constructor(type, options = {}) {
-			this.type = type;
-			this.bubbles = options.bubbles || false;
-			this.cancelable = options.cancelable || false;
-			this.defaultPrevented = false;
-		}
-		preventDefault() {
-			this.defaultPrevented = true;
-		}
-		stopPropagation() {
-			this.propagationStopped = true;
-		}
-	});
-	
+	mockGlobal('window', mockWindow);
+	mockGlobal('document', mockWindow.document);
+	mockGlobal('localStorage', mockWindow.localStorage);
+	mockGlobal('navigator', mockWindow.navigator);
+	mockGlobal('crypto', mockWindow.crypto);
+	mockGlobal('location', mockWindow.location);
+	mockGlobal('history', mockWindow.history);
+	mockGlobal('HTMLElement', class HTMLElement {});
+	mockGlobal('Element', class Element {});
+	mockGlobal(
+		'Event',
+		class Event {
+			constructor(type, options = {}) {
+				this.type = type;
+				this.bubbles = options.bubbles || false;
+				this.cancelable = options.cancelable || false;
+				this.defaultPrevented = false;
+			}
+			preventDefault() {
+				this.defaultPrevented = true;
+			}
+			stopPropagation() {
+				this.propagationStopped = true;
+			}
+		},
+	);
+
 	// Add fetch if not available
-	if (typeof global.fetch !== "function") {
-		mockGlobal("fetch", mockWindow.fetch);
+	if (typeof global.fetch !== 'function') {
+		mockGlobal('fetch', mockWindow.fetch);
 	}
 
 	return mockWindow;
@@ -385,27 +493,30 @@ export function setupBrowserMocks() {
 export function createMockElement(tagName, attributes = {}) {
 	const doc = createMockDocument();
 	const element = doc.createElement(tagName);
-	
+
 	// Set attributes
 	for (const [key, value] of Object.entries(attributes)) {
-		if (key === "id") {
+		if (key === 'id') {
 			element.id = value;
-		} else if (key === "className" || key === "class") {
-			if (typeof value === "string") {
-				value.split(" ").filter(Boolean).forEach(cls => {
-					element.classList.add(cls);
-				});
+		} else if (key === 'className' || key === 'class') {
+			if (typeof value === 'string') {
+				value
+					.split(' ')
+					.filter(Boolean)
+					.forEach((cls) => {
+						element.classList.add(cls);
+					});
 			}
-		} else if (key === "style" && typeof value === "object") {
+		} else if (key === 'style' && typeof value === 'object') {
 			for (const [prop, styleValue] of Object.entries(value)) {
 				element.style.set(prop, styleValue);
 			}
-		} else if (key === "dataset" && typeof value === "object") {
+		} else if (key === 'dataset' && typeof value === 'object') {
 			Object.assign(element.dataset, value);
 		} else {
 			element.setAttribute(key, value);
 		}
 	}
-	
+
 	return element;
 }

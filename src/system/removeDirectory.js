@@ -1,4 +1,4 @@
-import fs from "node:fs/promises";
+import fs from 'node:fs/promises';
 
 /**
  * Removes a directory.
@@ -23,10 +23,10 @@ export async function removeDirectory(
 			throw error;
 		}
 	}
-	
+
 	// For directories, we generally need recursive: true to remove them
 	// Even empty directories require recursive: true with fs.rm
 	const finalOptions = { recursive: true, force: false, ...options };
-	
+
 	return fs.rm(dirPath, finalOptions);
 }

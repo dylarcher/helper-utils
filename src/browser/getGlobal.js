@@ -4,5 +4,5 @@
  * @returns {object} The Node.js global object.
  */
 export function getGlobal(options = {}) {
-    return global
+	return global;
 }

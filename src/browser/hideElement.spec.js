@@ -1,6 +1,6 @@
-import { describe, it, beforeEach } from "node:test";
-import assert from "node:assert/strict";
-import { hideElement } from "./hideElement.js";
+import { describe, it, beforeEach } from 'node:test';
+import assert from 'node:assert/strict';
+import { hideElement } from './hideElement.js';
 
 // Mock Element class for testing
 class MockElement {
@@ -14,32 +14,32 @@ class MockElement {
 	}
 }
 
-describe("hideElement(element)", () => {
+describe('hideElement(element)', () => {
 	let mockElement;
 
 	beforeEach(() => {
 		mockElement = new MockElement();
 	});
 
-	it("should set display to none on valid element", () => {
+	it('should set display to none on valid element', () => {
 		hideElement(mockElement);
 
-		assert.strictEqual(mockElement.style.properties.display, "none");
+		assert.strictEqual(mockElement.style.properties.display, 'none');
 	});
 
-	it("should not throw error for null element", () => {
+	it('should not throw error for null element', () => {
 		assert.doesNotThrow(() => {
 			hideElement(null);
 		});
 	});
 
-	it("should not throw error for undefined element", () => {
+	it('should not throw error for undefined element', () => {
 		assert.doesNotThrow(() => {
 			hideElement(undefined);
 		});
 	});
 
-	it("should not throw error for element without style property", () => {
+	it('should not throw error for element without style property', () => {
 		const elementWithoutStyle = {};
 
 		assert.doesNotThrow(() => {
@@ -47,7 +47,7 @@ describe("hideElement(element)", () => {
 		});
 	});
 
-	it("should not throw error for element with null style", () => {
+	it('should not throw error for element with null style', () => {
 		const elementWithNullStyle = { style: null };
 
 		assert.doesNotThrow(() => {
@@ -55,7 +55,7 @@ describe("hideElement(element)", () => {
 		});
 	});
 
-	it("should work with real DOM-like element", () => {
+	it('should work with real DOM-like element', () => {
 		const domLikeElement = {
 			style: {
 				setProperty: function (property, value) {
@@ -65,10 +65,10 @@ describe("hideElement(element)", () => {
 		};
 
 		hideElement(domLikeElement);
-		assert.strictEqual(domLikeElement.style.display, "none");
+		assert.strictEqual(domLikeElement.style.display, 'none');
 	});
 
-	it("should handle element with style but no setProperty method", () => {
+	it('should handle element with style but no setProperty method', () => {
 		const brokenElement = {
 			style: {},
 		};
@@ -78,26 +78,26 @@ describe("hideElement(element)", () => {
 		});
 	});
 
-	it("should override existing display property", () => {
-		mockElement.style.properties.display = "block";
+	it('should override existing display property', () => {
+		mockElement.style.properties.display = 'block';
 
 		hideElement(mockElement);
-		assert.strictEqual(mockElement.style.properties.display, "none");
+		assert.strictEqual(mockElement.style.properties.display, 'none');
 	});
 
-	it("should work multiple times on same element", () => {
+	it('should work multiple times on same element', () => {
 		hideElement(mockElement);
 		hideElement(mockElement);
 		hideElement(mockElement);
 
-		assert.strictEqual(mockElement.style.properties.display, "none");
+		assert.strictEqual(mockElement.style.properties.display, 'none');
 	});
 
-	it("should handle style.setProperty throwing an error", () => {
+	it('should handle style.setProperty throwing an error', () => {
 		const element = {
 			style: {
 				setProperty: () => {
-					throw new Error("Simulated error");
+					throw new Error('Simulated error');
 				},
 			},
 		};

@@ -1,26 +1,35 @@
 ---
-arrowParens: avoid
-bracketSameLine: true
-bracketSpacing: true
-embeddedLanguageFormatting: auto
-endOfLine: lf
-htmlWhitespaceSensitivity: css
-insertPragma: false
+# Enforces consistent style
+printWidth: 80
+tabWidth: 2
+useTabs: true
+semi: true
+singleQuote: true
+quoteProps: as-needed
 jsxSingleQuote: false
+trailingComma: all
+bracketSpacing: true
+bracketSameLine: true
+arrowParens: avoid
+endOfLine: lf
+
+# Formatting behavior
+embeddedLanguageFormatting: auto
+htmlWhitespaceSensitivity: css
+proseWrap: always
+singleAttributePerLine: true
+vueIndentScriptAndStyle: false
+
+# Special cases
 overrides:
   - files: LICENSE
     options:
       parser: markdown
-# pluginSearchDirs: []
-# plugins: []
-printWidth: 80
-proseWrap: always
-quoteProps: as-needed
-requirePragma: false
-semi: true
-singleAttributePerLine: true
-singleQuote: false
-tabWidth: 2
-trailingComma: all
-useTabs: true
-vueIndentScriptAndStyle: false
+  - files: "*.{yaml,yml}"
+    options:
+      tabWidth: 2
+      useTabs: false
+      singleQuote: true
+  - files: "*.json"
+    options:
+      singleQuote: false

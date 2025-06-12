@@ -8,7 +8,7 @@ export function setLocalStorageJSON(key, value) {
 	try {
 		// Handle undefined and function values specially as they stringify to undefined
 		const stringified = JSON.stringify(value);
-		const finalValue = stringified === undefined ? "null" : stringified;
+		const finalValue = stringified === undefined ? 'null' : stringified;
 		localStorage.setItem(key, finalValue);
 		return true;
 	} catch (error) {
