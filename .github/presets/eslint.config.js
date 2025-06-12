@@ -1,8 +1,8 @@
-import pluginJs from "@eslint/js"
-import eslintPluginMarkdown from "eslint-plugin-markdown"
-import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended"
-import eslintPluginYaml from "eslint-plugin-yaml"
-import globals from "globals"
+import pluginJs from "@eslint/js";
+import eslintPluginMarkdown from "eslint-plugin-markdown";
+import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
+import eslintPluginYaml from "eslint-plugin-yaml";
+import globals from "globals";
 
 export default [
 	{
