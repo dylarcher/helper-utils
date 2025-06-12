@@ -1,12 +1,13 @@
 name: Bug report
 description: Create a report to help us fix issues with our library
-labels: ["bug"]
-# title: ''
+title: "[Issue]: "
+labels: [bug, triage, defect, issue, problem]
 assignees: dylarcher
 body:
   - type: markdown
     attributes:
-      value: We appreciate your help with submitting a bug report to make our library better. The more information you provide in the following sections, to better help us understand the issue you are facing, the more effective our response will be while improving your experience with the library.
+      value: |
+        Thanks for taking the time to fill out this bug report!
   - type: textarea
     id: what-happened
     attributes:
