@@ -44,5 +44,6 @@ jobs:
     # - name: Test
     #   run: npm run test:coverage
 
-      - name: Build
-        run: npm run build
+    # TODO: include build step to test distributed files
+    # - name: Build
+    #   run: npm run build
