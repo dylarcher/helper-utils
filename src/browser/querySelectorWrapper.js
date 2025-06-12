@@ -5,9 +5,12 @@
  * @returns {Element|null} The first matching element or null.
  */
 export function querySelectorWrapper(selector, container) {
-	// Use document as fallback only if it exists and container is not provided
-	const targetContainer =
-		container || (typeof document !== "undefined" ? document : null);
+	// Only use document as fallback when no container argument is provided
+	// Check arguments.length to distinguish between undefined being passed vs not passed
+	const targetContainer = 
+		arguments.length >= 2 
+			? container  // Container was explicitly provided (even if null/undefined)
+			: (typeof document !== "undefined" ? document : null); // No container provided, use document
 
 	if (!targetContainer || typeof targetContainer.querySelector !== "function") {
 		return null;

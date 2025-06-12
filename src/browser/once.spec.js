@@ -17,12 +17,20 @@ class MockEventTarget {
 
 	dispatchEvent(event) {
 		const listeners = this.listeners.get(event.type) || [];
+		const listenersToRemove = [];
+		
+		// Execute all listeners first
 		listeners.forEach(({ listener, options }) => {
 			listener.call(this, event);
-			// Simulate once behavior
+			// Mark for removal if once
 			if (options && options.once) {
-				this.removeEventListener(event.type, listener);
+				listenersToRemove.push(listener);
 			}
+		});
+		
+		// Remove once listeners after execution
+		listenersToRemove.forEach(listener => {
+			this.removeEventListener(event.type, listener);
 		});
 	}
 

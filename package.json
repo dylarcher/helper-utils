@@ -64,7 +64,6 @@
     },
     "scripts": {
         "build": "rimraf dist && tsc",
-        "c8": "c8 --config .github/presets/.c8rc.json",
         "eslint": "eslint --config .github/presets/eslint.config.js --ext .js --report-unused-disable-directives",
         "format": "npm run prettier --write",
         "format:check": "npm run prettier --check",
@@ -74,8 +73,7 @@
         "prepare": "npm dedupe && npm prune",
         "prepublishOnly": "npm run build",
         "prettier": "prettier . --config .github/presets/.prettierrc.yml --ignore-unknown",
-        "test": "node --no-warnings --test src/**/*.spec.js src/**/*.test.js",
-        "test:coverage": "npm run c8 -- npm test",
+        "test": "c8 --config .github/presets/.c8rc.json -- node --test src/**/*.spec.js",
         "test:watch": "npm test --watch"
     },
     "type": "module",

@@ -206,7 +206,12 @@ describe("removeDirectory(dirPath, options)", () => {
 				await removeDirectory(testFile);
 			}, "Should reject when trying to remove a file");
 		} finally {
-			await fs.unlink(testFile);
+			// Only try to remove if file still exists
+			try {
+				await fs.unlink(testFile);
+			} catch (error) {
+				// File might have been removed by removeDirectory, ignore error
+			}
 		}
 	});
 

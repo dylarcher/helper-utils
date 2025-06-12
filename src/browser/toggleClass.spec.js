@@ -7,15 +7,19 @@ class MockElement {
 	constructor(initialClasses = []) {
 		this.classList = new Set(initialClasses);
 		this.classList.toggle = (className, force) => {
-			if (force === true) {
-				this.classList.add(className);
-				return true;
+			// If force parameter is provided (not undefined)
+			if (force !== undefined) {
+				if (force) {
+					// Any truthy value forces add
+					this.classList.add(className);
+					return true;
+				} else {
+					// Any falsy value forces remove
+					this.classList.delete(className);
+					return false;
+				}
 			}
-			if (force === false) {
-				this.classList.delete(className);
-				return false;
-			}
-			// Normal toggle behavior
+			// Normal toggle behavior when force is undefined
 			if (this.classList.has(className)) {
 				this.classList.delete(className);
 				return false;

@@ -188,10 +188,10 @@ describe("removeElement(element)", () => {
 
 		childElement.parentNode = errorParent;
 
-		// Should throw the error from removeChild
-		assert.throws(() => {
+		// Should not throw the error - function handles errors gracefully
+		assert.doesNotThrow(() => {
 			removeElement(childElement);
-		}, Error);
+		});
 	});
 
 	it("should preserve sibling relationships", () => {

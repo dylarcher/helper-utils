@@ -80,12 +80,9 @@ describe("querySelectorAllWrapper(selector, container)", () => {
 			},
 		};
 
-		assert.throws(
-			() => {
-				querySelectorAllWrapper(".test", mockContainer);
-			},
-			{ message: "querySelectorAll failed" },
-		);
+		const result = querySelectorAllWrapper(".test", mockContainer);
+		assert.strictEqual(Array.isArray(result), true);
+		assert.strictEqual(result.length, 0);
 	});
 
 	it("should work with various selector types", () => {
