@@ -1,57 +1,305 @@
-# My Awesome Library
+# js-helpers
 
-This library provides a collection of useful functions and classes to simplify
-common tasks in your projects.
+[![npm version](https://img.shields.io/npm/v/js-helpers.svg)](https://www.npmjs.com/package/js-helpers)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/dylarcher/js.helper-utils/ci.yml?branch=main&logo=github)](https://github.com/dylarcher/js.helper-utils/actions?query=workflow%3ACI)
+[![codecov](https://codecov.io/gh/dylarcher/js.helper-utils/branch/main/graph/badge.svg)](https://codecov.io/gh/dylarcher/js.helper-utils)
+[![npm downloads](https://img.shields.io/npm/dm/js-helpers.svg)](https://www.npmjs.com/package/js-helpers)
+[![GitHub last commit](https://img.shields.io/github/last-commit/dylarcher/js.helper-utils.svg)](https://github.com/dylarcher/js.helper-utils/commits/main)
+[![GitHub repo size](https://img.shields.io/github/repo-size/dylarcher/js.helper-utils.svg)](https://github.com/dylarcher/js.helper-utils)
 
-## Intent
+Reusable javascript helper utility methods.
 
-The primary goal of this library is to offer a set of well-tested and
-easy-to-use tools that can be readily integrated into various applications,
-reducing the need to reinvent the wheel for frequently encountered problems.
+---
 
-## Installation
+## Table of Contents
 
-You can install the library using pip:
+* [About The Project](#about-the-project)
+  * [Built With](#built-with)
+* [Getting Started](#getting-started)
+  * [Prerequisites](#prerequisites)
+  * [Installation](#installation)
+* [Usage](#usage)
+  * [Available Utility Methods](#available-utility-methods)
+* [Development](#development)
+  * [Project Structure](#project-structure)
+  * [Available Scripts](#available-scripts)
+  * [Running Tests](#running-tests)
+  * [Linting and Formatting](#linting-and-formatting)
+  * [Building the Project](#building-the-project)
+* [Contributing](#contributing)
+* [License](#license)
+* [Contact](#contact)
 
-```bash
-pip install my-awesome-library
+---
+
+## About The Project
+
+`js-helpers` is a lightweight, zero-dependency library offering a collection of reusable JavaScript utility methods designed to streamline common development tasks.
+
+This project aims to provide well-tested, efficient, and easy-to-use functions for your JavaScript projects.
+
+### Built With
+
+* Node.js
+* TypeScript (for type definitions and compilation)
+
+---
+
+## Getting Started
+
+To get a local copy up and running follow these simple steps.
+
+### Prerequisites
+
+Make sure you have the following installed:
+
+* Node.js (version >=18.20.8 recommended)
+
+    ```sh
+    node -v
+    ```
+
+* npm (version >=10.8.2 recommended)
+
+    ```sh
+    npm -v
+    ```
+
+### Installation
+
+1. Clone the repo:
+
+    ```sh
+    git clone https://github.com/dylarcher/js.helper-utils.git
+    cd js.helper-utils
+    ```
+
+2. Install NPM packages:
+
+    ```sh
+    npm install
+    ```
+
+To use `js-helpers` in your own project:
+
+```sh
+npm install js-helpers
+# or
+yarn add js-helpers
 ```
+
+---
 
 ## Usage
 
-Here's a basic example of how to use a function from the library:
+Once installed, you can import and use the utility methods in your project.
 
-```python
-from my_awesome_library.utils import format_string
+```javascript
+// ESM
+import { exampleMethod } from 'js-helpers';
 
-my_string = "hello world"
-formatted_string = format_string(my_string)
-print(formatted_string)
+// CommonJS
+const { exampleMethod } = require('js-helpers');
+
+const result = exampleMethod(data);
+console.log(result);
 ```
 
-For more detailed examples and usage instructions, please refer to the
-documentation for each specific module and function.
+### Available Utility Methods
 
-## Available Features
+This section will be updated with a comprehensive list of available utility methods, their parameters, return values, and usage examples as they are developed.
 
-The library is organized into modules based on functionality. Here are some of
-the key areas covered:
+* **Method 1:** (Description)
+  * Usage: `method1(params)`
+  * Test Coverage: 0%
+* **Method 2:** (Description)
+  * Usage: `method2(params)`
+  * Test Coverage: 0%
 
-- **Utilities:** General-purpose helper functions.
-  - [`my_awesome_library/utils.py`](my_awesome_library/utils.py)
-    - [`format_string(text: str) -> str`](my_awesome_library/utils.py#L5) -
-      Formats a given string (e.g., capitalizes the first letter).
-    - [`is_palindrome(text: str) -> bool`](my_awesome_library/utils.py#L15) -
-      Checks if a string is a palindrome.
-- **Data Structures:** Custom data structures.
-  - [`my_awesome_library/data_structures.py`](my_awesome_library/data_structures.py)
-    - [`LinkedList`](my_awesome_library/data_structures.py#L5) - A simple
-      implementation of a singly linked list.
-      - [`append(value)`](my_awesome_library/data_structures.py#L15) - Appends a
-        value to the end of the list.
-      - [`find(value)`](my_awesome_library/data_structures.py#L25) - Finds the
-        first occurrence of a value in the list.
-- **Networking:** Functions for network operations.
-  - [`my_awesome_library/networking.py`](my_awesome_library/networking.py)
-    - [`fetch_url_content(url: str) -> str`](my_awesome_library/networking.py#L5) -
-      Fetches the content of a given URL.
+> Currently, all methods are under development or pending documentation. Test coverage is 0%.
+
+---
+
+## Development
+
+This section outlines how to contribute to the development of `js-helpers`, including understanding the project structure and using the available npm scripts.
+
+### Project Structure
+
+```bash
+.
+├── .github/              # GitHub specific files (workflows, linters configs)
+│   └── linters/
+├── dist/                 # Compiled JavaScript output and type definitions
+├── src/                  # TypeScript/JavaScript source files
+│   └── index.ts          # Main entry point for the library
+├── test/                 # Test files (e.g., *.test.js)
+├── .gitignore
+├── package.json          # Project metadata and dependencies
+├── README.md             # This file
+└── tsconfig.json         # TypeScript compiler configuration
+```
+
+### Available Scripts
+
+The `package.json` includes several scripts to help with development:
+
+| Script             | Description                                                                                                | How to use                  |
+| ------------------ | ---------------------------------------------------------------------------------------------------------- | --------------------------- |
+| `prepare`          | Runs `npm dedupe && npm prune`. Executed automatically by npm after `npm install`.                           | (Automatic)                 |
+| `format`           | Formats code using Prettier (`.github/linters/.prettierrc.yml`).                                           | `npm run format`            |
+| `format:check`     | Checks code formatting using Prettier without writing changes.                                             | `npm run format:check`      |
+| `lint`             | Lints code using ESLint (`.github/linters/eslint.config.js`) and attempts to fix issues.                   | `npm run lint`              |
+| `lint:check`       | Lints code using ESLint without fixing issues.                                                             | `npm run lint:check`        |
+| `prebuild`         | Runs `lint:check` and `format:check` before building. Executed automatically before `npm run build`.       | (Automatic)                 |
+| `build`            | Compiles source files from `src/` to `dist/` using `tsc`.                                                  | `npm run build`             |
+| `bundle`           | Generates a bundled `types.d.ts` file using `dts-bundle-generator`.                                        | `npm run bundle`            |
+| `bundle:watch`     | Watches for changes and re-runs the `bundle` script.                                                       | `npm run bundle:watch`      |
+| `pretest`          | Runs `build` and `bundle` scripts. Executed automatically before `npm test`.                               | (Automatic)                 |
+| `test`             | Runs tests using `node --no-warnings --experimental-specifier-resolution=node --inspect-brk test ...`.     | `npm test`                  |
+| `test:watch`       | Runs tests in watch mode.                                                                                  | `npm run test:watch`        |
+| `c8`               | Base command for `c8` test coverage tool.                                                                  | `npm run c8 -- <args>`      |
+| `test:coverage`    | Runs tests and generates a coverage report using `c8`.                                                     | `npm run test:coverage`     |
+| `prepublishOnly`   | Runs `build` and `bundle` scripts. Executed automatically before `npm publish`.                            | (Automatic)                 |
+
+**Note on `pre` scripts:** Scripts like `prebuild`, `pretest`, and `prepublishOnly` are npm lifecycle scripts that run automatically before their corresponding main script (e.g., `prebuild` runs before `build`).
+
+### Running Tests
+
+To execute the test suite:
+
+```sh
+npm test
+```
+
+This command will:
+
+1. (Via `pretest`) Build the project (`npm run build`).
+2. (Via `pretest`) Bundle type definitions (`npm run bundle`).
+3. Run test files (e.g., `**/*.test.js`) using the Node.js runtime with specific flags (`--no-warnings`, `--experimental-specifier-resolution=node`, `--inspect-brk`). The `--inspect-brk` flag enables the debugger and pauses execution at the start of the script.
+
+To run tests and generate a coverage report (currently 0%):
+
+```sh
+npm run test:coverage
+```
+
+Coverage reports will be generated in the `coverage/` directory.
+
+To run tests in watch mode (re-running tests on file changes):
+
+```sh
+npm run test:watch
+```
+
+### Linting and Formatting
+
+This project uses ESLint for linting and Prettier for code formatting.
+
+* **Check formatting:**
+
+    ```sh
+    npm run format:check
+    ```
+
+* **Apply formatting:**
+
+    ```sh
+    npm run format
+    ```
+
+* **Check for linting errors:**
+
+    ```sh
+    npm run lint:check
+    ```
+
+* **Apply linting fixes:**
+
+    ```sh
+    npm run lint
+    ```
+
+It's recommended to set up your editor to use these tools for a better development experience.
+
+### Building the Project
+
+To build the project (compile TypeScript/JavaScript from `src/` to `dist/` and generate type definitions):
+
+```sh
+npm run build
+npm run bundle
+```
+
+The `npm run build` script handles the compilation, and `npm run bundle` generates the `types.d.ts` file.
+The `prepublishOnly` script automatically runs these before publishing.
+
+---
+
+## Contributing
+
+Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+Please ensure your code adheres to the existing style and all tests pass.
+
+---
+
+## License
+
+Distributed under the MIT License. See `LICENSE` file (if one exists) or `package.json` for more information.
+
+---
+
+## Contact
+
+Dylan Archer - @dylarcher - <dylarcher@gmail.com>
+
+Project Link: <https://github.com/dylarcher/js.helper-utils>
+Homepage: <https://dylarcher.github.io/js.helper-utils/>
+
+---
+
+### Suggestions for `package.json`
+
+I noticed a couple of things in your `/Users/darcher/dev/js.helper-utils/package.json` that could be improved for clarity and correctness:
+
+1. **Undefined `dts` script in lifecycle hooks:**
+   The `prepublishOnly` and `pretest` scripts refer to `npm run dts`, but there's no `dts` script defined. It seems the `bundle` script (`npx dts-bundle-generator ...`) is responsible for generating the `.d.ts` files.
+
+   Consider replacing `npm run dts` with `npm run bundle` in these scripts.
+
+    ```diff
+    --- a/Users/darcher/dev/js.helper-utils/package.json
+    +++ b/Users/darcher/dev/js.helper-utils/package.json
+    @@ -43,8 +43,8 @@
+        "lint:check": "npm run eslint",
+        "lint": "npm run eslint -- --fix",
+        "prepare": "npm dedupe && npm prune",
+    -  "prebuild": "npm run lint:check && npm run format:check",
+    -  "prepublishOnly": "npm run build && npm run dts",
+    -  "pretest": "npm run build && npm run dts",
+    +  "prebuild": "npm run lint:check && npm run format:check",
+    +  "prepublishOnly": "npm run build && npm run bundle",
+    +  "pretest": "npm run build && npm run bundle",
+        "test": "node --no-warnings --experimental-specifier-resolution=node --inspect-brk test --reporter=spec ./**/*.test.js",
+        "c8": "npx c8 --config=./.github/linters/.c8rc.json",
+        "test:coverage": "npm run c8 -- npm test",
+    ```
+
+2. **`tsc --minify` in `build` script:**
+   The `build` script is `npx tsc --minify`. The standard TypeScript compiler `tsc` does not have a `--minify` flag. Minification is typically handled by separate tools (e.g., Terser, esbuild) or bundlers.
+   If minification is desired, you might need to add another step to your build process using an appropriate tool. If `--minify` is a typo or part of a custom `tsc` wrapper, it might be confusing.
+
+   For a standard `tsc` build, you'd typically just have `npx tsc`. If you have specific compiler options for minification-like behavior (e.g., related to output or module type), they should be in your `tsconfig.json`.
+
+   If you intend to minify, a common approach is to use a tool like `esbuild` or `terser` after `tsc` or as part of a bundler setup. For example:
+   `"build": "npx tsc && npx terser dist/index.js -o dist/index.min.js --compress --mangle"` (This is a simplified example).
+
+   For now, the README describes the `build` script as "Compiles source files ... using `tsc`." This is accurate for the `tsc` part, but the `--minify` flag will likely cause `tsc` to error or ignore it.
