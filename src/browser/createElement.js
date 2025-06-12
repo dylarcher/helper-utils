@@ -8,7 +8,7 @@
 export function createElement(
 	tagName,
 	attributes = /** @type {Record<string, string>} */ ({}),
-	children = []
+	children = [],
 ) {
 	const element = document.createElement(tagName);
 
@@ -18,9 +18,7 @@ export function createElement(
 		}
 	}
 
-	Array.isArray(children)
-		? appendChildren(children)
-		: appendChild(children)
+	Array.isArray(children) ? appendChildren(children) : appendChild(children);
 
 	/**
 	 * Appends a child (string or Node) to the element.
@@ -33,16 +31,16 @@ export function createElement(
 		} else if (child instanceof Node) {
 			element.appendChild(child);
 		}
-	};
+	}
 
 	/**
 	 * Appends multiple children (string or Node) to the element.
-	 * @param {Array<string | Node>} children
+	 * @param {Array<string | Node>} descendants
 	 * @returns {void}
 	 */
-	function appendChildren(children) {
-		for (const child of children) {
-			appendChild(child)
+	function appendChildren(descendants) {
+		for (const descendant of descendants) {
+			appendChild(descendant);
 		}
 	}
 

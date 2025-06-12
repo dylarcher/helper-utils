@@ -1,4 +1,4 @@
-import crypto from "node:crypto";
+import * as _crypto from "node:crypto";
 const ALGORITHM = "aes-256-cbc";
 
 /**
@@ -16,7 +16,7 @@ export function decrypt(encryptedTextWithIv, key) {
 		);
 	}
 	const iv = Buffer.from(ivHex, "hex");
-	const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
+	const decipher = _crypto.createDecipheriv(ALGORITHM, key, iv);
 	let decrypted = decipher.update(encryptedText, "hex", "utf8");
 	decrypted += decipher.final("utf8");
 	return decrypted;

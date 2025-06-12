@@ -1,14 +1,14 @@
 /**
  * Retrieves a browser cookie by name.
- * @param {string} name - The name of the cookie.
+ * @param {string} alias - The name of the cookie.
  * @returns {string|null} The cookie value, or null if not found.
  */
-export function getCookie(name) {
+export function getCookie(alias) {
 	if (typeof document === "undefined" || !document.cookie) {
 		return null;
 	}
 
-	const nameEQ = `${name}=`;
+	const nameEQ = `${alias}=`;
 	const ca = document.cookie.split(";");
 	for (let i = 0; i < ca.length; i++) {
 		const c = ca[i].trimStart();

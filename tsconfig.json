@@ -3,20 +3,29 @@
 		"allowJs": true,
 		"checkJs": true,
 		"baseUrl": ".",
+		"rootDir": "src",
+		"skipDefaultLibCheck": true,
 		"esModuleInterop": true,
-		"experimentalDecorators": true,
 		"forceConsistentCasingInFileNames": true,
-		"isolatedModules": true,
 		"declaration": true,
-		"lib": ["esnext", "dom"],
-		"module": "esnext",
-		"moduleResolution": "bundler",
+		"lib": ["ES2020", "DOM", "DOM.Iterable"],
+		"module": "ESNext",
+		"moduleResolution": "node",
 		"outDir": "dist",
 		"strict": true,
-		"target": "esnext"
+		"target": "ES2020",
+		"paths": {
+			"@/*": ["src/*"],
+			"@spec/*": ["tests/*"],
+			"@www/*": ["docs/*"],
+			"#node/*": ["@/system/*"],
+			"#util/*": ["@/browser/*"],
+		},
 	},
+	"exclude": ["node_modules", "dist"],
+	"include": ["**/*.js"],
 	"typeAcquisition": {
 		"enable": true,
-		"include": ["node", "eslint", "prettier", "dts-bundle-generator", "c8"]
+		"include": ["node", "eslint", "prettier", "c8"]
 	}
 }
