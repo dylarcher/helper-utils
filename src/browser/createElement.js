@@ -28,7 +28,7 @@ export function createElement(
 	function appendChild(child) {
 		if (typeof child === 'string') {
 			element.appendChild(document.createTextNode(child));
-		} else if (child && typeof child === 'object') {
+		} else if (child && child instanceof Node) {
 			// Handle any object that looks like a DOM node
 			element.appendChild(child);
 		}
