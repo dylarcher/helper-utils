@@ -1,14 +1,13 @@
-import { describe, it, beforeEach } from "node:test";
+import { describe, it, beforeEach, afterEach } from "node:test";
 import assert from "node:assert/strict";
-import { setLocalStorageJSON } from "src/browser/setLocalStorageJSON.js";
+import { setLocalStorageJSON } from "./setLocalStorageJSON.js";
+import { setupBrowserMocks, restoreGlobals } from "../../utils/test.utils.js";
 
 describe("setLocalStorageJSON(key, value)", () => {
-	let originalLocalStorage;
-	let mockStorage;
 	let consoleErrors;
 
 	beforeEach(() => {
-		originalLocalStorage = global.localStorage;
+		setupBrowserMocks();
 		consoleErrors = [];
 
 		// Mock console.error to capture error messages
@@ -21,15 +20,13 @@ describe("setLocalStorageJSON(key, value)", () => {
 		global.restoreConsoleError = () => {
 			console.error = originalConsoleError;
 		};
+	});
 
-		// Create mock localStorage
-		mockStorage = new Map();
-		global.localStorage = {
-			setItem: (key, value) => mockStorage.set(key, value),
-			getItem: (key) => mockStorage.get(key) || null,
-			removeItem: (key) => mockStorage.delete(key),
-			clear: () => mockStorage.clear(),
-		};
+	afterEach(() => {
+		if (global.restoreConsoleError) {
+			global.restoreConsoleError();
+		}
+		restoreGlobals();
 	});
 
 	it("should stringify and store simple object", () => {
@@ -37,7 +34,10 @@ describe("setLocalStorageJSON(key, value)", () => {
 		const result = setLocalStorageJSON("user", testData);
 
 		assert.strictEqual(result, true);
-		assert.strictEqual(mockStorage.get("user"), JSON.stringify(testData));
+		assert.strictEqual(
+			global.localStorage.getItem("user"),
+			JSON.stringify(testData),
+		);
 	});
 
 	it("should stringify and store array", () => {
@@ -45,7 +45,10 @@ describe("setLocalStorageJSON(key, value)", () => {
 		const result = setLocalStorageJSON("fruits", testData);
 
 		assert.strictEqual(result, true);
-		assert.strictEqual(mockStorage.get("fruits"), JSON.stringify(testData));
+		assert.strictEqual(
+			global.localStorage.getItem("fruits"),
+			JSON.stringify(testData),
+		);
 	});
 
 	it("should stringify and store primitive values", () => {
@@ -54,10 +57,10 @@ describe("setLocalStorageJSON(key, value)", () => {
 		assert.strictEqual(setLocalStorageJSON("boolean", true), true);
 		assert.strictEqual(setLocalStorageJSON("null", null), true);
 
-		assert.strictEqual(mockStorage.get("number"), "42");
-		assert.strictEqual(mockStorage.get("string"), '"hello"');
-		assert.strictEqual(mockStorage.get("boolean"), "true");
-		assert.strictEqual(mockStorage.get("null"), "null");
+		assert.strictEqual(global.localStorage.getItem("number"), "42");
+		assert.strictEqual(global.localStorage.getItem("string"), "\"hello\"");
+		assert.strictEqual(global.localStorage.getItem("boolean"), "true");
+		assert.strictEqual(global.localStorage.getItem("null"), "null");
 	});
 
 	it("should handle complex nested objects", () => {
@@ -87,7 +90,7 @@ describe("setLocalStorageJSON(key, value)", () => {
 		assert.strictEqual(result, true);
 
 		// Verify it can be parsed back correctly
-		const stored = mockStorage.get("complexData");
+		const stored = global.localStorage.getItem("complexData");
 		const parsed = JSON.parse(stored);
 		assert.deepStrictEqual(parsed, complexData);
 	});
@@ -103,7 +106,7 @@ describe("setLocalStorageJSON(key, value)", () => {
 
 		assert.strictEqual(result, true);
 
-		const stored = mockStorage.get("specialChars");
+		const stored = global.localStorage.getItem("specialChars");
 		const parsed = JSON.parse(stored);
 		assert.deepStrictEqual(parsed, specialData);
 	});
@@ -113,10 +116,16 @@ describe("setLocalStorageJSON(key, value)", () => {
 		const secondData = { version: 2 };
 
 		setLocalStorageJSON("data", firstData);
-		assert.strictEqual(mockStorage.get("data"), JSON.stringify(firstData));
+		assert.strictEqual(
+			global.localStorage.getItem("data"),
+			JSON.stringify(firstData),
+		);
 
 		setLocalStorageJSON("data", secondData);
-		assert.strictEqual(mockStorage.get("data"), JSON.stringify(secondData));
+		assert.strictEqual(
+			global.localStorage.getItem("data"),
+			JSON.stringify(secondData),
+		);
 	});
 
 	it("should return false and log error when localStorage.setItem throws", () => {
@@ -130,7 +139,7 @@ describe("setLocalStorageJSON(key, value)", () => {
 		assert.strictEqual(consoleErrors.length, 1);
 		assert.ok(
 			consoleErrors[0][0].includes(
-				"Error setting JSON in localStorage for key \"test\"",
+				'Error setting JSON in localStorage for key "test"',
 			),
 		);
 	});
@@ -146,7 +155,7 @@ describe("setLocalStorageJSON(key, value)", () => {
 		assert.strictEqual(consoleErrors.length, 1);
 		assert.ok(
 			consoleErrors[0][0].includes(
-				"Error setting JSON in localStorage for key \"circular\"",
+				'Error setting JSON in localStorage for key "circular"',
 			),
 		);
 	});
@@ -155,14 +164,14 @@ describe("setLocalStorageJSON(key, value)", () => {
 		const result = setLocalStorageJSON("undefined", undefined);
 
 		assert.strictEqual(result, true);
-		assert.strictEqual(mockStorage.get("undefined"), "null"); // JSON.stringify(undefined) becomes "null"
+		assert.strictEqual(global.localStorage.getItem("undefined"), "null"); // JSON.stringify(undefined) becomes "null"
 	});
 
 	it("should handle function values", () => {
 		const result = setLocalStorageJSON("function", () => "test");
 
 		assert.strictEqual(result, true);
-		assert.strictEqual(mockStorage.get("function"), "null"); // Functions become null in JSON
+		assert.strictEqual(global.localStorage.getItem("function"), "null"); // Functions become null in JSON
 	});
 
 	it("should handle objects with toJSON method", () => {
@@ -177,7 +186,7 @@ describe("setLocalStorageJSON(key, value)", () => {
 
 		assert.strictEqual(result, true);
 
-		const stored = mockStorage.get("customSerialization");
+		const stored = global.localStorage.getItem("customSerialization");
 		const parsed = JSON.parse(stored);
 		assert.deepStrictEqual(parsed, { value: "serialized" });
 	});
@@ -188,15 +197,18 @@ describe("setLocalStorageJSON(key, value)", () => {
 		const result = setLocalStorageJSON("date", dateObj);
 
 		assert.strictEqual(result, true);
-		assert.strictEqual(mockStorage.get("date"), `"${dateObj.toISOString()}"`);
+		assert.strictEqual(
+			global.localStorage.getItem("date"),
+			`"${dateObj.toISOString()}"`,
+		);
 	});
 
 	it("should handle empty objects and arrays", () => {
 		assert.strictEqual(setLocalStorageJSON("emptyObj", {}), true);
 		assert.strictEqual(setLocalStorageJSON("emptyArr", []), true);
 
-		assert.strictEqual(mockStorage.get("emptyObj"), "{}");
-		assert.strictEqual(mockStorage.get("emptyArr"), "[]");
+		assert.strictEqual(global.localStorage.getItem("emptyObj"), "{}");
+		assert.strictEqual(global.localStorage.getItem("emptyArr"), "[]");
 	});
 
 	it("should handle very large objects", () => {
@@ -209,7 +221,7 @@ describe("setLocalStorageJSON(key, value)", () => {
 
 		assert.strictEqual(result, true);
 
-		const stored = mockStorage.get("large");
+		const stored = global.localStorage.getItem("large");
 		const parsed = JSON.parse(stored);
 		assert.deepStrictEqual(parsed, largeObj);
 	});
@@ -225,14 +237,8 @@ describe("setLocalStorageJSON(key, value)", () => {
 
 		assert.strictEqual(result, true);
 
-		const stored = mockStorage.get("withSymbol");
+		const stored = global.localStorage.getItem("withSymbol");
 		const parsed = JSON.parse(stored);
 		assert.deepStrictEqual(parsed, { normalProp: "value" }); // Symbol property ignored
-	});
-
-	// Cleanup after each test
-	beforeEach(() => {
-		global.localStorage = originalLocalStorage;
-		global.restoreConsoleError();
 	});
 });

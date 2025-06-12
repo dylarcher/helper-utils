@@ -1,6 +1,7 @@
-import { describe, it, beforeEach } from "node:test";
+import { describe, it, beforeEach, afterEach } from "node:test";
 import assert from "node:assert/strict";
-import { querySelectorWrapper } from "src/browser/querySelectorWrapper.js";
+import { querySelectorWrapper } from "./querySelectorWrapper.js";
+import { setupBrowserMocks, restoreGlobals } from "../../utils/test.utils.js";
 
 // Mock Element and Document for testing
 class MockElement {
@@ -71,10 +72,9 @@ class MockElement {
 
 describe("querySelectorWrapper(selector, container)", () => {
 	let mockDocument;
-	let originalDocument;
 
 	beforeEach(() => {
-		originalDocument = global.document;
+		setupBrowserMocks();
 
 		// Create mock document structure
 		mockDocument = new MockElement("document");
@@ -89,6 +89,10 @@ describe("querySelectorWrapper(selector, container)", () => {
 		div1.appendChild(span);
 
 		global.document = mockDocument;
+	});
+
+	afterEach(() => {
+		restoreGlobals();
 	});
 
 	it("should find element by id using document", () => {
@@ -254,10 +258,5 @@ describe("querySelectorWrapper(selector, container)", () => {
 				`Should find element for selector: ${selector}`,
 			);
 		});
-	});
-
-	// Cleanup after each test
-	beforeEach(() => {
-		global.document = originalDocument;
 	});
 });

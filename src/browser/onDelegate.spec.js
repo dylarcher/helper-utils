@@ -1,6 +1,6 @@
 import { describe, it, beforeEach } from "node:test";
 import assert from "node:assert/strict";
-import { onDelegate } from "src/browser/onDelegate.js";
+import { onDelegate } from "./onDelegate.js";
 
 // Mock Element for testing event delegation
 class MockElement {

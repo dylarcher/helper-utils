@@ -9,7 +9,7 @@ import fs from "node:fs/promises";
  */
 export async function removeDirectory(
 	dirPath,
-	options = { recursive: false, force: false },
+	options = { recursive: true, force: false },
 ) {
 	return fs.rm(dirPath, options);
 }

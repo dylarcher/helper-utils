@@ -63,7 +63,7 @@
     "yaml.format.enable": false,
     "yaml.validate": false,
     "explorer.fileNesting.enabled": true,
-    "explorer.fileNesting.expand": false,
+    "explorer.fileNesting.expand": true,
     "explorer.fileNesting.patterns": {
         "package.json": "${basename}-lock.${extname}, npm-shrinkwrap.${extname}, yarn.lock, pnpm-lock.yaml, bun.lockb, bun.lock",
         "tsconfig.json": "${basename}.*.${extname}",

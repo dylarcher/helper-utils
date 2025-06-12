@@ -1,6 +1,6 @@
 import { describe, it, beforeEach } from "node:test";
 import assert from "node:assert/strict";
-import { hasClass } from "src/browser/hasClass.js";
+import { hasClass } from "./hasClass.js";
 
 // Mock Element class for testing
 class MockElement {

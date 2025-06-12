@@ -1,45 +1,25 @@
-import { describe, it, beforeEach } from "node:test";
+import { describe, it, beforeEach, afterEach } from "node:test";
 import assert from "node:assert/strict";
-import { createElement } from "src/browser/createElement.js";
+import { createElement } from "./createElement.js";
+import { setupBrowserMocks, restoreGlobals } from "../../utils/test.utils.js";
 
-// Mock DOM for testing environment
+// Mock Element class for testing
 class MockElement {
-	constructor(tagName) {
+	constructor(tagName, className = "", id = "") {
 		this.tagName = tagName.toLowerCase();
-		this.attributes = {};
-		this.childNodes = [];
+		this.className = className;
+		this.id = id;
 		this.textContent = "";
-	}
-
-	setAttribute(name, value) {
-		this.attributes[name] = value;
-	}
-
-	appendChild(child) {
-		this.childNodes.push(child);
-		if (typeof child === "string") {
-			this.textContent += child;
-		}
-	}
-}
-
-class MockTextNode {
-	constructor(text) {
-		this.nodeType = 3; // TEXT_NODE
-		this.textContent = text;
 	}
 }
 
 describe("createElement(tagName, attributes, children)", () => {
-	let originalDocument;
-
 	beforeEach(() => {
-		// Mock document
-		originalDocument = global.document;
-		global.document = {
-			createElement: (tagName) => new MockElement(tagName),
-			createTextNode: (text) => new MockTextNode(text),
-		};
+		setupBrowserMocks();
+	});
+
+	afterEach(() => {
+		restoreGlobals();
 	});
 
 	it("should create an element with specified tag name", () => {
@@ -118,10 +98,5 @@ describe("createElement(tagName, attributes, children)", () => {
 		const element = createElement("div", attributes);
 		assert.strictEqual(element.attributes.ownProp, "own");
 		assert.strictEqual(element.attributes.inheritedProp, undefined);
-	});
-
-	// Cleanup
-	beforeEach(() => {
-		global.document = originalDocument;
 	});
 });

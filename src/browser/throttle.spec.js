@@ -1,6 +1,6 @@
 import { describe, it, beforeEach } from "node:test";
 import assert from "node:assert/strict";
-import { throttle } from "src/browser/throttle.js";
+import { throttle } from "./throttle.js";
 
 describe("throttle(func, limit)", () => {
 	let callCount;

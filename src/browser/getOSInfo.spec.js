@@ -1,6 +1,6 @@
 import { describe, it, beforeEach } from "node:test";
 import assert from "node:assert/strict";
-import { getOSInfo } from "src/browser/getOSInfo.js";
+import { getOSInfo } from "./getOSInfo.js";
 
 describe("getOSInfo()", () => {
 	let originalOs;

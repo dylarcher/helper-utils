@@ -1,14 +1,20 @@
 import { describe, it, beforeEach } from "node:test";
 import assert from "node:assert/strict";
-import { addClass } from "src/browser/addClass.js";
+import { addClass } from "./addClass.js";
 
 // Mock Element class for testing environment
 class MockElement {
 	constructor() {
 		this.classList = new Set();
+		// Store reference to Set's add method to avoid recursion
+		const setAdd = this.classList.add.bind(this.classList);
 		// Define classList.add, classList.contains, and className for compatibility
 		this.classList.add = (...names) =>
-			names.forEach((name) => this.classList.add(name));
+			names.forEach((name) => {
+				if (typeof name === "string" && name.trim() !== "") {
+					setAdd(name); // Use Set's original add method
+				}
+			});
 		this.classList.contains = (name) => this.classList.has(name);
 	}
 
@@ -23,18 +29,6 @@ describe("addClass(element, ...classNames)", () => {
 
 	beforeEach(() => {
 		mockElement = new MockElement();
-		// Mock the classList.add method to behave like the DOM one
-		// It should add items to the Set.
-		const originalSetAdd = mockElement.classList.add.bind(
-			mockElement.classList,
-		);
-		mockElement.classList.add = (...classNames) => {
-			classNames.forEach((cn) => {
-				if (typeof cn === "string" && cn.trim() !== "") {
-					originalSetAdd(cn);
-				}
-			});
-		};
 	});
 
 	it("should add a single class to an element", () => {

@@ -18,12 +18,12 @@
 			"@/*": ["src/*"],
 			"@spec/*": ["tests/*"],
 			"@www/*": ["docs/*"],
-			"#node/*": ["@/system/*"],
-			"#util/*": ["@/browser/*"],
+			"#node/*": ["src/system/*"],
+			"#util/*": ["src/browser/*"],
 		},
 	},
-	"exclude": ["node_modules", "dist"],
-	"include": ["**/*.js"],
+	"exclude": ["node_modules", "docs", "dist", "test", "utils", "src/**/*.spec.js", "src/**/*.test.js"],
+	"include": ["src"],
 	"typeAcquisition": {
 		"enable": true,
 		"include": ["node", "eslint", "prettier", "c8"]

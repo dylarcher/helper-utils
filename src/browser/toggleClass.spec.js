@@ -1,6 +1,6 @@
 import { describe, it, beforeEach } from "node:test";
 import assert from "node:assert/strict";
-import { toggleClass } from "src/browser/toggleClass.js";
+import { toggleClass } from "./toggleClass.js";
 
 // Mock Element class for testing
 class MockElement {

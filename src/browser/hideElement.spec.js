@@ -1,6 +1,6 @@
 import { describe, it, beforeEach } from "node:test";
 import assert from "node:assert/strict";
-import { hideElement } from "src/browser/hideElement.js";
+import { hideElement } from "./hideElement.js";
 
 // Mock Element class for testing
 class MockElement {
@@ -8,7 +8,7 @@ class MockElement {
 		this.style = {
 			properties: {},
 			setProperty: (property, value) => {
-				this.properties[property] = value;
+				this.style.properties[property] = value;
 			},
 		};
 	}

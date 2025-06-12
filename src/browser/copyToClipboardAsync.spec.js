@@ -1,13 +1,15 @@
-import { describe, it, beforeEach } from "node:test";
+import { describe, it, beforeEach, afterEach } from "node:test";
 import assert from "node:assert/strict";
-import { copyToClipboardAsync } from "src/browser/copyToClipboardAsync.js";
+import { copyToClipboardAsync } from "./copyToClipboardAsync.js";
+import { setupBrowserMocks, restoreGlobals } from "../../utils/test.utils.js";
 
 describe("copyToClipboardAsync(text)", () => {
-	let originalNavigator;
-
 	beforeEach(() => {
-		// Save the original navigator
-		originalNavigator = global.navigator;
+		setupBrowserMocks();
+	});
+
+	afterEach(() => {
+		restoreGlobals();
 	});
 
 	it("should copy text to clipboard successfully", async () => {
@@ -76,10 +78,5 @@ describe("copyToClipboardAsync(text)", () => {
 		};
 
 		await assert.doesNotReject(() => copyToClipboardAsync(specialText));
-	});
-
-	// Cleanup after each test
-	beforeEach(() => {
-		global.navigator = originalNavigator;
 	});
 });

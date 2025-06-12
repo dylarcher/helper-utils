@@ -1,17 +1,18 @@
-import { describe, it, beforeEach } from "node:test";
+import { describe, it, beforeEach, afterEach } from "node:test";
 import assert from "node:assert/strict";
-import { parseQueryParams } from "src/browser/parseQueryParams.js";
+import { parseQueryParams } from "./parseQueryParams.js";
+import { setupBrowserMocks, restoreGlobals } from "../../utils/test.utils.js";
 
 describe("parseQueryParams(queryString)", () => {
-	let originalWindow;
-
 	beforeEach(() => {
-		originalWindow = global.window;
-		global.window = {
-			location: {
-				search: "?default=value&test=123",
-			},
+		setupBrowserMocks();
+		global.window.location = {
+			search: "?default=value&test=123",
 		};
+	});
+
+	afterEach(() => {
+		restoreGlobals();
 	});
 
 	it("should parse simple query parameters", () => {
@@ -192,10 +193,5 @@ describe("parseQueryParams(queryString)", () => {
 			city: "São Paulo",
 			país: "Brasil",
 		});
-	});
-
-	// Cleanup after each test
-	beforeEach(() => {
-		global.window = originalWindow;
 	});
 });

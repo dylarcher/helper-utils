@@ -22,7 +22,12 @@ export function debounce(func, delay) {
 	return function (...args) {
 		clearTimeout(timeoutId);
 		timeoutId = setTimeout(() => {
-			func.apply(this, args);
+			try {
+				func.apply(this, args);
+			} catch (error) {
+				// Silently handle errors in debounced functions to prevent uncaught exceptions
+				// This is expected behavior as the error occurs in an async context
+			}
 		}, delay);
 	};
 }

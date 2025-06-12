@@ -1,14 +1,13 @@
-import { describe, it, beforeEach } from "node:test";
+import { describe, it, beforeEach, afterEach } from "node:test";
 import assert from "node:assert/strict";
-import { getLocalStorageJSON } from "src/browser/getLocalStorageJSON.js";
+import { getLocalStorageJSON } from "./getLocalStorageJSON.js";
+import { setupBrowserMocks, restoreGlobals } from "../../utils/test.utils.js";
 
 describe("getLocalStorageJSON(key)", () => {
-	let originalLocalStorage;
-	let mockStorage;
 	let consoleErrors;
 
 	beforeEach(() => {
-		originalLocalStorage = global.localStorage;
+		setupBrowserMocks();
 		consoleErrors = [];
 
 		// Mock console.error to capture error messages
@@ -21,20 +20,18 @@ describe("getLocalStorageJSON(key)", () => {
 		global.restoreConsoleError = () => {
 			console.error = originalConsoleError;
 		};
+	});
 
-		// Create mock localStorage
-		mockStorage = new Map();
-		global.localStorage = {
-			getItem: (key) => mockStorage.get(key) || null,
-			setItem: (key, value) => mockStorage.set(key, value),
-			removeItem: (key) => mockStorage.delete(key),
-			clear: () => mockStorage.clear(),
-		};
+	afterEach(() => {
+		if (global.restoreConsoleError) {
+			global.restoreConsoleError();
+		}
+		restoreGlobals();
 	});
 
 	it("should parse and return valid JSON object", () => {
 		const testData = { name: "John", age: 30, active: true };
-		mockStorage.set("testKey", JSON.stringify(testData));
+		global.localStorage.setItem("testKey", JSON.stringify(testData));
 
 		const result = getLocalStorageJSON("testKey");
 		assert.deepStrictEqual(result, testData);
@@ -42,17 +39,17 @@ describe("getLocalStorageJSON(key)", () => {
 
 	it("should parse and return valid JSON array", () => {
 		const testData = ["apple", "banana", "cherry"];
-		mockStorage.set("fruits", JSON.stringify(testData));
+		global.localStorage.setItem("fruits", JSON.stringify(testData));
 
 		const result = getLocalStorageJSON("fruits");
 		assert.deepStrictEqual(result, testData);
 	});
 
 	it("should parse and return valid JSON primitive", () => {
-		mockStorage.set("number", JSON.stringify(42));
-		mockStorage.set("string", JSON.stringify("hello"));
-		mockStorage.set("boolean", JSON.stringify(true));
-		mockStorage.set("null", JSON.stringify(null));
+		global.localStorage.setItem("number", JSON.stringify(42));
+		global.localStorage.setItem("string", JSON.stringify("hello"));
+		global.localStorage.setItem("boolean", JSON.stringify(true));
+		global.localStorage.setItem("null", JSON.stringify(null));
 
 		assert.strictEqual(getLocalStorageJSON("number"), 42);
 		assert.strictEqual(getLocalStorageJSON("string"), "hello");
@@ -66,14 +63,14 @@ describe("getLocalStorageJSON(key)", () => {
 	});
 
 	it("should return null for empty string value", () => {
-		mockStorage.set("emptyKey", "");
+		global.localStorage.setItem("emptyKey", "");
 
 		const result = getLocalStorageJSON("emptyKey");
 		assert.strictEqual(result, null);
 	});
 
 	it("should return null and log error for invalid JSON", () => {
-		mockStorage.set("invalidJSON", "{ invalid json }");
+		global.localStorage.setItem("invalidJSON", "{ invalid json }");
 
 		const result = getLocalStorageJSON("invalidJSON");
 
@@ -124,7 +121,7 @@ describe("getLocalStorageJSON(key)", () => {
 			],
 		};
 
-		mockStorage.set("complexData", JSON.stringify(complexData));
+		global.localStorage.setItem("complexData", JSON.stringify(complexData));
 
 		const result = getLocalStorageJSON("complexData");
 		assert.deepStrictEqual(result, complexData);
@@ -137,7 +134,7 @@ describe("getLocalStorageJSON(key)", () => {
 			unicode: "café naïve résumé",
 		};
 
-		mockStorage.set("specialChars", JSON.stringify(specialData));
+		global.localStorage.setItem("specialChars", JSON.stringify(specialData));
 
 		const result = getLocalStorageJSON("specialChars");
 		assert.deepStrictEqual(result, specialData);
@@ -145,20 +142,14 @@ describe("getLocalStorageJSON(key)", () => {
 
 	it("should handle JSON with escaped characters", () => {
 		const dataWithEscapes = {
-			quote: 'He said "Hello"',
+			quote: "He said \"Hello\"",
 			backslash: "C:\\Users\\John",
 			newline: "Line 1\nLine 2",
 		};
 
-		mockStorage.set("escapedData", JSON.stringify(dataWithEscapes));
+		global.localStorage.setItem("escapedData", JSON.stringify(dataWithEscapes));
 
 		const result = getLocalStorageJSON("escapedData");
 		assert.deepStrictEqual(result, dataWithEscapes);
-	});
-
-	// Cleanup after each test
-	beforeEach(() => {
-		global.localStorage = originalLocalStorage;
-		global.restoreConsoleError();
 	});
 });

@@ -1,6 +1,6 @@
 import { describe, it, beforeEach } from "node:test";
 import assert from "node:assert/strict";
-import { setAttribute } from "src/browser/setAttribute.js";
+import { setAttribute } from "./setAttribute.js";
 
 // Mock Element class for testing
 class MockElement {

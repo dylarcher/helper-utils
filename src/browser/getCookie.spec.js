@@ -1,6 +1,6 @@
 import { describe, it, beforeEach } from "node:test";
 import assert from "node:assert/strict";
-import { getCookie } from "src/browser/getCookie.js";
+import { getCookie } from "./getCookie.js";
 
 describe("getCookie(alias)", () => {
 	let originalDocument;

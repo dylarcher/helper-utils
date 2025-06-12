@@ -1,14 +1,14 @@
-import { describe, it, beforeEach } from "node:test";
+import { describe, it, beforeEach, afterEach } from "node:test";
 import assert from "node:assert/strict";
-import { getStyle } from "src/browser/getStyle.js";
+import { getStyle } from "./getStyle.js";
+import { setupBrowserMocks, restoreGlobals } from "../../utils/test.utils.js";
 
 describe("getStyle(element, pseudoElt)", () => {
-	let originalWindow;
 	let mockElement;
 	let mockComputedStyle;
 
 	beforeEach(() => {
-		originalWindow = global.window;
+		setupBrowserMocks();
 
 		// Mock computed style object
 		mockComputedStyle = {
@@ -28,14 +28,16 @@ describe("getStyle(element, pseudoElt)", () => {
 		};
 
 		// Mock window.getComputedStyle
-		global.window = {
-			getComputedStyle: (element, pseudoElt) => {
-				if (element === mockElement) {
-					return mockComputedStyle;
-				}
-				return null;
-			},
+		global.window.getComputedStyle = (element, pseudoElt) => {
+			if (element === mockElement) {
+				return mockComputedStyle;
+			}
+			return null;
 		};
+	});
+
+	afterEach(() => {
+		restoreGlobals();
 	});
 
 	it("should return computed style for valid element", () => {
@@ -156,10 +158,5 @@ describe("getStyle(element, pseudoElt)", () => {
 
 		const result = getStyle(mockElement);
 		assert.strictEqual(result, emptyStyles);
-	});
-
-	// Cleanup after each test
-	beforeEach(() => {
-		global.window = originalWindow;
 	});
 });

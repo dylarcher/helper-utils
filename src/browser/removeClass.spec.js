@@ -1,6 +1,6 @@
 import { describe, it, beforeEach } from "node:test";
 import assert from "node:assert/strict";
-import { removeClass } from "src/browser/removeClass.js";
+import { removeClass } from "./removeClass.js";
 
 // Mock Element class for testing
 class MockElement {

@@ -1,6 +1,6 @@
 import { describe, it, beforeEach } from "node:test";
 import assert from "node:assert/strict";
-import { once } from "src/browser/once.js";
+import { once } from "./once.js";
 
 // Mock EventTarget for testing
 class MockEventTarget {

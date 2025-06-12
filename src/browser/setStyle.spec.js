@@ -1,6 +1,6 @@
 import { describe, it, beforeEach } from "node:test";
 import assert from "node:assert/strict";
-import { setStyle } from "src/browser/setStyle.js";
+import { setStyle } from "./setStyle.js";
 
 // Mock Element class for testing
 class MockElement {

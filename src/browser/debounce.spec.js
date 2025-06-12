@@ -1,6 +1,6 @@
 import { describe, it, beforeEach } from "node:test";
 import assert from "node:assert/strict";
-import { debounce } from "src/browser/debounce.js";
+import { debounce } from "./debounce.js";
 
 describe("debounce(func, delay)", () => {
 	let callCount;

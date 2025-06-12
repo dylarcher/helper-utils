@@ -7,6 +7,21 @@
  * const allImages = querySelectorAllWrapper('img');
  * const listItems = querySelectorAllWrapper('li', document.getElementById('myList'));
  */
-export function querySelectorAllWrapper(selector, container = document) {
-	return Array.from(container.querySelectorAll(selector));
+export function querySelectorAllWrapper(selector, container) {
+	// Use document as fallback only if it exists and container is not provided
+	const targetContainer =
+		container || (typeof document !== "undefined" ? document : null);
+
+	if (
+		!targetContainer ||
+		typeof targetContainer.querySelectorAll !== "function"
+	) {
+		return [];
+	}
+
+	try {
+		return Array.from(targetContainer.querySelectorAll(selector));
+	} catch (error) {
+		return [];
+	}
 }

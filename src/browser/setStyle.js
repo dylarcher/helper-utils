@@ -9,7 +9,7 @@ export function setStyle(element, property, value) {
 		return;
 	}
 
-	if (typeof property === "object") {
+	if (typeof property === "object" && property !== null) {
 		for (const key of Object.keys(property)) {
 			element.style[key] = property[key];
 		}

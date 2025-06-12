@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { findClosest } from "src/browser/findClosest.js";
+import { findClosest } from "./findClosest.js";
 
 // Mock Element class for testing
 class MockElement {

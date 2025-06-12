@@ -1,12 +1,15 @@
-import { describe, it, beforeEach } from "node:test";
+import { describe, it, beforeEach, afterEach } from "node:test";
 import assert from "node:assert/strict";
-import { uuid } from "src/browser/uuid.js";
+import { uuid } from "./uuid.js";
+import { setupBrowserMocks, restoreGlobals } from "../../utils/test.utils.js";
 
 describe("uuid()", () => {
-	let originalCrypto;
-
 	beforeEach(() => {
-		originalCrypto = global.crypto;
+		setupBrowserMocks();
+	});
+
+	afterEach(() => {
+		restoreGlobals();
 	});
 
 	it("should generate a valid UUID v4", () => {
@@ -186,10 +189,5 @@ describe("uuid()", () => {
 
 		// All should be unique
 		assert.strictEqual(uuids.size, 100);
-	});
-
-	// Cleanup after each test
-	beforeEach(() => {
-		global.crypto = originalCrypto;
 	});
 });

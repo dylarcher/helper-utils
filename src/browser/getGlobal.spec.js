@@ -1,6 +1,6 @@
 import { describe, it, beforeEach } from "node:test";
 import assert from "node:assert/strict";
-import { getGlobal } from "src/browser/getGlobal.js";
+import { getGlobal } from "./getGlobal.js";
 
 describe("getGlobal()", () => {
 	let originalGlobal, originalGlobalThis, originalSelf, originalWindow;

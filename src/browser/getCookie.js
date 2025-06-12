@@ -12,8 +12,14 @@ export function getCookie(alias) {
 	const ca = document.cookie.split(";");
 	for (let i = 0; i < ca.length; i++) {
 		const c = ca[i].trimStart();
-		if (c.startsWith(nameEQ)) {
-			return c.substring(nameEQ.length, c.length);
+		// Handle spaces around equals sign
+		if (c.includes("=")) {
+			const parts = c.split("=");
+			const cookieName = parts[0].trim();
+			const cookieValue = parts.slice(1).join("=").trim();
+			if (cookieName === alias) {
+				return cookieValue;
+			}
 		}
 	}
 	return null;

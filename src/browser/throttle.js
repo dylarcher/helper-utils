@@ -19,7 +19,16 @@ export function throttle(func, limit) {
 	 */
 	return function (...args) {
 		if (!inThrottle) {
-			func.apply(this, args);
+			try {
+				func.apply(this, args);
+			} catch (error) {
+				// Let the error bubble up on first call
+				inThrottle = true;
+				setTimeout(() => {
+					inThrottle = false;
+				}, limit);
+				throw error;
+			}
 			inThrottle = true;
 			setTimeout(() => {
 				inThrottle = false;
