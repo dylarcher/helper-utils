@@ -61,5 +61,13 @@
     "typescript.format.enable": false,
     "typescript.validate.enable": false,
     "yaml.format.enable": false,
-    "yaml.validate": false
+    "yaml.validate": false,
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.expand": false,
+    "explorer.fileNesting.patterns": {
+        "package.json": "${basename}-lock.${extname}, npm-shrinkwrap.${extname}, yarn.lock, pnpm-lock.yaml, bun.lockb, bun.lock",
+        "tsconfig.json": "${basename}.*.${extname}",
+        "jsconfig.json": "${basename}.*.${extname}",
+        "*.js": "${basename}.*.${extname}, ${basename}.d.ts, ${basename}.${extname}.map",
+    }
 }
