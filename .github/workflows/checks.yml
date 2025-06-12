@@ -19,6 +19,10 @@ jobs:
   checks:
     name: Lint, Format, Test & Build
     strategy:
+      matrix:
+        node-version:
+          - 18.x
+          - 20.x
       fail-fast: true
     runs-on: ubuntu-latest
     steps:

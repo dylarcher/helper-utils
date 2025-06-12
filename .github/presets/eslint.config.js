@@ -68,13 +68,6 @@ export default [
 			"prefer-promise-reject-errors": "error",
 			yoda: ["error", "never", { exceptRange: true }],
 			"object-curly-newline": ["error", { consistent: true }],
-			"no-restricted-syntax": [
-				"error",
-				{
-					selector: "CallExpression[callee.property.name='forEach']",
-					message: "Use for...of instead of forEach.",
-				},
-			],
 		},
 	},
 ];
