@@ -129,9 +129,14 @@
             transition: opacity 0.2s ease-in-out;
             color: var(--border-color);
         }
+        :root {
+            --focus-color: #3498db; /* Default focus color */
+        }
         .heading-group:hover .anchor-link,
         .anchor-link:focus {
             opacity: 0.7;
+            outline: 2px solid var(--focus-color);
+            outline-offset: 2px;
         }
         .anchor-link:hover {
             opacity: 1;
