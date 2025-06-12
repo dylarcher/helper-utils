@@ -25,6 +25,11 @@
             --button-color: #F59E0B;   /* Accessible Yellow */
             --button-text-color: #1F2937;
             --accent-color-blue: #3B82F6; /* Accessible Blue */
+            --syntax-comment: #6B7280;
+            --syntax-keyword: #8B5CF6;
+            --syntax-function: #EC4899;
+            --syntax-string: #22C55E;
+            --syntax-variable: var(--accent-color-blue);
         }
 
         html.dark {
@@ -37,6 +42,10 @@
             --button-color: #FBBF24;   /* Vibrant Yellow for dark */
             --button-text-color: #1F2937;
             --accent-color-blue: #60A5FA; /* Accessible Blue for dark */
+            --syntax-comment: #9CA3AF;
+            --syntax-keyword: #A78BFA;
+            --syntax-function: #F472B6;
+            --syntax-string: #4ADE80;
         }
 
         body {
@@ -103,13 +112,76 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        .key-shortcut {
+            display: inline-block;
+            border: 1px solid var(--border-color);
+            border-radius: 0.25rem;
+            padding: 0.1rem 0.4rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            line-height: 1;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+            color: var(--text-color);
+        }
     </style>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
-
+    <div class="relative">
+        <div id="shortcuts-menu-container" class="absolute top-4 left-4 z-20">
+            <button id="shortcuts-toggle" aria-haspopup="true" aria-expanded="false"
+                class="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+                aria-label="Open Keyboard Shortcuts Menu">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4">
+                    </path>
+                </svg>
+            </button>
+            <div id="shortcuts-dropdown"
+                class="hidden absolute left-0 mt-2 w-72 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none"
+                role="menu" aria-orientation="vertical" aria-labelledby="shortcuts-toggle">
+                <div class="py-1" role="none">
+                    <div class="px-4 py-2 text-xs font-bold uppercase text-gray-500 dark:text-gray-400">Shortcuts</div>
+                    <a href="#header"
+                        class="shortcut-link group flex items-center justify-between px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        role="menuitem" data-key="h"><span class="flex-grow">Go to Header</span><span
+                            class="key-shortcut">H</span></a>
+                    <a href="#renaissance-section"
+                        class="shortcut-link group flex items-center justify-between px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        role="menuitem" data-key="r"><span class="flex-grow">JS Renaissance</span><span
+                            class="key-shortcut">R</span></a>
+                    <a href="#getting-started-section"
+                        class="shortcut-link group flex items-center justify-between px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        role="menuitem" data-key="g"><span class="flex-grow">Getting Started</span><span
+                            class="key-shortcut">G</span></a>
+                    <a href="#collections-section"
+                        class="shortcut-link group flex items-center justify-between px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        role="menuitem" data-key="c"><span class="flex-grow">Collections</span><span
+                            class="key-shortcut">C</span></a>
+                    <a href="#ai-generator"
+                        class="shortcut-link group flex items-center justify-between px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        role="menuitem" data-key="a"><span class="flex-grow">AI Generator</span><span
+                            class="key-shortcut">A</span></a>
+                    <a href="#stats-section"
+                        class="shortcut-link group flex items-center justify-between px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        role="menuitem" data-key="s"><span class="flex-grow">Statistics</span><span
+                            class="key-shortcut">S</span></a>
+                    <a href="#libraries-section"
+                        class="shortcut-link group flex items-center justify-between px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        role="menuitem" data-key="l"><span class="flex-grow">Libraries</span><span
+                            class="key-shortcut">L</span></a>
+                    <a href="#anatomy-section"
+                        class="shortcut-link group flex items-center justify-between px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        role="menuitem" data-key="t"><span class="flex-grow">Anatomy</span><span
+                            class="key-shortcut">T</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="container mx-auto p-4 md:p-8 max-w-7xl">
 
-        <header class="text-center pt-8 pb-12 md:pt-12 md:pb-16 relative">
+        <header id="header" class="text-center pt-8 pb-12 md:pt-12 md:pb-16 relative">
             <div class="absolute top-4 right-4 flex items-center space-x-4">
                  <button id="download-btn" class="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none" aria-label="Download or clone library">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
@@ -128,8 +200,10 @@
 
         <main class="space-y-12 md:space-y-20">
 
-            <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 md:p-10 text-center md:col-span-2">
-                <h2 class="text-3xl font-bold mb-4" style="color: var(--heading-color-2);">The Vanilla JS Renaissance</h2>
+            <section id="renaissance-section"
+                class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 md:p-10 text-center md:col-span-2">
+                <h2 class="text-3xl font-bold mb-4" style="color: var(--heading-color-2);">The Vanilla JS Renaissance <span
+                        class="key-shortcut" aria-hidden="true">R</span></h2>
                 <p class="text-gray-700 dark:text-gray-300 mb-6 max-w-4xl mx-auto">Modern ECMAScript has armed developers with powerful native features, reducing dependency on large utility libraries. This shift prioritizes performance, smaller bundle sizes, and a deeper understanding of the language's core.</p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                     <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6">
@@ -154,34 +228,44 @@
                 </div>
             </section>
 
-            <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 md:p-10 md:col-span-2">
-                <h2 class="text-3xl font-bold text-center mb-8" style="color: var(--heading-color-2);">Getting Started</h2>
+            <section id="getting-started-section" class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 md:p-10 md:col-span-2">
+                <h2 class="text-3xl font-bold text-center mb-8" style="color: var(--heading-color-2);">Getting Started <span
+                        class="key-shortcut" aria-hidden="true">G</span></h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
                     <div>
                         <h3 class="text-2xl font-bold mb-4 text-gray-800 dark:text-white">Installation</h3>
                         <p class="text-gray-700 dark:text-gray-300 mb-4">You can clone the repository directly or install the package via NPM for easy integration into your build process.</p>
-                        <pre class="bg-gray-100 dark:bg-gray-900 rounded-lg p-4 text-sm text-gray-800 dark:text-gray-200 overflow-x-auto"><code># Clone the repo
-git clone https://github.com/dylarcher/js.helper-utils.git
+                        <pre class="bg-gray-100 dark:bg-gray-900 rounded-lg p-4 text-sm overflow-x-auto"><code class="language-bash"><span style="color: var(--syntax-comment);"># Clone the repo</span>
+                                                                                                <span style="color: var(--syntax-keyword);">git</span> clone https://github.com/dylarcher/js.helper-utils.git
 
-# Install with NPM
-npm install @dylarcher/js-helper-utils</code></pre>
+<span style="color: var(--syntax-comment);"># Install with NPM</span>
+<span style="color: var(--syntax-keyword);">npm</span> install @dylarcher/js-helper-utils</code></pre>
                     </div>
                     <div>
                         <h3 class="text-2xl font-bold mb-4 text-gray-800 dark:text-white">Usage</h3>
                         <p class="text-gray-700 dark:text-gray-300 mb-4">Import only the functions you need. This allows bundlers to perform tree-shaking and keep your application size minimal.</p>
-                         <pre class="bg-gray-100 dark:bg-gray-900 rounded-lg p-4 text-sm text-gray-800 dark:text-gray-200 overflow-x-auto"><code>import { debounce } from '@dylarcher/js-helper-utils/src/common';
-import { toggleClass } from '@dylarcher/js-helper-utils/src/browser';
+                        <pre class="bg-gray-100 dark:bg-gray-900 rounded-lg p-4 text-sm overflow-x-auto"><code class="language-js"><span style="color: var(--syntax-keyword);">import</span> { <span style="color: var(--syntax-variable);">debounce</span> } <span style="color: var(--syntax-keyword);">from</span> <span style="color: var(--syntax-string);">'@dylarcher/js-helper-utils/src/common'</span>;
+                                                                                                <span style="color: var(--syntax-keyword);">import</span> { <span style="color: var(--syntax-variable);">toggleClass</span> } <span style="color: var(--syntax-keyword);">from</span> <span style="color: var(--syntax-string);">'@dylarcher/js-helper-utils/src/browser'</span>;
 
-const button = document.querySelector('#my-button');
-button.addEventListener('click', debounce(() => {
-  toggleClass(button, 'active');
-}, 250));</code></pre>
+<span style="color: var(--syntax-keyword);">const</span> <span style="color: var(--syntax-variable);">button</span> =
+<span style="color: var(--syntax-variable);">document</span>.<span
+    style="color: var(--syntax-function);">querySelector</span>(<span
+    style="color: var(--syntax-string);">'#my-button'</span>);
+<span style="color: var(--syntax-variable);">button</span>.<span
+    style="color: var(--syntax-function);">addEventListener</span>(<span
+    style="color: var(--syntax-string);">'click'</span>, <span style="color: var(--syntax-function);">debounce</span>(()
+=> {
+<span style="color: var(--syntax-function);">toggleClass</span>(<span
+    style="color: var(--syntax-variable);">button</span>, <span style="color: var(--syntax-string);">'active'</span>);
+}, <span style="color: var(--accent-color-blue);">250</span>));</code></pre>
                     </div>
                 </div>
             </section>
 
-            <section class="md:col-span-2">
-                 <h2 class="text-3xl font-bold text-center mb-8" style="color: var(--heading-color-2);">Curated Utility Collections</h2>
+            <section id="collections-section" class="md:col-span-2">
+                <h2 class="text-3xl font-bold text-center mb-8" style="color: var(--heading-color-2);">Curated Utility Collections
+                    <span class="key-shortcut" aria-hidden="true">C</span>
+                </h2>
                  <p class="text-gray-700 dark:text-gray-300 mb-10 max-w-4xl mx-auto text-center">Below is a sampling of helper functions. Hover over any utility to see its source on GitHub and click the ✨ icon for an AI-generated explanation.</p>
                  <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="utility-collections">
                      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 md:p-8">
@@ -198,7 +282,8 @@ button.addEventListener('click', debounce(() => {
             </section>
 
             <section id="ai-generator" class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 md:p-10 md:col-span-2">
-                <h2 class="text-3xl font-bold text-center mb-4" style="color: var(--heading-color-2);">✨ Utility Generator</h2>
+                <h2 class="text-3xl font-bold text-center mb-4" style="color: var(--heading-color-2);">✨ Utility Generator <span
+                        class="key-shortcut" aria-hidden="true">A</span></h2>
                 <p class="text-gray-700 dark:text-gray-300 mb-6 max-w-4xl mx-auto text-center">Need a specific helper function? Describe it below, and our AI assistant will generate the code. You can then create a feature request on GitHub to add it to the collection.</p>
                 <div class="max-w-2xl mx-auto">
                     <label for="generator-prompt" class="sr-only">Utility function description</label>
@@ -218,9 +303,10 @@ button.addEventListener('click', debounce(() => {
                 </div>
             </section>
 
-            <section class="grid grid-cols-1 md:grid-cols-5 gap-8">
+            <section id="stats-section" class="grid grid-cols-1 md:grid-cols-5 gap-8">
                 <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 md:p-8 md:col-span-3">
-                     <h2 class="text-3xl font-bold mb-2" style="color: var(--heading-color-2);">Most In-Demand Utility Categories</h2>
+                    <h2 class="text-3xl font-bold mb-2" style="color: var(--heading-color-2);">Most In-Demand Utility Categories <span
+                            class="key-shortcut" aria-hidden="true">S</span></h2>
                      <p class="text-gray-700 dark:text-gray-300 mb-6">Analysis shows a focus on data manipulation and async helpers, fundamental to nearly every application.</p>
                      <div class="chart-container">
                         <canvas id="categoryDemandChart" role="img" aria-label="Bar chart displaying the importance of utility categories. Object and Array manipulation are rated highest, followed by Asynchronous Helpers, DOM, String, and Type Checking utilities."></canvas>
@@ -235,8 +321,10 @@ button.addEventListener('click', debounce(() => {
                 </div>
             </section>
 
-            <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 md:p-10 md:col-span-2">
-                 <h2 class="text-3xl font-bold text-center mb-8" style="color: var(--heading-color-2);">Industry-Leading Libraries</h2>
+            <section id="libraries-section" class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 md:p-10 md:col-span-2">
+                <h2 class="text-3xl font-bold text-center mb-8" style="color: var(--heading-color-2);">Industry-Leading Libraries
+                    <span class="key-shortcut" aria-hidden="true">L</span>
+                </h2>
                  <p class="text-gray-700 dark:text-gray-300 mb-10 max-w-4xl mx-auto text-center">While building your own utilities is empowering, these battle-tested libraries offer comprehensive, performant solutions that have shaped modern development.</p>
                  <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
                      <a href="https://lodash.com/" target="_blank" rel="noopener noreferrer" class="block p-6 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:shadow-md transition-shadow">
@@ -254,8 +342,9 @@ button.addEventListener('click', debounce(() => {
                  </div>
             </section>
 
-            <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 md:p-10 md:col-span-2">
-                <h2 class="text-3xl font-bold text-center mb-8" style="color: var(--heading-color-2);">The Anatomy of a Great Utility</h2>
+            <section id="anatomy-section" class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 md:p-10 md:col-span-2">
+                <h2 class="text-3xl font-bold text-center mb-8" style="color: var(--heading-color-2);">The Anatomy of a Great
+                    Utility <span class="key-shortcut" aria-hidden="true">T</span></h2>
                 <p class="text-gray-700 dark:text-gray-300 mb-10 max-w-4xl mx-auto text-center">Effective utility functions are well-designed, documented, and predictable building blocks that follow a clear path from conception to reliable implementation.</p>
                 <div class="relative max-w-2xl mx-auto mt-12">
                     <div class="absolute left-1/2 -translate-x-1/2 w-0.5 h-full" style="background-color: var(--border-color);" aria-hidden="true"></div>
@@ -305,7 +394,7 @@ button.addEventListener('click', debounce(() => {
     <div id="explanation-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="modal-title">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div class="p-6 border-b dark:border-gray-700 flex justify-between items-center" style="border-color: var(--border-color);">
-                <h3 id="modal-title" class="text-xl font-bold sr-only">Explanation</h3>
+                <h3 id="modal-title" class="text-xl font-bold"><span class="sr-only">Explanation</span></h3>
                 <button id="modal-close-btn" class="text-2xl font-bold leading-none p-1" aria-label="Close modal">&times;</button>
             </div>
             <div id="modal-content" class="p-6">
@@ -743,6 +832,54 @@ button.addEventListener('click', debounce(() => {
                 }
             });
         });
+
+    // Shortcuts Menu
+    const shortcutsToggle = document.getElementById('shortcuts-toggle')
+    const shortcutsDropdown = document.getElementById('shortcuts-dropdown')
+    shortcutsToggle.addEventListener('click', () => {
+        const isExpanded = shortcutsToggle.getAttribute('aria-expanded') === 'true'
+        shortcutsToggle.setAttribute('aria-expanded', !isExpanded)
+        shortcutsDropdown.classList.toggle('hidden')
+    })
+    document.addEventListener('click', (e) => {
+        if (!shortcutsToggle.contains(e.target) && !shortcutsDropdown.contains(e.target)) {
+            shortcutsToggle.setAttribute('aria-expanded', 'false')
+            shortcutsDropdown.classList.add('hidden')
+        }
+    })
+
+    // Keyboard Shortcuts Listener
+    document.addEventListener('keydown', (e) => {
+        const activeEl = document.activeElement
+        const isInputFocused = ['INPUT', 'TEXTAREA'].includes(activeEl.tagName)
+        if (isInputFocused) return
+
+        const shortcuts = {
+            'h': '#header',
+            'r': '#renaissance-section',
+            'g': '#getting-started-section',
+            'c': '#collections-section',
+            'a': '#ai-generator',
+            's': '#stats-section',
+            'l': '#libraries-section',
+            't': '#anatomy-section'
+        }
+
+        const key = e.key.toLowerCase()
+        if (shortcuts[key]) {
+            e.preventDefault()
+            const targetElement = document.querySelector(shortcuts[key])
+            if (targetElement) {
+                targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                const heading = targetElement.querySelector('h2')
+                if (heading) {
+                    heading.setAttribute('tabindex', -1)
+                    heading.focus({ preventScroll: true })
+                }
+            }
+        }
+    });
+
     </script>
 </body>
 </html>
