@@ -25,8 +25,11 @@ export function debounce(func, delay) {
 			try {
 				func.apply(this, args);
 			} catch (error) {
-				// Silently handle errors in debounced functions to prevent uncaught exceptions
-				// This is expected behavior as the error occurs in an async context
+				if (onError) {
+					onError(error);
+				} else {
+					console.error('Error in debounced function:', error);
+				}
 			}
 		}, delay);
 	};
