@@ -56,30 +56,30 @@ Make sure you have the following installed:
 
 * Node.js (version >=18.20.8 recommended)
 
-    ```sh
-    node -v
-    ```
+  ```sh
+  node -v
+  ```
 
 * npm (version >=10.8.2 recommended)
 
-    ```sh
-    npm -v
-    ```
+  ```sh
+  npm -v
+  ```
 
 ### Installation
 
 1. Clone the repo:
 
-    ```sh
-    git clone https://github.com/dylarcher/js.helper-utils.git
-    cd js.helper-utils
-    ```
+   ```sh
+   git clone https://github.com/dylarcher/js.helper-utils.git
+   cd js.helper-utils
+   ```
 
 2. Install NPM packages:
 
-    ```sh
-    npm install
-    ```
+   ```sh
+   npm install
+   ```
 
 To use `js-helpers` in your own project:
 
@@ -145,25 +145,21 @@ This section outlines how to contribute to the development of `js-helpers`, incl
 
 The `package.json` includes several scripts to help with development:
 
-| Script             | Description                                                                                                | How to use                  |
-| ------------------ | ---------------------------------------------------------------------------------------------------------- | --------------------------- |
-| `prepare`          | Runs `npm dedupe && npm prune`. Executed automatically by npm after `npm install`.                           | (Automatic)                 |
-| `format`           | Formats code using Prettier (`.github/linters/.prettierrc.yml`).                                           | `npm run format`            |
-| `format:check`     | Checks code formatting using Prettier without writing changes.                                             | `npm run format:check`      |
-| `lint`             | Lints code using ESLint (`.github/linters/eslint.config.js`) and attempts to fix issues.                   | `npm run lint`              |
-| `lint:check`       | Lints code using ESLint without fixing issues.                                                             | `npm run lint:check`        |
-| `prebuild`         | Runs `lint:check` and `format:check` before building. Executed automatically before `npm run build`.       | (Automatic)                 |
-| `build`            | Compiles source files from `src/` to `dist/` using `tsc`.                                                  | `npm run build`             |
-| `bundle`           | Generates a bundled `types.d.ts` file using `dts-bundle-generator`.                                        | `npm run bundle`            |
-| `bundle:watch`     | Watches for changes and re-runs the `bundle` script.                                                       | `npm run bundle:watch`      |
-| `pretest`          | Runs `build` and `bundle` scripts. Executed automatically before `npm test`.                               | (Automatic)                 |
-| `test`             | Runs tests using `node --no-warnings --experimental-specifier-resolution=node --inspect-brk test ...`.     | `npm test`                  |
-| `test:watch`       | Runs tests in watch mode.                                                                                  | `npm run test:watch`        |
-| `c8`               | Base command for `c8` test coverage tool.                                                                  | `npm run c8 -- <args>`      |
-| `test:coverage`    | Runs tests and generates a coverage report using `c8`.                                                     | `npm run test:coverage`     |
-| `prepublishOnly`   | Runs `build` and `bundle` scripts. Executed automatically before `npm publish`.                            | (Automatic)                 |
-
-**Note on `pre` scripts:** Scripts like `prebuild`, `pretest`, and `prepublishOnly` are npm lifecycle scripts that run automatically before their corresponding main script (e.g., `prebuild` runs before `build`).
+| Script             | Description                                                                                                | How to use                |
+| ------------------ | ---------------------------------------------------------------------------------------------------------- | ------------------------- |
+| `prepare`        | Runs `npm dedupe && npm prune`. Executed automatically by npm after `npm install`.                     | (Automatic)               |
+| `format`         | Formats code using Prettier (`.github/linters/.prettierrc.yml`).                                         | `npm run format`        |
+| `format:check`   | Checks code formatting using Prettier without writing changes.                                             | `npm run format:check`  |
+| `lint`           | Lints code using ESLint (`.github/linters/eslint.config.js`) and attempts to fix issues.                 | `npm run lint`          |
+| `lint:check`     | Lints code using ESLint without fixing issues.                                                             | `npm run lint:check`    |
+| `prebuild`       | Runs `lint:check` and `format:check` before building. Executed automatically before `npm run build`. | (Automatic)               |
+| `build`          | Compiles source files from `src/` to `dist/` using `tsc`.                                            | `npm run build`         |
+| `pretest`        | Runs `build` script. Executed automatically before `npm test`.                                         | (Automatic)               |
+| `test`           | Runs tests using `node --no-warnings --experimental-specifier-resolution=node --inspect-brk test ...`.   | `npm test`              |
+| `test:watch`     | Runs tests in watch mode.                                                                                  | `npm run test:watch`    |
+| `c8`             | Base command for `c8` test coverage tool.                                                                | `npm run c8 -- <args>`  |
+| `test:coverage`  | Runs tests and generates a coverage report using `c8`.                                                   | `npm run test:coverage` |
+| `prepublishOnly` | Runs `build` script. Executed automatically before `npm publish`.                                      | (Automatic)               |
 
 ### Running Tests
 
@@ -176,8 +172,7 @@ npm test
 This command will:
 
 1. (Via `pretest`) Build the project (`npm run build`).
-2. (Via `pretest`) Bundle type definitions (`npm run bundle`).
-3. Run test files (e.g., `**/*.test.js`) using the Node.js runtime with specific flags (`--no-warnings`, `--experimental-specifier-resolution=node`, `--inspect-brk`). The `--inspect-brk` flag enables the debugger and pauses execution at the start of the script.
+2. Run test files (e.g., `**/*.test.js`) using the Node.js runtime with specific flags (`--no-warnings`, `--experimental-specifier-resolution=node`, `--inspect-brk`). The `--inspect-brk` flag enables the debugger and pauses execution at the start of the script.
 
 To run tests and generate a coverage report (currently 0%):
 
@@ -199,33 +194,33 @@ This project uses ESLint for linting and Prettier for code formatting.
 
 * **Check formatting:**
 
-    ```sh
-    npm run format:check
-    ```
+  ```sh
+  npm run format:check
+  ```
 
 * **Apply formatting:**
 
-    ```sh
-    npm run format
-    ```
+  ```sh
+  npm run format
+  ```
 
 * **Check for linting errors:**
 
-    ```sh
-    npm run lint:check
-    ```
+  ```sh
+  npm run lint:check
+  ```
 
 * **Apply linting fixes:**
 
-    ```sh
-    npm run lint
-    ```
+  ```sh
+  npm run lint
+  ```
 
 It's recommended to set up your editor to use these tools for a better development experience.
 
 ### Building the Project
 
-To build the project (compile TypeScript/JavaScript from `src/` to `dist/` and generate type definitions):
+To build the project (compile TypeScript/JavaScript from `src/` to `dist/`):
 
 ```sh
 npm run build
@@ -261,45 +256,5 @@ Distributed under the MIT License. See `LICENSE` file (if one exists) or `packag
 
 Dylan Archer - @dylarcher - <dylarcher@gmail.com>
 
-Project Link: <https://github.com/dylarcher/js.helper-utils>
-Homepage: <https://dylarcher.github.io/js.helper-utils/>
-
----
-
-### Suggestions for `package.json`
-
-I noticed a couple of things in your `/Users/darcher/dev/js.helper-utils/package.json` that could be improved for clarity and correctness:
-
-1. **Undefined `dts` script in lifecycle hooks:**
-   The `prepublishOnly` and `pretest` scripts refer to `npm run dts`, but there's no `dts` script defined. It seems the `bundle` script (`npx dts-bundle-generator ...`) is responsible for generating the `.d.ts` files.
-
-   Consider replacing `npm run dts` with `npm run bundle` in these scripts.
-
-    ```diff
-    --- a/Users/darcher/dev/js.helper-utils/package.json
-    +++ b/Users/darcher/dev/js.helper-utils/package.json
-    @@ -43,8 +43,8 @@
-        "lint:check": "npm run eslint",
-        "lint": "npm run eslint -- --fix",
-        "prepare": "npm dedupe && npm prune",
-    -  "prebuild": "npm run lint:check && npm run format:check",
-    -  "prepublishOnly": "npm run build && npm run dts",
-    -  "pretest": "npm run build && npm run dts",
-    +  "prebuild": "npm run lint:check && npm run format:check",
-    +  "prepublishOnly": "npm run build && npm run bundle",
-    +  "pretest": "npm run build && npm run bundle",
-        "test": "node --no-warnings --experimental-specifier-resolution=node --inspect-brk test --reporter=spec ./**/*.test.js",
-        "c8": "npx c8 --config=./.github/linters/.c8rc.json",
-        "test:coverage": "npm run c8 -- npm test",
-    ```
-
-2. **`tsc --minify` in `build` script:**
-   The `build` script is `npx tsc --minify`. The standard TypeScript compiler `tsc` does not have a `--minify` flag. Minification is typically handled by separate tools (e.g., Terser, esbuild) or bundlers.
-   If minification is desired, you might need to add another step to your build process using an appropriate tool. If `--minify` is a typo or part of a custom `tsc` wrapper, it might be confusing.
-
-   For a standard `tsc` build, you'd typically just have `npx tsc`. If you have specific compiler options for minification-like behavior (e.g., related to output or module type), they should be in your `tsconfig.json`.
-
-   If you intend to minify, a common approach is to use a tool like `esbuild` or `terser` after `tsc` or as part of a bundler setup. For example:
-   `"build": "npx tsc && npx terser dist/index.js -o dist/index.min.js --compress --mangle"` (This is a simplified example).
-
-   For now, the README describes the `build` script as "Compiles source files ... using `tsc`." This is accurate for the `tsc` part, but the `--minify` flag will likely cause `tsc` to error or ignore it.
+Project Link: [https://github.com/dylarcher/js.helper-utils](https://github.com/dylarcher/js.helper-utils)
+Homepage: [https://dylarcher.github.io/js.helper-utils/](https://dylarcher.github.io/js.helper-utils/)
