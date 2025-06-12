@@ -11,6 +11,10 @@ on:
       - review_requested
       - synchronize
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   checks:
     name: Lint, Format, Test & Build
