@@ -7,7 +7,7 @@ on:
 
 jobs:
   publish:
-    name: Build > Bundle > Release
+    name: Build & Release
     strategy:
       fail-fast: true
     runs-on: ubuntu-latest
@@ -30,9 +30,6 @@ jobs:
 
       - name: Build
         run: npm run build
-
-      - name: Bundle
-        run: npm run bundle
 
       - name: Release
         run: npm publish --access public

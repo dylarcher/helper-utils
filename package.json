@@ -17,6 +17,7 @@
         "prettier": "3.5.3",
         "prettier-plugin-glsl": "0.2.1",
         "prettier-plugin-properties": "0.3.0",
+        "rimraf": "5.0.10",
         "typescript": "5.8.3"
     },
     "overrides": {
@@ -63,9 +64,7 @@
         "url": "git+https://github.com/dylarcher/js.helper-utils.git"
     },
     "scripts": {
-        "build": "tsc --build --clean",
-        "bundle": "dts-bundle-generator --config .github/presets/dts.config.cjs",
-        "bundle:watch": "npm run bundle --watch",
+        "build": "rimraf dist && tsc",
         "c8": "c8 --config .github/presets/.c8rc.json",
         "eslint": "eslint --config .github/presets/eslint.config.js --ext .js --report-unused-disable-directives",
         "format": "npm run prettier --write",
