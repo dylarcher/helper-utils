@@ -1,7 +1,7 @@
 {
 	"all": true,
 	"branches": 100,
-	"check-coverage": false,
+	"check-coverage": true,
 	"exclude": ["test/**/*.js", "src/**/*.test.js"],
 	"functions": 100,
 	"include": ["src/**/*.js"],

@@ -75,7 +75,7 @@
         "prepublishOnly": "npm run build",
         "pretest": "npm run build",
         "prettier": "prettier . --config .github/presets/.prettierrc.yml --ignore-unknown",
-        "test": "node --no-warnings --experimental-specifier-resolution node --inspect-brk test --reporter spec **/*.test.js",
+        "test": "node --no-warnings --test",
         "test:coverage": "npm run c8 -- npm test",
         "test:watch": "npm test --watch"
     },
