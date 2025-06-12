@@ -127,7 +127,7 @@ describe('getCookie(alias)', () => {
 	});
 
 	// Cleanup
-	beforeEach(() => {
+	afterEach(() => {
 		global.document = originalDocument;
 	});
 });
