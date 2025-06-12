@@ -22,15 +22,7 @@ export function debounce(func, delay) {
 	return function (...args) {
 		clearTimeout(timeoutId);
 		timeoutId = setTimeout(() => {
-			try {
-				func.apply(this, args);
-			} catch (error) {
-				if (onError) {
-					onError(error);
-				} else {
-					console.error('Error in debounced function:', error);
-				}
-			}
+			func.apply(this, args);
 		}, delay);
 	};
 }
