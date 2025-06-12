@@ -46,6 +46,3 @@ jobs:
 
       - name: Build
         run: npm run build
-
-      - name: Bundle
-        run: npm run bundle
