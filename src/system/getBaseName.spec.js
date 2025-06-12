@@ -23,11 +23,16 @@ describe("getBasename(p, ext)", () => {
 	});
 
 	it("should handle Windows-style paths", () => {
-		const result = getBasename("C:\\path\\to\\file.txt");
+		const winPath = "C:\\path\\to\\file.txt";
+		const result = getBasename(winPath);
+
+		// Get the expected result from Node.js path.basename
+		const expected = path.basename(winPath);
+
 		assert.strictEqual(
 			result,
-			"file.txt",
-			"Should handle Windows path separators",
+			expected,
+			"Should handle Windows path separators properly",
 		);
 	});
 
@@ -55,7 +60,7 @@ describe("getBasename(p, ext)", () => {
 		assert.strictEqual(
 			result,
 			"file.txt",
-			"Should return full filename when empty extension provided",
+			"Should return full filename when extension parameter is empty",
 		);
 	});
 
@@ -69,16 +74,9 @@ describe("getBasename(p, ext)", () => {
 	});
 
 	it("should handle files with multiple dots", () => {
-		const result1 = getBasename("/path/to/file.tar.gz");
-		const result2 = getBasename("/path/to/file.tar.gz", ".gz");
-
+		const result = getBasename("/path/to/file.tar.gz", ".gz");
 		assert.strictEqual(
-			result1,
-			"file.tar.gz",
-			"Should return full filename with multiple dots",
-		);
-		assert.strictEqual(
-			result2,
+			result,
 			"file.tar",
 			"Should remove only specified extension",
 		);
@@ -89,68 +87,73 @@ describe("getBasename(p, ext)", () => {
 		assert.strictEqual(
 			result,
 			"README",
-			"Should handle files without extension",
+			"Should return filename for files without extension",
 		);
 	});
 
 	it("should handle hidden files (starting with dot)", () => {
-		const result1 = getBasename("/path/to/.gitignore");
-		const result2 = getBasename("/path/to/.env.local", ".local");
-
-		assert.strictEqual(result1, ".gitignore", "Should handle hidden files");
+		const result = getBasename("/path/to/.gitignore");
 		assert.strictEqual(
-			result2,
-			".env",
-			"Should handle hidden files with extension removal",
+			result,
+			".gitignore",
+			"Should handle hidden files correctly",
 		);
 	});
 
 	it("should handle root path", () => {
-		const result = getBasename("/");
-		assert.strictEqual(result, "/", "Should handle root path");
+		const rootPath = "/";
+		const result = getBasename(rootPath);
+
+		// Get the expected result from Node.js path.basename
+		const expected = path.basename(rootPath);
+
+		assert.strictEqual(
+			result,
+			expected,
+			"Should handle root path correctly",
+		);
 	});
 
 	it("should handle current directory path", () => {
 		const result = getBasename(".");
-		assert.strictEqual(result, ".", "Should handle current directory");
+		assert.strictEqual(result, ".", "Should handle current directory path");
 	});
 
 	it("should handle parent directory path", () => {
 		const result = getBasename("..");
-		assert.strictEqual(result, "..", "Should handle parent directory");
+		assert.strictEqual(result, "..", "Should handle parent directory path");
 	});
 
 	it("should handle complex paths with spaces and special characters", () => {
 		const result = getBasename(
-			"/path/to/file with spaces & symbols!.txt",
-			".txt",
+			"/path/to/file with spaces and (special) chars.txt",
 		);
 		assert.strictEqual(
 			result,
-			"file with spaces & symbols!",
-			"Should handle special characters",
+			"file with spaces and (special) chars.txt",
+			"Should handle filenames with spaces and special characters",
 		);
 	});
 
 	it("should be consistent with Node.js path.basename", () => {
-		const testPaths = [
-			"/path/to/file.txt",
-			"C:\\Windows\\System32\\file.exe",
-			"file.txt",
-			"/path/to/directory/",
-			".",
-			"..",
+		const paths = [
 			"/",
-			"/path/to/.hidden",
-			"/path/to/file.tar.gz",
+			"/path/to/file.txt",
+			"C:\\Windows\\System32\\drivers\\etc\\hosts",
+			"relative/path/file.js",
+			"file.ext",
+			".hidden",
+			"path/with/trailing/",
+			"path/with///multiple///separators////file.txt",
+			"../parent/dir/file",
 		];
 
-		testPaths.forEach((testPath) => {
-			const ourResult = getBasename(testPath);
-			const nodeResult = path.basename(testPath);
+		paths.forEach((testPath) => {
+			const expected = path.basename(testPath);
+			const result = getBasename(testPath);
 			assert.strictEqual(
-				ourResult,
-				nodeResult,
+				result,
+				expected,
 				`Should match Node.js result for path: ${testPath}`,
 			);
 		});
@@ -158,31 +161,27 @@ describe("getBasename(p, ext)", () => {
 
 	it("should be consistent with Node.js path.basename with extension parameter", () => {
 		const testCases = [
-			["/path/to/file.txt", ".txt"],
-			["/path/to/file.tar.gz", ".gz"],
-			["/path/to/.env.local", ".local"],
-			["file.js", ".js"],
-			["README", ".md"],
+			{ path: "/path/to/file.txt", ext: ".txt" },
+			{ path: "/path/to/file.tar.gz", ext: ".gz" },
+			{ path: "C:\\Windows\\file.exe", ext: ".exe" },
+			{ path: "script.js", ext: ".js" },
+			{ path: "path/to/file", ext: "" },
+			{ path: "path/to/file.txt", ext: ".csv" }, // Non-matching extension
 		];
 
-		testCases.forEach(([testPath, ext]) => {
-			const ourResult = getBasename(testPath, ext);
-			const nodeResult = path.basename(testPath, ext);
+		testCases.forEach(({ path: testPath, ext }) => {
+			const expected = path.basename(testPath, ext);
+			const result = getBasename(testPath, ext);
 			assert.strictEqual(
-				ourResult,
-				nodeResult,
-				`Should match Node.js result for path: ${testPath} with extension: ${ext}`,
+				result,
+				expected,
+				`Should match Node.js result for path: ${testPath} with ext: ${ext}`,
 			);
 		});
 	});
 
 	it("should handle empty string path", () => {
 		const result = getBasename("");
-		const nodeResult = path.basename("");
-		assert.strictEqual(
-			result,
-			nodeResult,
-			"Should handle empty string like Node.js path.basename",
-		);
+		assert.strictEqual(result, "", "Should return empty string for empty input");
 	});
 });

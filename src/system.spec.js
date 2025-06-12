@@ -1,7 +1,8 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 
-// Import functions from 'src/system.js'
+// Import functions directly and verify they work
+import * as allExports from "./system.js";
 import {
 	createDirectory,
 	decrypt,
@@ -28,6 +29,46 @@ import {
 } from "./system.js";
 
 describe("system", () => {
+	it("should export all expected functions correctly", () => {
+		// Test that all exports are functions
+		const expectedExports = [
+			"createDirectory",
+			"decrypt",
+			"encrypt",
+			"env",
+			"execAsync",
+			"fileExists",
+			"generateHash",
+			"getBasename",
+			"getCPUInfo",
+			"getDirname",
+			"getExtension",
+			"getHostname",
+			"getMemoryInfo",
+			"getNetworkInterfaces",
+			"isDirectory",
+			"joinPaths",
+			"listDirectoryContents",
+			"readFileAsync",
+			"removeDirectory",
+			"resolvePath",
+			"uuid",
+			"writeFileAsync",
+		];
+
+		expectedExports.forEach((exportName) => {
+			assert.strictEqual(typeof allExports[exportName], "function");
+		});
+
+		// Check total number of exports matches expected
+		assert.strictEqual(Object.keys(allExports).length, expectedExports.length);
+
+		// Test some specific functions have the right names
+		assert.strictEqual(allExports.createDirectory.name, "createDirectory");
+		assert.strictEqual(allExports.getBasename.name, "getBasename");
+		assert.strictEqual(allExports.uuid.name, "uuid");
+	});
+
 	it("should export createDirectory function", () => {
 		assert.strictEqual(typeof createDirectory, "function");
 	});
@@ -114,72 +155,5 @@ describe("system", () => {
 
 	it("should export writeFileAsync function", () => {
 		assert.strictEqual(typeof writeFileAsync, "function");
-	});
-
-	it("should export all expected functions", () => {
-		const expectedExports = [
-			"createDirectory",
-			"decrypt",
-			"encrypt",
-			"env",
-			"execAsync",
-			"fileExists",
-			"generateHash",
-			"getBasename",
-			"getCPUInfo",
-			"getDirname",
-			"getExtension",
-			"getHostname",
-			"getMemoryInfo",
-			"getNetworkInterfaces",
-			"isDirectory",
-			"joinPaths",
-			"listDirectoryContents",
-			"readFileAsync",
-			"removeDirectory",
-			"resolvePath",
-			"uuid",
-			"writeFileAsync",
-		];
-
-		const actualExports = {
-			createDirectory,
-			decrypt,
-			encrypt,
-			env,
-			execAsync,
-			fileExists,
-			generateHash,
-			getBasename,
-			getCPUInfo,
-			getDirname,
-			getExtension,
-			getHostname,
-			getMemoryInfo,
-			getNetworkInterfaces,
-			isDirectory,
-			joinPaths,
-			listDirectoryContents,
-			readFileAsync,
-			removeDirectory,
-			resolvePath,
-			uuid,
-			writeFileAsync,
-		};
-
-		expectedExports.forEach((exportName) => {
-			assert.ok(actualExports[exportName], `${exportName} should be exported`);
-			assert.strictEqual(
-				typeof actualExports[exportName],
-				"function",
-				`${exportName} should be a function`,
-			);
-		});
-
-		assert.strictEqual(
-			Object.keys(actualExports).length,
-			expectedExports.length,
-			"Should export exactly the expected number of functions",
-		);
 	});
 });

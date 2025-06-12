@@ -259,4 +259,20 @@ describe("querySelectorWrapper(selector, container)", () => {
 			);
 		});
 	});
+
+	// Test for when document doesn't exist and only a single argument is passed
+	it("should return null when document doesn't exist and only one argument is provided", () => {
+		// Temporarily remove the global document
+		const originalDocument = global.document;
+		delete global.document;
+
+		try {
+			// Call with only one argument (selector)
+			const result = querySelectorWrapper("#test");
+			assert.strictEqual(result, null);
+		} finally {
+			// Restore the global document
+			global.document = originalDocument;
+		}
+	});
 });

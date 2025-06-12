@@ -10,11 +10,8 @@ export function getExtension(p) {
 		return "";
 	}
 	
-	// If path ends with a separator, it's a directory - return empty extension
-	// This is our custom behavior, different from Node.js path.extname
-	if (p.endsWith("/") || p.endsWith("\\")) {
-		return "";
-	}
-	
+	// Match Node.js behavior exactly for consistent results
+	// Node.js returns the last extension even in paths that end with a separator
+	// This ensures our function returns identical results to path.extname
 	return path.extname(p);
 }

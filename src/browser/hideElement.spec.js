@@ -92,4 +92,19 @@ describe("hideElement(element)", () => {
 
 		assert.strictEqual(mockElement.style.properties.display, "none");
 	});
+
+	it("should handle style.setProperty throwing an error", () => {
+		const element = {
+			style: {
+				setProperty: () => {
+					throw new Error("Simulated error");
+				},
+			},
+		};
+
+		// Should not throw
+		assert.doesNotThrow(() => {
+			hideElement(element);
+		});
+	});
 });

@@ -1,7 +1,8 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 
-// Import functions from 'src/browser.js'
+// Import functions directly and verify they work
+import * as allExports from "./browser.js";
 import {
 	addClass,
 	copyToClipboardAsync,
@@ -33,6 +34,50 @@ import {
 } from "./browser.js";
 
 describe("browser", () => {
+	it("should export all expected functions correctly", () => {
+		// Test that all exports are functions
+		const expectedExports = [
+			"addClass",
+			"copyToClipboardAsync",
+			"createElement",
+			"debounce",
+			"fetchJSON",
+			"findClosest",
+			"getCookie",
+			"getGlobal",
+			"getLocalStorageJSON",
+			"getOSInfo",
+			"getStyle",
+			"hasClass",
+			"hideElement",
+			"once",
+			"onDelegate",
+			"parseQueryParams",
+			"querySelectorAllWrapper",
+			"querySelectorWrapper",
+			"querySelectorWrapperAll",
+			"removeClass",
+			"removeElement",
+			"setAttribute",
+			"setLocalStorageJSON",
+			"setStyle",
+			"throttle",
+			"toggleClass",
+			"uuid",
+		];
+
+		expectedExports.forEach((exportName) => {
+			assert.strictEqual(typeof allExports[exportName], "function");
+		});
+
+		// Verify that querySelectorWrapperAll is an alias for querySelectorAllWrapper
+		assert.strictEqual(allExports.querySelectorWrapperAll, allExports.querySelectorAllWrapper);
+
+		// Check total number of exports matches expected
+		assert.strictEqual(Object.keys(allExports).length, expectedExports.length);
+	});
+
+	// Test each exported function exists and is a function
 	it("should export addClass function", () => {
 		assert.strictEqual(typeof addClass, "function");
 	});
@@ -139,86 +184,5 @@ describe("browser", () => {
 
 	it("should export uuid function", () => {
 		assert.strictEqual(typeof uuid, "function");
-	});
-
-	it("should have querySelectorWrapperAll as alias for querySelectorAllWrapper", () => {
-		assert.strictEqual(querySelectorWrapperAll, querySelectorAllWrapper);
-	});
-
-	it("should export all expected functions", () => {
-		const expectedExports = [
-			"addClass",
-			"copyToClipboardAsync",
-			"createElement",
-			"debounce",
-			"fetchJSON",
-			"findClosest",
-			"getCookie",
-			"getGlobal",
-			"getLocalStorageJSON",
-			"getOSInfo",
-			"getStyle",
-			"hasClass",
-			"hideElement",
-			"once",
-			"onDelegate",
-			"parseQueryParams",
-			"querySelectorAllWrapper",
-			"querySelectorWrapper",
-			"querySelectorWrapperAll",
-			"removeClass",
-			"removeElement",
-			"setAttribute",
-			"setLocalStorageJSON",
-			"setStyle",
-			"throttle",
-			"toggleClass",
-			"uuid",
-		];
-
-		const actualExports = {
-			addClass,
-			copyToClipboardAsync,
-			createElement,
-			debounce,
-			fetchJSON,
-			findClosest,
-			getCookie,
-			getGlobal,
-			getLocalStorageJSON,
-			getOSInfo,
-			getStyle,
-			hasClass,
-			hideElement,
-			once,
-			onDelegate,
-			parseQueryParams,
-			querySelectorAllWrapper,
-			querySelectorWrapper,
-			querySelectorWrapperAll,
-			removeClass,
-			removeElement,
-			setAttribute,
-			setLocalStorageJSON,
-			setStyle,
-			throttle,
-			toggleClass,
-			uuid,
-		};
-
-		expectedExports.forEach((exportName) => {
-			assert.ok(actualExports[exportName], `${exportName} should be exported`);
-			assert.strictEqual(
-				typeof actualExports[exportName],
-				"function",
-				`${exportName} should be a function`,
-			);
-		});
-
-		assert.strictEqual(
-			Object.keys(actualExports).length,
-			expectedExports.length,
-			"Should export exactly the expected number of functions",
-		);
 	});
 });

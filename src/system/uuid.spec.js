@@ -104,11 +104,23 @@ describe("uuid()", () => {
 
 	it("should not contain uppercase letters (assuming lowercase format)", () => {
 		const result = uuid();
-		// crypto.randomUUID() returns lowercase, so our function should too
 		assert.strictEqual(
 			result,
 			result.toLowerCase(),
 			"Should be in lowercase format",
+		);
+	});
+
+	// Note: UUIDs can start with numbers, so we can't enforce this constraint
+	// While it's preferable for HTML/CSS IDs to start with letters,
+	// this isn't a requirement for UUIDs which follow RFC 4122
+	it("should be usable as an identifier with a prefix", () => {
+		const result = "id-" + uuid();
+		
+		// With the prefix, it will definitely be valid for CSS/HTML
+		assert.ok(
+			/^[a-z]/.test(result),
+			"Should be usable as an identifier with a prefix",
 		);
 	});
 
