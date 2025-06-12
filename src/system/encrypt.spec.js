@@ -1,0 +1,153 @@
+import { describe, it } from "node:test";
+import assert from "node:assert/strict";
+import * as crypto from "node:crypto";
+import { encrypt } from "./encrypt.js";
+
+describe("encrypt(text, key, iv)", () => {
+	const testKey = crypto.randomBytes(32); // 256-bit key for AES-256
+	const testIv = crypto.randomBytes(16); // 128-bit IV for AES-CBC
+
+	it("should encrypt text using AES-256-CBC", () => {
+		const originalText = "Hello, World!";
+		const encryptedResult = encrypt(originalText, testKey, testIv);
+
+		assert.ok(typeof encryptedResult === "string", "Result should be a string");
+		assert.ok(
+			encryptedResult.includes(":"),
+			"Result should contain IV and encrypted text separated by colon",
+		);
+
+		const [ivHex, encryptedHex] = encryptedResult.split(":");
+		assert.strictEqual(
+			ivHex,
+			testIv.toString("hex"),
+			"IV should be prepended correctly",
+		);
+		assert.ok(encryptedHex.length > 0, "Encrypted text should not be empty");
+	});
+
+	it("should encrypt empty string", () => {
+		const originalText = "";
+		const encryptedResult = encrypt(originalText, testKey, testIv);
+
+		assert.ok(typeof encryptedResult === "string", "Result should be a string");
+		assert.ok(
+			encryptedResult.includes(":"),
+			"Result should contain IV and encrypted text",
+		);
+
+		const [ivHex, encryptedHex] = encryptedResult.split(":");
+		assert.strictEqual(
+			ivHex,
+			testIv.toString("hex"),
+			"IV should be prepended correctly",
+		);
+		assert.ok(
+			encryptedHex.length > 0,
+			"Even empty string should produce encrypted output due to padding",
+		);
+	});
+
+	it("should encrypt unicode text", () => {
+		const originalText = "Hello 🌍! Unicode: αβγδε";
+		const encryptedResult = encrypt(originalText, testKey, testIv);
+
+		assert.ok(typeof encryptedResult === "string", "Result should be a string");
+		assert.ok(
+			encryptedResult.includes(":"),
+			"Result should contain IV and encrypted text",
+		);
+
+		const [ivHex, encryptedHex] = encryptedResult.split(":");
+		assert.strictEqual(
+			ivHex,
+			testIv.toString("hex"),
+			"IV should be prepended correctly",
+		);
+		assert.ok(encryptedHex.length > 0, "Encrypted text should not be empty");
+	});
+
+	it("should produce different output with different IVs", () => {
+		const originalText = "Same text";
+		const iv1 = crypto.randomBytes(16);
+		const iv2 = crypto.randomBytes(16);
+
+		const encrypted1 = encrypt(originalText, testKey, iv1);
+		const encrypted2 = encrypt(originalText, testKey, iv2);
+
+		assert.notStrictEqual(
+			encrypted1,
+			encrypted2,
+			"Same text with different IVs should produce different encrypted output",
+		);
+	});
+
+	it("should produce different output with different keys", () => {
+		const originalText = "Same text";
+		const key1 = crypto.randomBytes(32);
+		const key2 = crypto.randomBytes(32);
+
+		const encrypted1 = encrypt(originalText, key1, testIv);
+		const encrypted2 = encrypt(originalText, key2, testIv);
+
+		// Extract only the encrypted part (after colon) since IV is the same
+		const [, encryptedHex1] = encrypted1.split(":");
+		const [, encryptedHex2] = encrypted2.split(":");
+
+		assert.notStrictEqual(
+			encryptedHex1,
+			encryptedHex2,
+			"Same text with different keys should produce different encrypted output",
+		);
+	});
+
+	it("should produce consistent output with same inputs", () => {
+		const originalText = "Consistent text";
+		const result1 = encrypt(originalText, testKey, testIv);
+		const result2 = encrypt(originalText, testKey, testIv);
+
+		assert.strictEqual(
+			result1,
+			result2,
+			"Same inputs should produce same encrypted output",
+		);
+	});
+
+	it("should handle long text", () => {
+		const longText = "A".repeat(1000);
+		const encryptedResult = encrypt(longText, testKey, testIv);
+
+		assert.ok(typeof encryptedResult === "string", "Result should be a string");
+		assert.ok(
+			encryptedResult.includes(":"),
+			"Result should contain IV and encrypted text",
+		);
+
+		const [ivHex, encryptedHex] = encryptedResult.split(":");
+		assert.strictEqual(
+			ivHex,
+			testIv.toString("hex"),
+			"IV should be prepended correctly",
+		);
+		assert.ok(encryptedHex.length > 0, "Encrypted text should not be empty");
+	});
+
+	it("should integrate properly with decrypt function", () => {
+		// This test assumes decrypt function exists and works correctly
+		const originalText = "Integration test";
+		const encryptedResult = encrypt(originalText, testKey, testIv);
+
+		// Manually decrypt to verify compatibility
+		const [ivHex, encryptedHex] = encryptedResult.split(":");
+		const iv = Buffer.from(ivHex, "hex");
+		const decipher = crypto.createDecipheriv("aes-256-cbc", testKey, iv);
+		let decrypted = decipher.update(encryptedHex, "hex", "utf8");
+		decrypted += decipher.final("utf8");
+
+		assert.strictEqual(
+			decrypted,
+			originalText,
+			"Encrypted text should decrypt back to original",
+		);
+	});
+});
