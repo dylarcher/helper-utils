@@ -1,0 +1,45 @@
+name: Bug report
+description: Create a report to help us fix issues with our library
+title: "[Issue]: "
+labels: [bug, triage, defect, issue, problem]
+assignees: dylarcher
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Also tell us, what did you expect to happen?
+      placeholder: When I run…
+    validations:
+      required: true
+  - type: textarea
+    id: to-reproduce
+    attributes:
+      label: To reproduce
+      description: Please share the steps to reproduce the issue you are facing.
+      placeholder: |
+        e.g.
+
+          1. Installed the library
+          2. Imported the module
+          3. Called function `foo()`
+          4. Get error when calling `bar()`
+          5. …
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: What version of the library are you running?
+      placeholder: e.g. 0.1.0
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Provide any other context about the problem.
+      placeholder: e.g. Add additional details here or insert screenshots/recordings.
