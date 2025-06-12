@@ -48,9 +48,8 @@ jobs:
       - name: Format
         run: npm run format
 
-    # TODO: setup node:test & c8 for src/** files
-    # - name: Test
-    #   run: npm run test:coverage
+      - name: Test
+        run: npm run test:coverage
 
     # TODO: include build step to test distributed files
     # - name: Build
