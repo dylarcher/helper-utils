@@ -1,9 +1,6 @@
 # js-helpers
 
-[![npm version](https://img.shields.io/npm/v/js-helpers.svg)](https://www.npmjs.com/package/js-helpers)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/dylarcher/js.helper-utils/ci.yml?branch=main&logo=github)](https://github.com/dylarcher/js.helper-utils/actions?query=workflow%3ACI)
-[![codecov](https://codecov.io/gh/dylarcher/js.helper-utils/branch/main/graph/badge.svg)](https://codecov.io/gh/dylarcher/js.helper-utils)
+[![Checks](https://github.com/dylarcher/js.helper-utils/actions/workflows/checks.yml/badge.svg?event=pull_request)](https://github.com/dylarcher/js.helper-utils/actions/workflows/checks.yml)
 [![npm downloads](https://img.shields.io/npm/dm/js-helpers.svg)](https://www.npmjs.com/package/js-helpers)
 [![GitHub last commit](https://img.shields.io/github/last-commit/dylarcher/js.helper-utils.svg)](https://github.com/dylarcher/js.helper-utils/commits/main)
 [![GitHub repo size](https://img.shields.io/github/repo-size/dylarcher/js.helper-utils.svg)](https://github.com/dylarcher/js.helper-utils)
