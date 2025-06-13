@@ -1,13 +1,13 @@
 ---
-name: Checks
+name: Linter
 
 on:
   pull_request:
     types: [edited,opened,reopened,synchronize]
 
 jobs:
-  checks:
-    name: Lint, Format, Test & Build
+  linter:
+    name: Lint
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -37,15 +37,3 @@ jobs:
 
       - name: Lint
         run: npm run lint
-
-      - name: Format
-        run: npm run format
-
-      - name: Test
-        run: npm run test:coverage
-
-      # Uncomment the following step if you want to build the package explicitly.
-      # If the 'prepublishOnly' script in package.json already handles this, you can skip this step.
-      # If you want to build the package explicitly, uncomment the following step:
-      # - name: Build
-      #   run: npm run build
