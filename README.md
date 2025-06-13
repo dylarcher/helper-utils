@@ -1,5 +1,6 @@
 # js-helpers
 
+[![CodeQL](https://github.com/dylarcher/js.helper-utils/actions/workflows/github-code-scanning/codeql/badge.svg?event=pull_request)](https://github.com/dylarcher/js.helper-utils/actions/workflows/github-code-scanning/codeql)
 [![Checks](https://github.com/dylarcher/js.helper-utils/actions/workflows/checks.yml/badge.svg?event=pull_request)](https://github.com/dylarcher/js.helper-utils/actions/workflows/checks.yml)
 [![npm downloads](https://img.shields.io/npm/dm/js-helpers.svg)](https://www.npmjs.com/package/js-helpers)
 [![GitHub last commit](https://img.shields.io/github/last-commit/dylarcher/js.helper-utils.svg)](https://github.com/dylarcher/js.helper-utils/commits/main)
