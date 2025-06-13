@@ -1,17 +1,18 @@
-name: Publish
+---
+name: ESLint
 
 on:
-  release:
-    types: [published]
+  pull_request:
+    types: [edited,opened,reopened,synchronize]
 
 jobs:
-  publish:
-    name: Build & Release
+  eslint:
+    name: Lint
     runs-on: ubuntu-latest
-    
     permissions:
       contents: read
-    
+      packages: write
+
     strategy:
       fail-fast: true
       matrix:
@@ -32,14 +33,7 @@ jobs:
           cache: npm
 
       - name: Install
-        run: npm clean-install
+        run: npm install
 
-      # The 'prepublishOnly' script in package.json (npm run build) handles linting, formatting, and building.
-      # If you prefer an explicit build step in CI:
-      # - name: Build package
-      #   run: npm run build
-
-      - name: Release
-        run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Lint
+        run: npm run lint
