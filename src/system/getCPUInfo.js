@@ -7,10 +7,10 @@ import os from 'node:os';
  */
 
 export function getCPUInfo(cpuData) {
-    const cpus = cpuData || os.cpus();
-    return cpus.map(cpu => ({
-        model: cpu.model || 'unknown',
-        speed: cpu.speed > 0 ? cpu.speed : 0, // Default to 0 if speed is invalid
-        times: cpu.times,
-    }));
+	const cpus = cpuData || os.cpus();
+	return cpus.map((cpu) => ({
+		model: cpu.model || 'unknown',
+		speed: cpu.speed > 0 ? cpu.speed : 0, // Default to 0 if speed is invalid
+		times: cpu.times,
+	}));
 }
