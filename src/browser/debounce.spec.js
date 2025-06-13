@@ -16,30 +16,34 @@ describe('debounce(func, delay)', () => {
 		};
 	});
 
-	it('should delay function execution', async (t) => {
+	it('should delay function execution', (t, done) => {
 		const debouncedFn = debounce(testFunction, 50);
 
 		debouncedFn('test');
 		assert.strictEqual(callCount, 0); // Should not be called immediately
 
-		await new Promise((resolve) => setTimeout(resolve, 60));
-		assert.strictEqual(callCount, 1); // Should be called after delay
-		assert.deepStrictEqual(lastArgs, ['test']);
+		setTimeout(() => {
+			assert.strictEqual(callCount, 1); // Should be called after delay
+			assert.deepStrictEqual(lastArgs, ['test']);
+			done();
+		}, 60);
 	});
 
-	it('should cancel previous calls when called multiple times rapidly', async (t) => {
+	it('should cancel previous calls when called multiple times rapidly', (t, done) => {
 		const debouncedFn = debounce(testFunction, 50);
 
 		debouncedFn('first');
 		debouncedFn('second');
 		debouncedFn('third');
 
-		await new Promise((resolve) => setTimeout(resolve, 60));
-		assert.strictEqual(callCount, 1); // Should only be called once
-		assert.deepStrictEqual(lastArgs, ['third']); // With the last arguments
+		setTimeout(() => {
+			assert.strictEqual(callCount, 1); // Should only be called once
+			assert.deepStrictEqual(lastArgs, ['third']); // With the last arguments
+			done();
+		}, 60);
 	});
 
-	it('should preserve function context (this)', async (t) => {
+	it('should preserve function context (this)', (t, done) => {
 		const context = { value: 'test-context' };
 		let receivedContext;
 
