@@ -76,6 +76,7 @@ describe('debounce(func, delay)', () => {
 				123,
 				{ key: 'value' },
 			]);
+			done();
 		}, 40);
 	});
 
