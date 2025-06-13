@@ -23,6 +23,12 @@
         },
         "editor.defaultFormatter": "dbaeumer.vscode-eslint"
     },
+    "[html]": {
+        "editor.codeActionsOnSave": {
+            "source.fixAll": "explicit"
+        },
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    },
     "[yaml]": {
         "editor.codeActionsOnSave": {
             "source.fixAll": "explicit"
