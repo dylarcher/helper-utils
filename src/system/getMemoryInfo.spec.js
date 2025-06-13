@@ -27,6 +27,11 @@ describe('getMemoryInfo()', () => {
 		);
 	});
 
+	it('should match os.freemem()', () => {
+		const memInfo = getMemoryInfo();
+		assert.strictEqual(memInfo.freeMemory, os.freemem(), 'freeMemory should match os.freemem()');
+	});
+	
 	it('should return positive memory values', () => {
 		const memInfo = getMemoryInfo();
 
