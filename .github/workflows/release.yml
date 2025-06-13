@@ -1,0 +1,130 @@
+name: Publish
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    name: Release
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write
+    
+    strategy:
+      fail-fast: true
+      matrix:
+        node-version: [22.x]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Setup
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          registry-url: https://registry.npmjs.org
+          cache: npm
+
+      - name: Install
+        run: npm clean-install
+
+      - name: Prepare
+        id: prep_changelog
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          VERSION_TAG=${{ github.ref_name }}
+          echo "Current version tag: $VERSION_TAG"
+
+          # Fetch all tags to ensure git describe and log have all info
+          git fetch --tags --force
+
+          # Determine the previous tag. If this is the first tag, PREVIOUS_TAG will be empty.
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 ${VERSION_TAG}^ 2>/dev/null || true)
+          
+          if [ -z "$PREVIOUS_TAG" ]; then
+            echo "No previous tag found (this might be the first release)."
+          else
+            echo "Previous tag: $PREVIOUS_TAG"
+          fi
+
+          CHANGELOG_ENTRY_HEADER="## [$VERSION_TAG] - $(date +'%Y-%m-%d')"
+          COMMIT_LOG_ENTRIES=""
+
+          if [ -z "$PREVIOUS_TAG" ]; then
+            echo "Logging all commits leading up to $VERSION_TAG."
+            # For the first tag, log all commits in its history.
+            # The range '..TAG' means all commits reachable from TAG that are not reachable from an empty start point (i.e., all commits for TAG).
+            COMMIT_LOG_ENTRIES=$(git log --pretty="format:* %s (%h)" $VERSION_TAG)
+          else
+            echo "Logging commits from $PREVIOUS_TAG to $VERSION_TAG."
+            # The range A..B includes commits reachable from B but not from A.
+            COMMIT_LOG_ENTRIES=$(git log --pretty="format:* %s (%h)" $PREVIOUS_TAG..$VERSION_TAG)
+          fi
+
+          if [ -z "$COMMIT_LOG_ENTRIES" ]; then
+            COMMIT_LOG_ENTRIES="* No specific commits for this release version."
+          fi
+          
+          echo "Generated commit log entries:"
+          echo "$COMMIT_LOG_ENTRIES"
+
+          NEW_CHANGELOG_SECTION=$(echo -e "$CHANGELOG_ENTRY_HEADER\n\n$COMMIT_LOG_ENTRIES\n")
+          
+          FINAL_CHANGELOG_CONTENT="$NEW_CHANGELOG_SECTION"
+          if [ -f CHANGELOG.md ]; then
+            # Prepend new section to existing changelog
+            FINAL_CHANGELOG_CONTENT="${NEW_CHANGELOG_SECTION}$(cat CHANGELOG.md)"
+          else
+            echo "CHANGELOG.md not found, creating a new one."
+          fi
+          
+          echo "Updating CHANGELOG.md in workspace for publishing..."
+          echo "$FINAL_CHANGELOG_CONTENT" > CHANGELOG.md
+          echo "CHANGELOG.md content prepared for publish:"
+          cat CHANGELOG.md
+
+      - name: Distribute
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Includes
+        if: success()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          VERSION_TAG=${{ github.ref_name }}
+          TARGET_BRANCH=${{ github.event.repository.default_branch }}
+          # Prefer target_commitish if it's a valid branch name
+          if git show-ref --verify --quiet refs/heads/${{ github.event.release.target_commitish }}; then
+            TARGET_BRANCH=${{ github.event.release.target_commitish }}
+          fi
+          echo "Target branch for changelog commit: $TARGET_BRANCH"
+
+          DESIRED_CHANGELOG_CONTENT=$(cat CHANGELOG.md) # This is the content that was published
+
+          echo "Switching to branch $TARGET_BRANCH to update CHANGELOG.md."
+          git fetch origin $TARGET_BRANCH
+          git checkout -B $TARGET_BRANCH origin/$TARGET_BRANCH
+
+          echo "$DESIRED_CHANGELOG_CONTENT" > CHANGELOG.md
+          git add CHANGELOG.md
+          if git diff --staged --quiet; then
+            echo "No changes to CHANGELOG.md on branch $TARGET_BRANCH after update. Already up-to-date."
+          else
+            echo "Committing updated CHANGELOG.md to $TARGET_BRANCH."
+            git commit -m "chore(changelog): update for release $VERSION_TAG"
+            echo "Pushing changelog updates to $TARGET_BRANCH."
+            git push origin $TARGET_BRANCH
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
