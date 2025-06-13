@@ -1,12 +1,12 @@
 ---
-name: Linter
+name: ESLint
 
 on:
   pull_request:
     types: [edited,opened,reopened,synchronize]
 
 jobs:
-  linter:
+  eslint:
     name: Lint
     runs-on: ubuntu-latest
     permissions:

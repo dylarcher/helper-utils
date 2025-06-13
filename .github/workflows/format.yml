@@ -1,12 +1,12 @@
 ---
-name: Formatter
+name: Prettier
 
 on:
   pull_request:
     types: [edited,opened,reopened,synchronize]
 
 jobs:
-  formatter:
+  prettier:
     name: Format
     runs-on: ubuntu-latest
     permissions:
