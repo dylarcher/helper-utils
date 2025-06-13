@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     
     permissions:
-      contents: writ
+      contents: write
     
     strategy:
       fail-fast: true
