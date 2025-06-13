@@ -10,13 +10,13 @@ class MockElement {
 		this.className = className;
 		this.id = id;
 		this.textContent = '';
-        this.childNodes = [];
+		this.childNodes = [];
 	}
-    
-    appendChild(child) {
-        this.childNodes.push(child);
-        return child;
-    }
+
+	appendChild(child) {
+		this.childNodes.push(child);
+		return child;
+	}
 }
 
 describe('createElement(tagName, attributes, children)', () => {

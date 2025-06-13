@@ -26,8 +26,8 @@ export function debounce(func, delay) {
 				func.apply(this, args);
 			} catch (error) {
 				console.error('Error in debounced function:', error);
-				// Re-throw to allow tests to catch it if needed
-				throw error;
+				// Don't re-throw the error as it would become an uncaught exception
+				// in the setTimeout context. Just log it.
 			}
 		}, delay);
 	};

@@ -73,7 +73,7 @@
         "prepare": "npm dedupe -s && npm prune -s",
         "prepublishOnly": "npm run build",
         "prettier": "prettier . --config .github/presets/.prettierrc.yml --ignore-unknown",
-        "test": "node --test src/**/*.spec.js",
+        "test": "node --test src/**/*.spec.js src/**/*.test.js",
         "test:watch": "npm test --watch",
         "test:debug": "npm test --inspect-brk",
         "test:coverage": "c8 --config .github/presets/.c8rc.json -- npm test"

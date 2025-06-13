@@ -114,7 +114,90 @@ describe('debounce(func, delay)', () => {
 			done();
 		}, 80);
 	});
+	it('should have error handling in the debounced function', (t, done) => {
+		const errorFunction = () => {
+			throw new Error('Test error handling');
+		};
 
-	// Error handling test moved to separate test file (debounce.test.js)
-	// to prevent uncaught exceptions from affecting the test suite
+		// Save original console.error
+		const originalConsoleError = console.error;
+		let errorCaught = false;
+		let errorMessage = '';
+		let caughtError = null;
+
+		// Mock console.error to capture the error
+		console.error = (msg, err) => {
+			errorCaught = true;
+			errorMessage = msg;
+			caughtError = err;
+		};
+
+		// Create and call the debounced function
+		const debouncedFn = debounce(errorFunction, 10);
+		debouncedFn();
+
+		// Wait for the debounced function to execute
+		setTimeout(() => {
+			// Verify error was caught and logged
+			assert.strictEqual(
+				errorCaught,
+				true,
+				'Error should have been caught and logged',
+			);
+			assert.strictEqual(errorMessage, 'Error in debounced function:');
+			assert.ok(caughtError instanceof Error);
+			assert.strictEqual(caughtError.message, 'Test error handling');
+
+			// Restore console.error
+			console.error = originalConsoleError;
+
+			// Signal test completion
+			done();
+		}, 50);
+	});
+
+	// Test that errors don't break subsequent debounced calls
+	it('should continue working after an error', (t, done) => {
+		let callCount = 0;
+		let errorCaught = false;
+
+		const errorFunction = () => {
+			if (callCount === 0) {
+				callCount++;
+				throw new Error('First call error');
+			} else {
+				callCount++;
+			}
+		};
+
+		// Save original console.error
+		const originalConsoleError = console.error;
+
+		// Mock console.error to capture the error
+		console.error = () => {
+			errorCaught = true;
+		};
+
+		const debouncedFn = debounce(errorFunction, 10);
+
+		// First call should error
+		debouncedFn();
+
+		setTimeout(() => {
+			// Verify error was logged
+			assert.strictEqual(errorCaught, true, 'Error should have been logged');
+			assert.strictEqual(callCount, 1, 'Function should have been called once');
+
+			// Second call should work normally
+			debouncedFn();
+
+			setTimeout(() => {
+				assert.strictEqual(callCount, 2, 'Function should have been called twice');
+
+				// Restore console.error
+				console.error = originalConsoleError;
+				done();
+			}, 20);
+		}, 20);
+	});
 });

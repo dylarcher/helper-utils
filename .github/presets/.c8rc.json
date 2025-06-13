@@ -1,23 +1,26 @@
 {
     "all": true,
-    "branches": 95,
+    "branches": 100,
     "check-coverage": true,
     "exclude": [
-        "node_modules/**/*.{js,ts}",
+        "node_modules/**/*.js",
+        "node_modules/**/*.d.ts",
         "utils/**/*.js",
+        "dist/**/*.js",
+        "dist/**/*.d.ts",
         "src/**/*.spec.js",
         "src/**/*.test.js"
     ],
-    "functions": 95,
+    "functions": 100,
     "include": [
         "src/**/*.js"
     ],
-    "lines": 95,
+    "lines": 100,
     "report-dir": "dist/.coverage",
     "reporter": [
         "text",
         "html",
         "lcov"
     ],
-    "statements": 95
+    "statements": 100
 }

@@ -18,7 +18,9 @@ export function createElement(
 		}
 	}
 
-	Array.isArray(children) ? appendChildren(children, element) : appendChild(children, element);
+	Array.isArray(children)
+		? appendChildren(children, element)
+		: appendChild(children, element);
 
 	/**
 	 * Appends a child (string or Node) to the element.

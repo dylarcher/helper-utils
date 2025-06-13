@@ -15,7 +15,7 @@ export function decrypt(encryptedTextWithIv, key) {
 			'Invalid encrypted text format. Expected ivHex:encryptedHex',
 		);
 	}
-	
+
 	try {
 		const iv = Buffer.from(ivHex, 'hex');
 		const decipher = _crypto.createDecipheriv(ALGORITHM, key, iv);
