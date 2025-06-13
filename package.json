@@ -19,24 +19,19 @@
         "rimraf": "6.0.1",
         "typescript": "5.8.3"
     },
-    "overrides": {
-        "glob": "^10.4.5",
-        "inflight": "npm:lru-cache@^10.2.0"
-    },
     "engines": {
         "node": ">=22.16.0",
         "npm": ">=10.9.2"
     },
-    "packageManager": "npm@11.4.1",
     "exports": {
-        ".": {
-            "import": "./dist/index.js",
-            "require": "./dist/index.js",
-            "types": "./dist/types.d.ts"
-        },
         "*": {
             "import": "./dist/*.js",
             "require": "./dist/*.js",
+            "types": "./dist/types.d.ts"
+        },
+        ".": {
+            "import": "./dist/index.js",
+            "require": "./dist/index.js",
             "types": "./dist/types.d.ts"
         }
     },
@@ -57,7 +52,17 @@
     "license": "MIT",
     "main": "dist/index.js",
     "name": "js-helpers",
+    "overrides": {
+        "glob": "^10.4.5",
+        "inflight": "npm:lru-cache@^10.2.0"
+    },
+    "packageManager": "npm@11.4.1",
     "private": false,
+    "publishConfig": {
+        "access": "public",
+        "registry": "https://registry.npmjs.org/"
+    },
+    "publisher": "darcher",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/dylarcher/js.helper-utils.git"
@@ -73,11 +78,17 @@
         "prepare": "npm dedupe -s && npm prune -s",
         "prepublishOnly": "npm run build",
         "prettier": "prettier . --config .github/presets/.prettierrc.yml --ignore-unknown",
+        "publish:npm": "npm publish",
         "test": "node --no-warnings --test src/**/*.spec.js src/**/*.test.js",
+        "test:coverage": "c8 --config .github/presets/.c8rc.json npm test",
+        "test:debug": "node --no-warnings --inspect-brk --test src/**/*.spec.js src/**/*.test.js",
         "test:watch": "npm test --watch",
-        "test:debug": "npm test --inspect-brk",
-        "test:coverage": "c8 --config .github/presets/.c8rc.json -- npm test"
+        "version:path": "npm version patch",
+        "version:minor": "npm version minor",
+        "version:major": "npm version major",
+        "version:alpha": "npm version prerelease --preid=alpha",
+        "version:beta": "npm version prerelease --preid=beta"
     },
     "type": "module",
-    "version": "0.1.0"
+    "version": "0.1.1-alpha.0"
 }
