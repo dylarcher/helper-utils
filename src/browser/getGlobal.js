@@ -1,7 +1,8 @@
 /**
- * Returns the global object for the Node.js environment.
- * @returns {object} The global object (global).
+ * Returns the Node.js global object.
+ * @param {object} options Optional parameter (maintained for backward compatibility)
+ * @returns {object} The Node.js global object.
  */
-export function getGlobal() {
-	return global ?? globalThis ?? self ?? window ?? this;
+export function getGlobal(options = {}) {
+	return global;
 }

@@ -21,12 +21,15 @@ export function onDelegate(
 		eventType,
 		(_event) => {
 			const { target } = _event;
-			if (
-				target &&
-				typeof target.matches === "function" &&
-				target.matches(selector)
-			) {
-				callback.call(target, _event);
+			if (target && typeof target.matches === 'function') {
+				try {
+					if (target.matches(selector)) {
+						callback.call(target, _event);
+					}
+				} catch (error) {
+					// Silently handle errors in target.matches
+					// This prevents breaking the event delegation chain
+				}
 			}
 		},
 		options,

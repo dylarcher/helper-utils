@@ -1,0 +1,69 @@
+{
+    "tasks": [
+        {
+            "command": "npm run test",
+            "group": "test",
+            "isBackground": false,
+            "label": "Test: Run",
+            "problemMatcher": [
+                "$tsc"
+            ],
+            "type": "shell"
+        },
+        {
+            "command": "npm run test:watch",
+            "group": "test",
+            "isBackground": false,
+            "label": "Test: Watch",
+            "problemMatcher": [
+                "$tsc"
+            ],
+            "type": "shell"
+        },
+        {
+            "command": "npm run test:coverage",
+            "group": "test",
+            "isBackground": false,
+            "label": "Test: Coverage",
+            "problemMatcher": [
+                "$tsc"
+            ],
+            "type": "shell"
+        },
+        {
+            "command": "npm run test:debug",
+            "group": "test",
+            "isBackground": false,
+            "label": "Test: Debug",
+            "problemMatcher": [
+                "$tsc"
+            ],
+            "type": "shell"
+        },
+        {
+            "command": "npm run build",
+            "group": "build",
+            "isBackground": false,
+            "label": "Build: Distribute",
+            "problemMatcher": [],
+            "type": "shell"
+        },
+        {
+            "command": "npm run lint",
+            "group": "cleanup",
+            "isBackground": false,
+            "label": "Lint: Run ESLint",
+            "problemMatcher": [],
+            "type": "shell"
+        },
+        {
+            "command": "npm run format",
+            "group": "cleanup",
+            "isBackground": false,
+            "label": "Format: Run Prettier",
+            "problemMatcher": [],
+            "type": "shell"
+        }
+    ],
+    "version": "2.0.0"
+}

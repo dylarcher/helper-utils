@@ -24,8 +24,8 @@
         "inflight": "npm:lru-cache@^10.2.0"
     },
     "engines": {
-        "node": ">=22",
-        "npm": ">=11"
+        "node": ">=22.16.0",
+        "npm": ">=10.9.2"
     },
     "packageManager": "npm@11.4.1",
     "exports": {
@@ -64,22 +64,20 @@
     },
     "scripts": {
         "build": "rimraf dist && tsc",
-        "c8": "c8 --config .github/presets/.c8rc.json",
         "eslint": "eslint --config .github/presets/eslint.config.js --ext .js --report-unused-disable-directives",
         "format": "npm run prettier --write",
         "format:check": "npm run prettier --check",
         "lint": "npm run eslint -- --fix",
         "lint:check": "npm run eslint",
         "prebuild": "npm run lint:check && npm run format:check",
-        "prepare": "npm dedupe && npm prune",
+        "prepare": "npm dedupe -s && npm prune -s",
         "prepublishOnly": "npm run build",
-        "pretest": "npm run build",
         "prettier": "prettier . --config .github/presets/.prettierrc.yml --ignore-unknown",
-        "test": "node --no-warnings --experimental-specifier-resolution node --inspect-brk test --reporter spec **/*.test.js",
-        "test:coverage": "npm run c8 -- npm test",
-        "test:watch": "npm test --watch"
+        "test": "node --no-warnings --test src/**/*.spec.js src/**/*.test.js",
+        "test:watch": "npm test --watch",
+        "test:debug": "npm test --inspect-brk",
+        "test:coverage": "c8 --config .github/presets/.c8rc.json -- npm test"
     },
     "type": "module",
-    "types": "dist/types.d.ts",
-    "version": "0.0.1"
+    "version": "0.1.0"
 }

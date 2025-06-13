@@ -1,12 +1,26 @@
 {
-	"all": true,
-	"branches": 100,
-	"check-coverage": false,
-	"exclude": ["test/**/*.js", "src/**/*.test.js"],
-	"functions": 100,
-	"include": ["src/**/*.js"],
-	"lines": 100,
-	"report-dir": "./test/coverage",
-	"reporter": ["text", "html", "lcov"],
-	"statements": 100
+    "all": true,
+    "branches": 100,
+    "check-coverage": true,
+    "exclude": [
+        "node_modules/**/*.js",
+        "node_modules/**/*.d.ts",
+        "utils/**/*.js",
+        "dist/**/*.js",
+        "dist/**/*.d.ts",
+        "src/**/*.spec.js",
+        "src/**/*.test.js"
+    ],
+    "functions": 100,
+    "include": [
+        "src/**/*.js"
+    ],
+    "lines": 100,
+    "report-dir": "dist/.coverage",
+    "reporter": [
+        "text",
+        "html",
+        "lcov"
+    ],
+    "statements": 100
 }

@@ -1,4 +1,4 @@
-import fs from "node:fs/promises";
+import fs from 'node:fs/promises';
 
 /**
  * Creates a directory.

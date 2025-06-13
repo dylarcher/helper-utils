@@ -49,6 +49,24 @@
             "mode": "auto"
         }
     ],
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.expand": true,
+    "explorer.fileNesting.patterns": {
+        "*.js": "${basename}.*.${extname}, ${basename}.d.ts, ${basename}.${extname}.map",
+        "jsconfig.json": "${basename}.*.${extname}",
+        "package.json": "${basename}-lock.${extname}, npm-shrinkwrap.${extname}, yarn.lock, pnpm-lock.yaml, bun.lockb, bun.lock",
+        "tsconfig.json": "${basename}.*.${extname}"
+    },
+    "files.associations": {
+        ".editorconfig": "ini",
+        ".gitignore": "properties",
+        ".npmrc": "properties",
+        ".nvmrc": "properties",
+        "LICENSE": "plaintext"
+    },
+    "html.format.enable": true,
+    "html.validate.scripts": true,
+    "html.validate.styles": true,
     "javascript.format.enable": false,
     "javascript.validate.enable": false,
     "json.format.enable": false,

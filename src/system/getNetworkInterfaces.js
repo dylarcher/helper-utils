@@ -1,4 +1,4 @@
-import os from "node:os";
+import os from 'node:os';
 
 /**
  * Get network interface information.

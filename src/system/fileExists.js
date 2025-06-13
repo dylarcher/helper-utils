@@ -1,4 +1,4 @@
-import fs from "node:fs/promises";
+import fs from 'node:fs/promises';
 
 /**
  * Checks if a file or directory exists at the given path.

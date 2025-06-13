@@ -21,8 +21,7 @@ jobs:
     strategy:
       matrix:
         node-version:
-          - 18.x
-          - 20.x
+          - 22.x
       fail-fast: true
     runs-on: ubuntu-latest
     steps:
@@ -35,7 +34,7 @@ jobs:
       - name: Setup
         uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: 22.x
           registry-url: https://registry.npmjs.org
           cache: npm
 
@@ -48,9 +47,8 @@ jobs:
       - name: Format
         run: npm run format
 
-    # TODO: setup node:test & c8 for src/** files
-    # - name: Test
-    #   run: npm run test:coverage
+      - name: Test
+        run: npm run test:coverage
 
     # TODO: include build step to test distributed files
     # - name: Build

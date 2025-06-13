@@ -10,20 +10,20 @@
  * }, 100));
  */
 export function throttle(func, limit) {
-	let inThrottle = false;
+	let lastCall = 0;
 	/**
 	 * @description Executes the provided function if not currently throttled, then prevents further execution until the limit has passed.
-	 * @this {Function}
+	 * @this {any} - The context with which the throttled function is called.
 	 * @param {any[]} args - Arguments to pass to the throttled function.
-	 * @returns {void}
+	 * @returns {any} The result of the original function call.
 	 */
 	return function (...args) {
-		if (!inThrottle) {
-			func.apply(this, args);
-			inThrottle = true;
-			setTimeout(() => {
-				inThrottle = false;
-			}, limit);
+		const now = Date.now();
+		// With zero limit, execute immediately without throttling
+		if (limit === 0 || now - lastCall >= limit) {
+			lastCall = now;
+			return func.apply(this, args);
 		}
+		return undefined;
 	};
 }

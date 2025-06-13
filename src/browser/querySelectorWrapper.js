@@ -4,9 +4,23 @@
  * @param {Document|Element} [container=document] - The parent element to search within.
  * @returns {Element|null} The first matching element or null.
  */
-export function querySelectorWrapper(selector, container = document) {
-	if (!parent || typeof container.querySelector !== "function") {
+export function querySelectorWrapper(selector, container) {
+	// Only use document as fallback when no container argument is provided
+	// Check arguments.length to distinguish between undefined being passed vs not passed
+	const targetContainer =
+		arguments.length >= 2
+			? container // Container was explicitly provided (even if null/undefined)
+			: typeof document !== 'undefined'
+				? document
+				: null; // No container provided, use document
+
+	if (!targetContainer || typeof targetContainer.querySelector !== 'function') {
 		return null;
 	}
-	return container.querySelector(selector);
+
+	try {
+		return targetContainer.querySelector(selector);
+	} catch (error) {
+		return null;
+	}
 }

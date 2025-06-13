@@ -1,4 +1,7 @@
+# files
 .DS_Store
 .node-version
-dist
-node_modules
+
+# folders
+dist/
+node_modules/

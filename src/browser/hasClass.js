@@ -5,9 +5,17 @@
  * @returns {boolean} True if the element has the class, false otherwise.
  */
 export function hasClass(element, className) {
-	return !!(
-		element?.classList &&
-		className &&
-		element.classList.contains(className)
-	);
+	if (!element?.classList || !className) {
+		return false;
+	}
+
+	try {
+		return (
+			typeof element.classList.contains === 'function' &&
+			element.classList.contains(className)
+		);
+	} catch (error) {
+		// Handle cases where classList.contains throws an error
+		return false;
+	}
 }
