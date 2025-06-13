@@ -2,7 +2,6 @@
 name: c8
 
 on:
-<<<<<<<< HEAD:.github/workflows/test.yml
   pull_request:
     types: [edited,opened,reopened,synchronize]
 
@@ -14,19 +13,6 @@ jobs:
       contents: read
       packages: write
 
-========
-  release:
-    types: [published]
-
-jobs:
-  publish:
-    name: Build & Release
-    runs-on: ubuntu-latest
-    
-    permissions:
-      contents: read
-    
->>>>>>>> f6988d4 (chore: adds publishing scripts and updates workflow (#19)):.github/workflows/publish.yml
     strategy:
       fail-fast: true
       matrix:
@@ -49,17 +35,5 @@ jobs:
       - name: Install
         run: npm install
 
-<<<<<<<< HEAD:.github/workflows/test.yml
       - name: Test
         run: npm run test:coverage
-========
-      # The 'prepublishOnly' script in package.json (npm run build) handles linting, formatting, and building.
-      # If you prefer an explicit build step in CI:
-      # - name: Build package
-      #   run: npm run build
-
-      - name: Release
-        run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
->>>>>>>> f6988d4 (chore: adds publishing scripts and updates workflow (#19)):.github/workflows/publish.yml
