@@ -3,27 +3,21 @@ name: Checks
 
 on:
   pull_request:
-    types:
-      - edited
-      - opened
-      - ready_for_review
-      - reopened
-      - review_requested
-      - synchronize
-
-permissions:
-  contents: read
-  packages: write
+    types: [edited,opened,reopened,synchronize]
 
 jobs:
   checks:
     name: Lint, Format, Test & Build
-    strategy:
-      matrix:
-        node-version:
-          - 22.x
-      fail-fast: true
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    strategy:
+      fail-fast: true
+      matrix:
+        node-version: [22.x]
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -50,6 +44,8 @@ jobs:
       - name: Test
         run: npm run test:coverage
 
-    # TODO: include build step to test distributed files
-    # - name: Build
-    #   run: npm run build
+      # Uncomment the following step if you want to build the package explicitly.
+      # If the 'prepublishOnly' script in package.json already handles this, you can skip this step.
+      # If you want to build the package explicitly, uncomment the following step:
+      # - name: Build
+      #   run: npm run build

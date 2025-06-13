@@ -2,22 +2,21 @@ name: Publish
 
 on:
   release:
-    types:
-      - published
-
-permissions:
-  contents: read
-  packages: write
+    types: [published]
 
 jobs:
   publish:
     name: Build & Release
-    strategy:
-      matrix:
-        node-version:
-          - 22.x
-      fail-fast: true
     runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+    
+    strategy:
+      fail-fast: true
+      matrix:
+        node-version: [22.x]
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -35,8 +34,10 @@ jobs:
       - name: Install
         run: npm clean-install
 
-      - name: Build
-        run: npm run build
+      # The 'prepublishOnly' script in package.json (npm run build) handles linting, formatting, and building.
+      # If you prefer an explicit build step in CI:
+      # - name: Build package
+      #   run: npm run build
 
       - name: Release
         run: npm publish --access public
