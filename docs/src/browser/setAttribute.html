@@ -1,0 +1,23 @@
+<article class="document-class"><p>Sets an attribute on an element.</p><h3>Details</h3><ul><li><strong>@param</strong> <code>element</code> <code>{Element}</code> - The DOM element.</li><li><strong>@param</strong> <code>attributeName</code> <code>{string}</code> - The name of the attribute to set.</li><li><strong>@param</strong> <code>value</code> <code>{string}</code> - The value to set for the attribute.</li></ul><pre data-language="js">/**
+ * Sets an attribute on an element.
+ * @param {Element} element - The DOM element.
+ * @param {string} attributeName - The name of the attribute to set.
+ * @param {string} value - The value to set for the attribute.
+ */
+export function setAttribute(element, attributeName, value) {
+	if (
+		!element ||
+		!attributeName ||
+		typeof element.setAttribute !== 'function'
+	) {
+		return;
+	}
+
+	try {
+		element.setAttribute(attributeName, value);
+	} catch (error) {
+		// Silently handle errors when setting attributes
+	}
+}
+
+</pre></article>

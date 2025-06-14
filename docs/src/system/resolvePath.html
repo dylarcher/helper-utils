@@ -1,0 +1,12 @@
+<article class="document-class"><p>Resolves a sequence of paths or path segments into an absolute path.</p><h3>Details</h3><ul><li><strong>@param</strong> <code>paths</code> <code>{Object}</code> - A sequence of paths or path segments.</li><li><strong>@returns</strong> <code>{string}</code> - The resolved absolute path.</li></ul><pre data-language="js">import path from 'node:path';
+
+/**
+ * Resolves a sequence of paths or path segments into an absolute path.
+ * @param {...string} paths - A sequence of paths or path segments.
+ * @returns {string} The resolved absolute path.
+ */
+export function resolvePath(...paths) {
+	return path.resolve(...paths);
+}
+
+</pre></article>

@@ -1,0 +1,56 @@
+<article class="document-class"><p>Creates a new DOM element with optional attributes and children.</p><h3>Details</h3><ul><li><strong>@param</strong> <code>tagName</code> <code>{string}</code> - The tag name for the element.</li><li><strong>@param</strong> <code>attributes</code> <code>{Object}</code> - An object of attributes to set on the element.</li><li><strong>@param</strong> <code>children</code> <code>{Object}</code> - Content to append (text, a DOM node, or an array of these).</li><li><strong>@returns</strong> <code>{Element}</code> - The created DOM element.</li></ul><hr><h3>Details</h3><ul><li><strong>@type</strong> <code>{Record&lt;string, string&gt;}</code></li></ul><hr><p>Appends a child (string or Node) to the element.</p><h3>Details</h3><ul><li><strong>@param</strong> <code>child</code> <code>{Object}</code></li><li><strong>@param</strong> <code>parent</code> <code>{Element}</code></li><li><strong>@returns</strong> <code>{void}</code></li></ul><hr><p>Appends multiple children (string or Node) to the element.</p><h3>Details</h3><ul><li><strong>@param</strong> <code>descendants</code> <code>{Array&lt;Object&gt;}</code></li><li><strong>@param</strong> <code>parent</code> <code>{Element}</code></li><li><strong>@returns</strong> <code>{void}</code></li></ul><pre data-language="js">/**
+ * Creates a new DOM element with optional attributes and children.
+ * @param {string} tagName - The tag name for the element.
+ * @param {Record&lt;string, string&gt;} [attributes={}] - An object of attributes to set on the element.
+ * @param {(string|Node|Array&lt;string|Node&gt;)} [children=[]] - Content to append (text, a DOM node, or an array of these).
+ * @returns {Element} The created DOM element.
+ */
+export function createElement(
+	tagName,
+	attributes = /** @type {Record&lt;string, string&gt;} */ ({}),
+	children = [],
+) {
+	const element = document.createElement(tagName);
+
+	for (const key in attributes) {
+		if (Object.prototype.hasOwnProperty.call(attributes, key)) {
+			element.setAttribute(key, attributes[key]);
+		}
+	}
+
+	Array.isArray(children)
+		? appendChildren(children, element)
+		: appendChild(children, element);
+
+	/**
+	 * Appends a child (string or Node) to the element.
+	 * @param {string | Node} child
+	 * @param {Element} parent
+	 * @returns {void}
+	 */
+	function appendChild(child, parent) {
+		if (typeof child === 'string') {
+			parent.appendChild(document.createTextNode(child));
+		} else if (child) {
+			// Handle any object that might be a DOM node
+			// In tests, we don't have real Node instances but objects with similar interface
+			parent.appendChild(child);
+		}
+	}
+
+	/**
+	 * Appends multiple children (string or Node) to the element.
+	 * @param {Array&lt;string | Node&gt;} descendants
+	 * @param {Element} parent
+	 * @returns {void}
+	 */
+	function appendChildren(descendants, parent) {
+		for (const descendant of descendants) {
+			appendChild(descendant, parent);
+		}
+	}
+
+	return element;
+}
+
+</pre></article>

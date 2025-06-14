@@ -1,0 +1,18 @@
+<article class="document-class"><p>Get CPU information.</p><h3>Details</h3><ul><li><strong>@param</strong> <code>cpuData</code> <code>{Object}</code> - Optional CPU data for testing purposes</li><li><strong>@returns</strong> <code>{Array&lt;os.CpuInfo&gt;}</code> - An array of objects containing information about each logical CPU core.</li></ul><pre data-language="js">import os from 'node:os';
+
+/**
+ * Get CPU information.
+ * @param {os.CpuInfo[]} [cpuData] - Optional CPU data for testing purposes
+ * @returns {os.CpuInfo[]} An array of objects containing information about each logical CPU core.
+ */
+
+export function getCPUInfo(cpuData) {
+	const cpus = cpuData || os.cpus();
+	return cpus.map((cpu) =&gt; ({
+		model: cpu.model || 'unknown',
+		speed: cpu.speed &gt; 0 ? cpu.speed : 0, // Default to 0 if speed is invalid
+		times: cpu.times,
+	}));
+}
+
+</pre></article>

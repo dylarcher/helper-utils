@@ -1,0 +1,29 @@
+<article class="document-class"><p>Sets CSS style(s) on an element.</p><h3>Details</h3><ul><li><strong>@param</strong> <code>element</code> <code>{HTMLElement}</code> - The DOM element.</li><li><strong>@param</strong> <code>property</code> <code>{Object}</code> - CSS property name (string) or an object of property-value pairs.</li><li><strong>@param</strong> <code>value</code> <code>{Object}</code> - CSS property value (if property is a string).</li></ul><pre data-language="js">/**
+ * Sets CSS style(s) on an element.
+ * @param {HTMLElement} element - The DOM element.
+ * @param {string|Record&lt;string, string&gt;} property - CSS property name (string) or an object of property-value pairs.
+ * @param {string} [value] - CSS property value (if property is a string).
+ */
+export function setStyle(element, property, value) {
+	if (!element || !element.style) {
+		return;
+	}
+
+	if (typeof property === 'object' &amp;&amp; property !== null) {
+		for (const key of Object.keys(property)) {
+			if (key &amp;&amp; typeof key === 'string') {
+				// @ts-ignore - Dynamic property access on style object
+				element.style[key] = property[key];
+			}
+		}
+	} else if (
+		typeof property === 'string' &amp;&amp;
+		property &amp;&amp;
+		typeof value !== 'undefined'
+	) {
+		// @ts-ignore - Dynamic property access on style object
+		element.style[property] = value;
+	}
+}
+
+</pre></article>

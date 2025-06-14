@@ -1,0 +1,13 @@
+<article class="document-class"><p>Creates a directory.</p><h3>Details</h3><ul><li><strong>@param</strong> <code>dirPath</code> <code>{string}</code> - The path of the directory to create.</li><li><strong>@param</strong> <code>options</code> - Options for mkdir (e.g., recursive).</li><li><strong>@returns</strong> <code>{Promise&lt;Object&gt;}</code> - A promise that resolves with the first directory path created if recursive, or undefined.</li></ul><pre data-language="js">import fs from 'node:fs/promises';
+
+/**
+ * Creates a directory.
+ * @param {string} dirPath - The path of the directory to create.
+ * @param {{recursive?: boolean}} [options={ recursive: true }] - Options for mkdir (e.g., recursive).
+ * @returns {Promise&lt;string | undefined&gt;} A promise that resolves with the first directory path created if recursive, or undefined.
+ */
+export async function createDirectory(dirPath, options = { recursive: true }) {
+	return fs.mkdir(dirPath, options);
+}
+
+</pre></article>

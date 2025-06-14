@@ -1,0 +1,17 @@
+<article class="document-class"><p>Checks if a file or directory exists at the given path.</p><h3>Details</h3><ul><li><strong>@param</strong> <code>filePath</code> <code>{string}</code> - The path to check.</li><li><strong>@returns</strong> <code>{Promise&lt;boolean&gt;}</code> - True if the path exists, false otherwise.</li></ul><pre data-language="js">import fs from 'node:fs/promises';
+
+/**
+ * Checks if a file or directory exists at the given path.
+ * @param {string} filePath - The path to check.
+ * @returns {Promise&lt;boolean&gt;} True if the path exists, false otherwise.
+ */
+export async function fileExists(filePath) {
+	try {
+		await fs.access(filePath);
+		return true;
+	} catch {
+		return false;
+	}
+}
+
+</pre></article>

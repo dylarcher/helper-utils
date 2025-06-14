@@ -1,0 +1,23 @@
+<article class="document-class"><p>Stringify and store JSON in localStorage.</p><h3>Details</h3><ul><li><strong>@param</strong> <code>key</code> <code>{string}</code> - The key in localStorage.</li><li><strong>@param</strong> <code>value</code> <code>{Object}</code> - The value to stringify and store.</li><li><strong>@returns</strong> <code>{boolean}</code> - True if successful, false otherwise.</li></ul><pre data-language="js">/**
+ * Stringify and store JSON in localStorage.
+ * @param {string} key - The key in localStorage.
+ * @param {*} value - The value to stringify and store.
+ * @returns {boolean} True if successful, false otherwise.
+ */
+export function setLocalStorageJSON(key, value) {
+	try {
+		// Handle undefined and function values specially as they stringify to undefined
+		const stringified = JSON.stringify(value);
+		const finalValue = stringified === undefined ? 'null' : stringified;
+		localStorage.setItem(key, finalValue);
+		return true;
+	} catch (error) {
+		console.error(
+			`Error setting JSON in localStorage for key &quot;${key}&quot;:`,
+			error,
+		);
+		return false;
+	}
+}
+
+</pre></article>

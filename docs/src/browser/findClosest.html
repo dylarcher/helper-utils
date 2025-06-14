@@ -1,0 +1,14 @@
+<article class="document-class"><h3>Details</h3><ul><li><strong>@description</strong> - Gets the closest ancestor of the current element (or the current element itself) which matches the selectors.</li><li><strong>@param</strong> <code>element</code> <code>{Element}</code> - The starting DOM element.</li><li><strong>@param</strong> <code>selector</code> <code>{string}</code> - A string containing a selector list.</li><li><strong>@returns</strong> <code>{Object}</code> - The closest ancestor element or null.</li><li><strong>@example</strong> - const formElement = findClosest(document.getElementById('submitButton'), 'form');</li></ul><pre data-language="js">/**
+ * @description Gets the closest ancestor of the current element (or the current element itself) which matches the selectors.
+ * @param {Element} element - The starting DOM element.
+ * @param {string} selector - A string containing a selector list.
+ * @returns {Element|null} The closest ancestor element or null.
+ * @example
+ * const formElement = findClosest(document.getElementById('submitButton'), 'form');
+ */
+export function findClosest(element, selector) {
+	return element ? element.closest(selector) : null;
+}
+// Similar for getParent, getChildren, siblings
+
+</pre></article>

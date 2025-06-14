@@ -1,0 +1,18 @@
+<article class="document-class"><p>Toggles a CSS class on an element. Can optionally force add or remove based on the 'force' boolean.</p><h3>Details</h3><ul><li><strong>@param</strong> <code>element</code> <code>{Element}</code> - The DOM element.</li><li><strong>@param</strong> <code>className</code> <code>{string}</code> - The CSS class to toggle.</li><li><strong>@param</strong> <code>force</code> <code>{Object}</code> - If true, adds the class; if false, removes it.</li></ul><pre data-language="js">/**
+ * Toggles a CSS class on an element.
+ * Can optionally force add or remove based on the 'force' boolean.
+ * @param {Element} element - The DOM element.
+ * @param {string} className - The CSS class to toggle.
+ * @param {boolean} [force] - If true, adds the class; if false, removes it.
+ */
+export function toggleClass(element, className, force) {
+	if (element?.classList &amp;&amp; className) {
+		try {
+			element.classList.toggle(className, force);
+		} catch (error) {
+			// Silently handle errors
+		}
+	}
+}
+
+</pre></article>

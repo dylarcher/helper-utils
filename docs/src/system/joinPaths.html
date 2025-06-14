@@ -1,0 +1,12 @@
+<article class="document-class"><p>Joins all given path segments together using the platform-specific separator.</p><h3>Details</h3><ul><li><strong>@param</strong> <code>paths</code> <code>{Object}</code> - A sequence of path segments.</li><li><strong>@returns</strong> <code>{string}</code> - The joined path.</li></ul><pre data-language="js">import path from 'node:path';
+
+/**
+ * Joins all given path segments together using the platform-specific separator.
+ * @param {...string} paths - A sequence of path segments.
+ * @returns {string} The joined path.
+ */
+export function joinPaths(...paths) {
+	return path.join(...paths);
+}
+
+</pre></article>

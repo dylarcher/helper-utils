@@ -1,0 +1,19 @@
+<article class="document-class"><p>Gets the filename part of a path.</p><h3>Details</h3><ul><li><strong>@param</strong> <code>p</code> <code>{string}</code> - The path to evaluate.</li><li><strong>@param</strong> <code>ext</code> <code>{Object}</code> - An optional extension to remove from the result.</li><li><strong>@returns</strong> <code>{string}</code> - The basename of the path.</li></ul><pre data-language="js">import path from 'node:path';
+
+/**
+ * Gets the filename part of a path.
+ * @param {string} p - The path to evaluate.
+ * @param {string} [ext] - An optional extension to remove from the result.
+ * @returns {string} The basename of the path.
+ */
+export function getBasename(p, ext) {
+	if (!p || typeof p !== 'string') {
+		return '';
+	}
+
+	// For cross-platform path handling, always use the Node.js implementation
+	// which is thoroughly tested and handles all edge cases correctly
+	return path.basename(p, ext);
+}
+
+</pre></article>

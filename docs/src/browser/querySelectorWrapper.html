@@ -1,0 +1,28 @@
+<article class="document-class"><p>Wrapper for querySelector with optional parent context.</p><h3>Details</h3><ul><li><strong>@param</strong> <code>selector</code> <code>{string}</code> - The CSS selector.</li><li><strong>@param</strong> <code>container</code> <code>{Object}</code> - The parent element to search within.</li><li><strong>@returns</strong> <code>{Object}</code> - The first matching element or null.</li></ul><pre data-language="js">/**
+ * Wrapper for querySelector with optional parent context.
+ * @param {string} selector - The CSS selector.
+ * @param {Document|Element} [container=document] - The parent element to search within.
+ * @returns {Element|null} The first matching element or null.
+ */
+export function querySelectorWrapper(selector, container) {
+	// Only use document as fallback when no container argument is provided
+	// Check arguments.length to distinguish between undefined being passed vs not passed
+	const targetContainer =
+		arguments.length &gt;= 2
+			? container // Container was explicitly provided (even if null/undefined)
+			: typeof document !== 'undefined'
+				? document
+				: null; // No container provided, use document
+
+	if (!targetContainer || typeof targetContainer.querySelector !== 'function') {
+		return null;
+	}
+
+	try {
+		return targetContainer.querySelector(selector);
+	} catch (error) {
+		return null;
+	}
+}
+
+</pre></article>

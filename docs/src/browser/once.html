@@ -1,0 +1,21 @@
+<article class="document-class"><p>Attaches an event listener to an element that fires only once.</p><h3>Details</h3><ul><li><strong>@param</strong> <code>element</code> <code>{EventTarget}</code> - The DOM element or event target.</li><li><strong>@param</strong> <code>eventType</code> <code>{string}</code> - The type of event (e.g., 'click').</li><li><strong>@param</strong> <code>listener</code> <code>{EventListener}</code> - The event listener function.</li><li><strong>@param</strong> <code>options</code> <code>{Object}</code> - Optional event listener options.</li></ul><pre data-language="js">/**
+ * Attaches an event listener to an element that fires only once.
+ * @param {EventTarget} element - The DOM element or event target.
+ * @param {string} eventType - The type of event (e.g., 'click').
+ * @param {EventListener} listener - The event listener function.
+ * @param {boolean|object} [options] - Optional event listener options.
+ */
+export function once(element, eventType, listener, options) {
+	if (!element || typeof element.addEventListener !== 'function') {
+		return;
+	}
+
+	const optionsWithOnce =
+		typeof options === 'object' ? { ...options, once: true } : { once: true };
+
+	// For older browsers that don't support `once` in options, wrap the listener.
+	// Modern browsers handle `once: true` natively.
+	element.addEventListener(eventType, listener, optionsWithOnce);
+}
+
+</pre></article>

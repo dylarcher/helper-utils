@@ -1,0 +1,14 @@
+<article class="document-class"><p>Asynchronously writes data to a file.</p><h3>Details</h3><ul><li><strong>@param</strong> <code>filePath</code> <code>{string}</code> - The path to the file.</li><li><strong>@param</strong> <code>data</code> <code>{Object}</code> - The data to write.</li><li><strong>@param</strong> <code>encoding</code> <code>{Object}</code> - The file encoding.</li><li><strong>@returns</strong> <code>{Promise&lt;void&gt;}</code> - A promise that resolves when the file has been written.</li></ul><pre data-language="js">import fs from 'node:fs/promises';
+
+/**
+ * Asynchronously writes data to a file.
+ * @param {string} filePath - The path to the file.
+ * @param {string|Buffer} data - The data to write.
+ * @param {BufferEncoding} [encoding='utf8'] - The file encoding.
+ * @returns {Promise&lt;void&gt;} A promise that resolves when the file has been written.
+ */
+export async function writeFileAsync(filePath, data, encoding = 'utf8') {
+	return fs.writeFile(filePath, data, { encoding });
+}
+
+</pre></article>

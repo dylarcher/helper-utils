@@ -1,0 +1,20 @@
+<article class="document-class"><p>Encrypts text using AES-256-CBC.</p><h3>Details</h3><ul><li><strong>@param</strong> <code>text</code> <code>{string}</code> - The text to encrypt.</li><li><strong>@param</strong> <code>key</code> <code>{Buffer}</code> - The encryption key (must be 32 bytes for AES-256).</li><li><strong>@param</strong> <code>iv</code> <code>{Buffer}</code> - The initialization vector (must be 16 bytes for AES-CBC).</li><li><strong>@returns</strong> <code>{string}</code> - The encrypted text in hex format, prefixed with the IV in hex.</li></ul><pre data-language="js">import * as _crypto from 'node:crypto';
+
+const ALGORITHM = 'aes-256-cbc';
+
+/**
+ * Encrypts text using AES-256-CBC.
+ * @param {string} text - The text to encrypt.
+ * @param {Buffer} key - The encryption key (must be 32 bytes for AES-256).
+ * @param {Buffer} iv - The initialization vector (must be 16 bytes for AES-CBC).
+ * @returns {string} The encrypted text in hex format, prefixed with the IV in hex.
+ */
+export function encrypt(text, key, iv) {
+	const cipher = _crypto.createCipheriv(ALGORITHM, key, iv);
+	let encrypted = cipher.update(text, 'utf8', 'hex');
+	encrypted += cipher.final('hex');
+	// Prepend IV for use in decryption
+	return `${iv.toString('hex')}:${encrypted}`;
+}
+
+</pre></article>

@@ -1,0 +1,21 @@
+<article class="document-class"><p>Asynchronously copy text to clipboard using the Clipboard API.</p><h3>Details</h3><ul><li><strong>@param</strong> <code>text</code> <code>{string}</code> - The text to copy.</li><li><strong>@returns</strong> <code>{Promise&lt;void&gt;}</code> - A promise that resolves when copying is successful, or rejects if not.</li></ul><pre data-language="js">/**
+ * Asynchronously copy text to clipboard using the Clipboard API.
+ * @param {string} text - The text to copy.
+ * @returns {Promise&lt;void&gt;} A promise that resolves when copying is successful, or rejects if not.
+ */
+export async function copyToClipboardAsync(text) {
+	if (!navigator.clipboard) {
+		return Promise.reject(
+			new Error(
+				'Clipboard API not available. Use a fallback or ensure secure context (HTTPS).',
+			),
+		);
+	}
+	try {
+		await navigator.clipboard.writeText(text);
+	} catch (err) {
+		return Promise.reject(err);
+	}
+}
+
+</pre></article>

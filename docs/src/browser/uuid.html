@@ -1,0 +1,17 @@
+<article class="document-class"><p>Generates a UUID (v4) using the browser's crypto API.</p><h3>Details</h3><ul><li><strong>@returns</strong> <code>{string}</code> - A new UUID.</li><li><strong>@throws</strong> <code>{Error}</code> - If crypto.randomUUID is not available.</li></ul><pre data-language="js">/**
+ * Generates a UUID (v4) using the browser's crypto API.
+ * @returns {string} A new UUID.
+ * @throws {Error} If crypto.randomUUID is not available.
+ */
+export function uuid() {
+	if (
+		typeof crypto !== 'undefined' &amp;&amp;
+		typeof crypto.randomUUID === 'function'
+	) {
+		return crypto.randomUUID();
+	}
+	// Fallback or error for older browsers could be added here if needed.
+	throw new Error('crypto.randomUUID is not available in this browser.');
+}
+
+</pre></article>
