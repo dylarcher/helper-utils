@@ -1,1 +1,11 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Run lint-staged
 npx lint-staged
+
+# Check if there are any staged changes after lint-staged
+if git diff --staged --quiet; then
+  echo "No staged changes after lint-staged. Preventing empty commit."
+  exit 1
+fi
