@@ -8,5 +8,5 @@ if ! git diff --staged --quiet; then
   git add .
   git commit --amend --no-edit --no-verify
   echo "Changes have been amended to the previous commit."
-  exit 1  # Prevent the original commit from proceeding
+  exit 0  # Allow the commit to proceed after amending
 fi
