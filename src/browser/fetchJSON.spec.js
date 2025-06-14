@@ -1,6 +1,8 @@
-import { describe, test, beforeEach, afterEach } from 'node:test';
+import { describe, test, beforeEach, afterEach, it as performanceIt } from 'node:test'; // Renamed 'it' for performance tests
 import assert from 'node:assert';
 import { fetchJSON } from './fetchJSON.js';
+
+const PERF_TEST_ENABLED = false; // Set to true to enable performance tests
 
 describe('fetchJSON(url, options)', () => {
 	let originalFetch;
@@ -105,4 +107,119 @@ describe('fetchJSON(url, options)', () => {
 		const result = await fetchJSON('https://api.example.com/data');
 		assert.strictEqual(result, null);
 	});
+
+	test('should reject with an error if fetch itself fails (e.g., network error)', async () => {
+		const networkError = new TypeError('Network request failed');
+		global.fetch = async () => {
+			throw networkError;
+		};
+
+		await assert.rejects(
+			() => fetchJSON('https://api.example.com/network-error'),
+			networkError,
+			'Should reject with the same error that fetch threw'
+		);
+	});
+
+	test('should reject if response is OK but JSON parsing fails (invalid JSON)', async () => {
+		const mockResponse = {
+			ok: true,
+			status: 200,
+			statusText: 'OK',
+			headers: new Map([['content-type', 'application/json']]),
+			// Simulate json() throwing an error for invalid JSON
+			json: async () => {
+				throw new SyntaxError("Unexpected token 'I' in JSON at position 0");
+			},
+			// text() might be called by some error paths, not relevant for this specific test's main path
+			text: async () => 'Invalid JSON content',
+		};
+		mockResponse.headers.get = (key) => mockResponse.headers.get(key.toLowerCase());
+
+
+		global.fetch = async (url, options) => {
+			return Promise.resolve(mockResponse);
+		};
+
+		await assert.rejects(
+			() => fetchJSON('https://api.example.com/invalid-json'),
+			SyntaxError, // Expecting a SyntaxError (or a subclass)
+			'Should reject with SyntaxError when JSON parsing fails'
+		);
+	});
+});
+
+describe('Performance Tests for fetchJSON', () => {
+  const describeOrSkip = PERF_TEST_ENABLED ? describe : describe.skip;
+
+  describeOrSkip('Large JSON payload processing', () => {
+    // The global.fetch mock is managed by the outer describe's beforeEach/afterEach.
+    // We will set a specific mock for this test inside the 'it' block.
+
+    // Using 'performanceIt' which is 'it' from node:test, to avoid Jest/Jasmine confusion if any.
+    // Or, could use the same 'test' as used in the functional tests above. Let's stick to 'test' for consistency.
+    const testFn = PERF_TEST_ENABLED ? test : test.skip;
+
+
+    testFn('should perform efficiently when fetching and parsing a large JSON payload', async () => {
+      const largePayloadItemCount = 20000; // Number of items in the array
+      const sampleItem = {
+        id: 0,
+        name: 'Performance Test Item',
+        value: Math.random(),
+        isActive: true,
+        tags: ['perf', 'test', 'json'],
+        data: 'x'.repeat(200), // Adding some bulk to each item
+      };
+
+      // Create a large array of objects
+      const largeJSONArray = Array.from({ length: largePayloadItemCount }, (_, i) => ({
+        ...sampleItem,
+        id: i,
+        value: Math.random() * i,
+      }));
+
+      // Simulate the text version of the JSON, as fetch would receive
+      const largeJSONText = JSON.stringify(largeJSONArray);
+
+      const mockResponse = {
+        ok: true,
+        status: 200,
+        statusText: 'OK',
+        headers: new Map([['content-type', 'application/json']]),
+        // response.json() first gets text, then parses. Simulating this.
+        text: async () => Promise.resolve(largeJSONText),
+        // fetchJSON internally calls response.json(), which does the parsing.
+        // The actual .json() method from Fetch API would parse the internal text stream.
+        // Here, we directly provide the parsed object for simplicity of the mock,
+        // but the real work fetchJSON does (calling .json()) is what we are testing.
+        // The 'Promise.try' in fetchJSON wraps this call.
+        json: async () => JSON.parse(largeJSONText), // This simulates the parsing step.
+      };
+      // Ensure headers.get works as expected
+      mockResponse.headers.get = (key) => mockResponse.headers.get(key.toLowerCase());
+
+
+      // Set up the global fetch mock for this specific test
+      const originalFetchForPerfTest = global.fetch;
+      global.fetch = async (url, options) => {
+        assert.strictEqual(url, 'https://api.example.com/large-data-perf');
+        return Promise.resolve(mockResponse);
+      };
+
+      console.log(`[INFO] Running fetchJSON performance test with large payload (approx ${Math.round(largeJSONText.length / 1024)} KB, ${largePayloadItemCount} items).`);
+      console.time('fetchJSON performance');
+      const result = await fetchJSON('https://api.example.com/large-data-perf');
+      console.timeEnd('fetchJSON performance');
+
+      // Restore fetch for other tests if any were to run after this, though afterEach handles it too.
+      global.fetch = originalFetchForPerfTest;
+
+      // Basic validation of the result
+      assert.ok(Array.isArray(result), 'Result should be an array.');
+      assert.strictEqual(result.length, largePayloadItemCount, `Result array length should be ${largePayloadItemCount}.`);
+      assert.strictEqual(result[0].id, 0, 'First item ID check.');
+      assert.strictEqual(result[largePayloadItemCount - 1].id, largePayloadItemCount - 1, 'Last item ID check.');
+    });
+  });
 });
