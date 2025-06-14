@@ -19,17 +19,14 @@ export function onDelegate(
 	}
 	parentElement.addEventListener(
 		eventType,
-		(_event) => {
-			const { target } = _event;
-			if (
-				target &&
-				typeof target.matches === 'function'
-			) {
+		(/** @type {Event} */ _event) => {
+			const target = /** @type {Element} */ (_event.target);
+			if (target && typeof target.matches === 'function') {
 				try {
 					if (target.matches(selector)) {
 						callback.call(target, _event);
 					}
-				} catch (_error) {
+				} catch (/** @type {any} */ _error) {
 					// Silently handle errors in target.matches
 					// This prevents breaking the event delegation chain
 				}

@@ -8,5 +8,8 @@ import * as _crypto from 'node:crypto';
  * @returns {string} The generated hash.
  */
 export function generateHash(data, algorithm = 'sha256', encoding = 'hex') {
-	return _crypto.createHash(algorithm).update(data).digest(encoding);
+	return _crypto
+		.createHash(algorithm)
+		.update(data)
+		.digest(/** @type {any} */ (encoding));
 }
