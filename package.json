@@ -94,5 +94,5 @@
         "version:beta": "npm version prerelease --preid=beta -m \"chore(prerelease-beta): v%s\""
     },
     "type": "module",
-    "version": "1.1.0"
+    "version": "1.2.0"
 }
