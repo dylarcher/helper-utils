@@ -10,9 +10,9 @@
  * @returns {Promise<any>} A promise that resolves with the parsed JSON response.
  */
 export async function fetchJSON(url, options = {}) {
+	/** @type {Record<string, string>} */
 	const defaultHeaders = {
 		Accept: 'application/json',
-		'Content-Type': undefined,
 	};
 
 	if (

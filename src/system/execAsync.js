@@ -10,5 +10,9 @@ const execPromise = promisify(exec);
  * @returns {Promise<{stdout: string, stderr: string}>} A promise that resolves with stdout and stderr.
  */
 export async function execAsync(command, options) {
-	return execPromise(command, options);
+	const result = await execPromise(command, options);
+	return {
+		stdout: result.stdout.toString(),
+		stderr: result.stderr.toString(),
+	};
 }

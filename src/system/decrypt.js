@@ -24,6 +24,10 @@ export function decrypt(encryptedTextWithIv, key) {
 		return decrypted;
 	} catch (error) {
 		// Rethrow any crypto errors, which would include wrong key errors
-		throw new Error(`Decryption failed: ${error.message}`);
+		let message = 'Unknown error';
+		if (error && error.message) {
+			message = error.message;
+		}
+		throw new Error(`Decryption failed: ${message}`);
 	}
 }
