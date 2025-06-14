@@ -38,14 +38,14 @@ class MockElement {
 	// Simulate event dispatching for testing
 	simulateEvent(eventType, target = this) {
 		const listeners = this.listeners.get(eventType) || [];
-		const event = {
+		const evt = {
 			type: eventType,
 			target: target,
 			currentTarget: this,
 		};
 
 		listeners.forEach(({ listener }) => {
-			listener.call(this, event);
+			listener.call(this, evt);
 		});
 	}
 }
@@ -75,9 +75,9 @@ describe('onDelegate(parentElement, eventType, selector, callback, options)', ()
 
 	it('should call callback when target matches selector', () => {
 		const button = new MockElement('button', 'button');
-		const callback = function (event) {
+		const callback = function (evt) {
 			callCount++;
-			lastEvent = event;
+			lastEvent = evt;
 			lastTarget = this;
 		};
 
@@ -200,8 +200,8 @@ describe('onDelegate(parentElement, eventType, selector, callback, options)', ()
 
 		// Mock addEventListener to simulate null target
 		parentElement.addEventListener = (eventType, listener) => {
-			const event = { target: null };
-			listener(event);
+			const evt = { target: null };
+			listener(evt);
 		};
 
 		assert.doesNotThrow(() => {
@@ -230,7 +230,7 @@ describe('onDelegate(parentElement, eventType, selector, callback, options)', ()
 
 	it('should work with complex selectors', () => {
 		const complexElement = new MockElement('input', 'form-input');
-		complexElement.matches = (selector) => {
+		complexElement.matches = selector => {
 			// Mock complex selector matching
 			if (selector === "input.form-input[type='text']") {
 				return true;
@@ -257,8 +257,8 @@ describe('onDelegate(parentElement, eventType, selector, callback, options)', ()
 		const button = new MockElement('button', 'test-btn');
 		let receivedEvent;
 
-		const callback = (event) => {
-			receivedEvent = event;
+		const callback = evt => {
+			receivedEvent = evt;
 			callCount++;
 		};
 

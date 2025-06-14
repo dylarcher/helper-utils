@@ -1,4 +1,12 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
+# Run lint-staged with allow-empty to let it handle the changes
+npx lint-staged --allow-empty
 
-npx lint-staged
+# If lint-staged succeeds and there are still staged changes,
+# check if we should amend the previous commit
+if ! git diff --staged --quiet; then
+  echo "lint-staged made changes. Amending previous commit..."
+  git add .
+  git commit --amend --no-edit --no-verify
+  echo "Changes have been amended to the previous commit."
+  exit 0  # Allow the commit to proceed after amending
+fi

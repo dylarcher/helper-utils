@@ -36,11 +36,11 @@ describe('browser exports', () => {
 		];
 
 		// Verify all expected exports exist
-		expectedExports.forEach((name) => {
+		expectedExports.forEach(elementName => {
 			assert.strictEqual(
-				typeof browser[name],
+				typeof browser[elementName],
 				'function',
-				`${name} should be exported as a function`,
+				`${elementName} should be exported as a function`,
 			);
 		});
 

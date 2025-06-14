@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import * as crypto from 'node:crypto';
+import * as cryptoModule from 'node:crypto';
 import { generateHash } from './generateHash.js';
 
 describe('generateHash(data, algorithm, encoding)', () => {
@@ -16,8 +16,11 @@ describe('generateHash(data, algorithm, encoding)', () => {
 			'SHA256 hex hash should be 64 characters long',
 		);
 
-		// Verify it matches crypto.createHash result
-		const expectedHash = crypto.createHash('sha256').update(data).digest('hex');
+		// Verify it matches cryptoModule.createHash result
+		const expectedHash = cryptoModule
+			.createHash('sha256')
+			.update(data)
+			.digest('hex');
 		assert.strictEqual(hash, expectedHash, 'Should match native crypto result');
 	});
 
@@ -32,7 +35,10 @@ describe('generateHash(data, algorithm, encoding)', () => {
 			'MD5 hex hash should be 32 characters long',
 		);
 
-		const expectedHash = crypto.createHash('md5').update(data).digest('hex');
+		const expectedHash = cryptoModule
+			.createHash('md5')
+			.update(data)
+			.digest('hex');
 		assert.strictEqual(hash, expectedHash, 'Should match native crypto result');
 	});
 
@@ -47,7 +53,10 @@ describe('generateHash(data, algorithm, encoding)', () => {
 			'SHA1 hex hash should be 40 characters long',
 		);
 
-		const expectedHash = crypto.createHash('sha1').update(data).digest('hex');
+		const expectedHash = cryptoModule
+			.createHash('sha1')
+			.update(data)
+			.digest('hex');
 		assert.strictEqual(hash, expectedHash, 'Should match native crypto result');
 	});
 
@@ -62,7 +71,10 @@ describe('generateHash(data, algorithm, encoding)', () => {
 			'SHA512 hex hash should be 128 characters long',
 		);
 
-		const expectedHash = crypto.createHash('sha512').update(data).digest('hex');
+		const expectedHash = cryptoModule
+			.createHash('sha512')
+			.update(data)
+			.digest('hex');
 		assert.strictEqual(hash, expectedHash, 'Should match native crypto result');
 	});
 
@@ -76,7 +88,7 @@ describe('generateHash(data, algorithm, encoding)', () => {
 			'Should produce valid base64 string',
 		);
 
-		const expectedHash = crypto
+		const expectedHash = cryptoModule
 			.createHash('sha256')
 			.update(data)
 			.digest('base64');
@@ -87,7 +99,7 @@ describe('generateHash(data, algorithm, encoding)', () => {
 		const data = 'Hello, World!';
 		const hash = generateHash(data, 'sha256', 'latin1');
 
-		const expectedHash = crypto
+		const expectedHash = cryptoModule
 			.createHash('sha256')
 			.update(data)
 			.digest('latin1');
@@ -103,7 +115,10 @@ describe('generateHash(data, algorithm, encoding)', () => {
 			'Should produce valid hex string for empty input',
 		);
 
-		const expectedHash = crypto.createHash('sha256').update(data).digest('hex');
+		const expectedHash = cryptoModule
+			.createHash('sha256')
+			.update(data)
+			.digest('hex');
 		assert.strictEqual(
 			hash,
 			expectedHash,
@@ -120,7 +135,10 @@ describe('generateHash(data, algorithm, encoding)', () => {
 			'Should produce valid hex string for unicode',
 		);
 
-		const expectedHash = crypto.createHash('sha256').update(data).digest('hex');
+		const expectedHash = cryptoModule
+			.createHash('sha256')
+			.update(data)
+			.digest('hex');
 		assert.strictEqual(
 			hash,
 			expectedHash,
@@ -142,7 +160,10 @@ describe('generateHash(data, algorithm, encoding)', () => {
 			'SHA256 hash length should be consistent regardless of input size',
 		);
 
-		const expectedHash = crypto.createHash('sha256').update(data).digest('hex');
+		const expectedHash = cryptoModule
+			.createHash('sha256')
+			.update(data)
+			.digest('hex');
 		assert.strictEqual(
 			hash,
 			expectedHash,
@@ -179,7 +200,10 @@ describe('generateHash(data, algorithm, encoding)', () => {
 
 		assert.ok(/^[0-9a-f]+$/i.test(hash), 'Should handle binary-like strings');
 
-		const expectedHash = crypto.createHash('sha256').update(data).digest('hex');
+		const expectedHash = cryptoModule
+			.createHash('sha256')
+			.update(data)
+			.digest('hex');
 		assert.strictEqual(
 			hash,
 			expectedHash,
@@ -193,7 +217,10 @@ describe('generateHash(data, algorithm, encoding)', () => {
 
 		assert.ok(/^[0-9a-f]+$/i.test(hash), 'Should handle special characters');
 
-		const expectedHash = crypto.createHash('sha256').update(data).digest('hex');
+		const expectedHash = cryptoModule
+			.createHash('sha256')
+			.update(data)
+			.digest('hex');
 		assert.strictEqual(
 			hash,
 			expectedHash,

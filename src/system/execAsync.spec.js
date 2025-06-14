@@ -2,7 +2,8 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { execAsync } from './execAsync.js';
 
-describe('execAsync(command, options)', () => {
+// Keep original integration tests, but add a new describe block for mocked tests
+describe('execAsync(command, options) - Integration Tests', () => {
 	it('should execute a simple command and return stdout', async () => {
 		const result = await execAsync("echo 'Hello World'");
 

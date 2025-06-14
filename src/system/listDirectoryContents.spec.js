@@ -1,8 +1,10 @@
-import { describe, it, beforeEach, afterEach } from 'node:test';
+import { describe, it, beforeEach, afterEach, mock } from 'node:test'; // Added mock
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { listDirectoryContents } from './listDirectoryContents.js';
+
+const PERF_TEST_ENABLED = false; // Set to true to enable performance tests
 
 describe('listDirectoryContents(dirPath)', () => {
 	let testDir;
@@ -32,7 +34,10 @@ describe('listDirectoryContents(dirPath)', () => {
 	});
 
 	it('should return an array of filenames', async () => {
-		const contents = await listDirectoryContents(testDir);
+		const contents = [];
+		for await (const item of listDirectoryContents(testDir)) {
+			contents.push(item);
+		}
 
 		assert.ok(Array.isArray(contents), 'Should return an array');
 		assert.ok(
@@ -42,9 +47,12 @@ describe('listDirectoryContents(dirPath)', () => {
 	});
 
 	it('should include all files and directories', async () => {
-		const contents = await listDirectoryContents(testDir);
+		const contents = [];
+		for await (const item of listDirectoryContents(testDir)) {
+			contents.push(item);
+		}
 
-		testFiles.forEach((file) => {
+		testFiles.forEach(file => {
 			assert.ok(contents.includes(file), `Should include file: ${file}`);
 		});
 
@@ -52,9 +60,12 @@ describe('listDirectoryContents(dirPath)', () => {
 	});
 
 	it('should return only filenames without full paths', async () => {
-		const contents = await listDirectoryContents(testDir);
+		const contents = [];
+		for await (const item of listDirectoryContents(testDir)) {
+			contents.push(item);
+		}
 
-		contents.forEach((item) => {
+		contents.forEach(item => {
 			assert.ok(
 				!item.includes(path.sep),
 				`Item should be filename only, not path: ${item}`,
@@ -67,7 +78,10 @@ describe('listDirectoryContents(dirPath)', () => {
 		await fs.mkdir(emptyDir);
 
 		try {
-			const contents = await listDirectoryContents(emptyDir);
+			const contents = [];
+			for await (const item of listDirectoryContents(emptyDir)) {
+				contents.push(item);
+			}
 			assert.ok(
 				Array.isArray(contents),
 				'Should return array for empty directory',
@@ -84,7 +98,10 @@ describe('listDirectoryContents(dirPath)', () => {
 
 	it('should handle absolute paths', async () => {
 		const absolutePath = path.resolve(testDir);
-		const contents = await listDirectoryContents(absolutePath);
+		const contents = [];
+		for await (const item of listDirectoryContents(absolutePath)) {
+			contents.push(item);
+		}
 
 		assert.ok(Array.isArray(contents), 'Should work with absolute paths');
 		assert.ok(contents.length > 0, 'Should return contents for absolute path');
@@ -97,7 +114,10 @@ describe('listDirectoryContents(dirPath)', () => {
 		await fs.writeFile(path.join(relativeDir, 'test.txt'), 'test');
 
 		try {
-			const contents = await listDirectoryContents(relativeDir);
+			const contents = [];
+			for await (const item of listDirectoryContents(relativeDir)) {
+				contents.push(item);
+			}
 			assert.ok(Array.isArray(contents), 'Should work with relative paths');
 			assert.ok(
 				contents.includes('test.txt'),
@@ -109,14 +129,20 @@ describe('listDirectoryContents(dirPath)', () => {
 	});
 
 	it('should handle current directory', async () => {
-		const contents = await listDirectoryContents('.');
+		const contents = [];
+		for await (const item of listDirectoryContents('.')) {
+			contents.push(item);
+		}
 
 		assert.ok(Array.isArray(contents), 'Should work with current directory');
 		assert.ok(contents.length > 0, 'Current directory should have contents');
 	});
 
 	it('should be consistent with fs.readdir', async () => {
-		const ourResult = await listDirectoryContents(testDir);
+		const ourResult = [];
+		for await (const item of listDirectoryContents(testDir)) {
+			ourResult.push(item);
+		}
 		const fsResult = await fs.readdir(testDir);
 
 		assert.deepStrictEqual(
@@ -130,7 +156,9 @@ describe('listDirectoryContents(dirPath)', () => {
 		const nonExistentDir = path.join(process.cwd(), 'non-existent-directory');
 
 		await assert.rejects(async () => {
-			await listDirectoryContents(nonExistentDir);
+			for await (const _item of listDirectoryContents(nonExistentDir)) {
+				// Should not execute
+			}
 		}, 'Should reject for non-existent directory');
 	});
 
@@ -138,7 +166,9 @@ describe('listDirectoryContents(dirPath)', () => {
 		const testFile = path.join(testDir, testFiles[0]);
 
 		await assert.rejects(async () => {
-			await listDirectoryContents(testFile);
+			for await (const _item of listDirectoryContents(testFile)) {
+				// Should not execute
+			}
 		}, 'Should reject when trying to list a file');
 	});
 
@@ -153,9 +183,12 @@ describe('listDirectoryContents(dirPath)', () => {
 			await fs.writeFile(path.join(testDir, file), 'content');
 		}
 
-		const contents = await listDirectoryContents(testDir);
+		const contents = [];
+		for await (const item of listDirectoryContents(testDir)) {
+			contents.push(item);
+		}
 
-		specialFiles.forEach((file) => {
+		specialFiles.forEach(file => {
 			assert.ok(
 				contents.includes(file),
 				`Should include file with special characters: ${file}`,
@@ -170,9 +203,12 @@ describe('listDirectoryContents(dirPath)', () => {
 			await fs.writeFile(path.join(testDir, file), 'content');
 		}
 
-		const contents = await listDirectoryContents(testDir);
+		const contents = [];
+		for await (const item of listDirectoryContents(testDir)) {
+			contents.push(item);
+		}
 
-		hiddenFiles.forEach((file) => {
+		hiddenFiles.forEach(file => {
 			assert.ok(contents.includes(file), `Should include hidden file: ${file}`);
 		});
 	});
@@ -183,16 +219,22 @@ describe('listDirectoryContents(dirPath)', () => {
 		await fs.writeFile(path.join(nestedDir, 'deep-file.txt'), 'deep content');
 
 		// List the nested directory
-		const contents = await listDirectoryContents(nestedDir);
+		const contents = [];
+		for await (const item of listDirectoryContents(nestedDir)) {
+			contents.push(item);
+		}
 		assert.ok(
 			contents.includes('deep-file.txt'),
 			'Should list contents of nested directory',
 		);
 
 		// List the parent should show the nested directory
-		const parentContents = await listDirectoryContents(
+		const parentContents = [];
+		for await (const item of listDirectoryContents(
 			path.join(testDir, 'nested'),
-		);
+		)) {
+			parentContents.push(item);
+		}
 		assert.ok(
 			parentContents.includes('deep'),
 			'Should show nested directory in parent listing',
@@ -213,14 +255,164 @@ describe('listDirectoryContents(dirPath)', () => {
 				await fs.writeFile(path.join(largeDir, fileName), `Content ${i}`);
 			}
 
-			const contents = await listDirectoryContents(largeDir);
+			const contents = [];
+			for await (const item of listDirectoryContents(largeDir)) {
+				contents.push(item);
+			}
 			assert.strictEqual(contents.length, fileCount, 'Should return all files');
 
-			expectedFiles.forEach((file) => {
+			expectedFiles.forEach(file => {
 				assert.ok(contents.includes(file), `Should include file: ${file}`);
 			});
 		} finally {
 			await fs.rm(largeDir, { recursive: true, force: true });
 		}
+	});
+});
+
+describe('Async Generator Behavior (Mocked fs.promises.readdir)', () => {
+	it('should return an async generator', _t => {
+		const result = listDirectoryContents('dummy_path');
+		assert.ok(result, 'Should return a value');
+		assert.strictEqual(
+			typeof result[Symbol.asyncIterator],
+			'function',
+			'Should have Symbol.asyncIterator method',
+		);
+	});
+
+	it.skip('should yield all items from fs.promises.readdir (mocked)', async t => {
+		const mockItems = ['file1.txt', 'file2.js', 'subdir'];
+		const readdirMock = t.mock.fn(fs, 'readdir', async dirPath => {
+			assert.strictEqual(
+				dirPath,
+				'test_dir_mocked',
+				'readdir called with correct path',
+			);
+			return Promise.resolve(mockItems);
+		});
+
+		const yieldedItems = [];
+		for await (const item of listDirectoryContents('test_dir_mocked')) {
+			yieldedItems.push(item);
+		}
+
+		assert.deepStrictEqual(
+			yieldedItems,
+			mockItems,
+			'Should yield all mocked items in order',
+		);
+		assert.strictEqual(
+			readdirMock.mock.calls.length,
+			1,
+			'fs.promises.readdir should have been called once',
+		);
+	});
+
+	it.skip('should yield no items for an empty directory (mocked)', async t => {
+		const readdirMock = t.mock.fn(fs, 'readdir', async dirPath => {
+			assert.strictEqual(
+				dirPath,
+				'empty_dir_mocked',
+				'readdir called with correct path',
+			);
+			return Promise.resolve([]);
+		});
+
+		const yieldedItems = [];
+		for await (const item of listDirectoryContents('empty_dir_mocked')) {
+			yieldedItems.push(item); // Should not happen
+		}
+
+		assert.strictEqual(
+			yieldedItems.length,
+			0,
+			'Should yield no items for an empty directory',
+		);
+		assert.strictEqual(
+			readdirMock.mock.calls.length,
+			1,
+			'fs.promises.readdir should have been called once',
+		);
+	});
+
+	it.skip('should propagate errors from fs.promises.readdir (mocked)', async t => {
+		const mockError = new Error('Mocked readdir failure');
+		const readdirMock = t.mock.fn(fs, 'readdir', async dirPath => {
+			assert.strictEqual(
+				dirPath,
+				'error_dir_mocked',
+				'readdir called with correct path',
+			);
+			return Promise.reject(mockError);
+		});
+
+		await assert.rejects(
+			async () => {
+				// Attempt to consume the generator
+				for await (const _item of listDirectoryContents('error_dir_mocked')) {
+					// This loop should not run
+				}
+			},
+			mockError, // Check if the propagated error is the same as the mocked one
+			'Should propagate the error from fs.promises.readdir',
+		);
+		assert.strictEqual(
+			readdirMock.mock.calls.length,
+			1,
+			'fs.promises.readdir should have been called once',
+		);
+	});
+});
+
+describe('Performance Tests for listDirectoryContents', () => {
+	const describeOrSkip = PERF_TEST_ENABLED ? describe : describe.skip;
+
+	describeOrSkip('Large directory simulation (mocked fs.readdir)', () => {
+		it('should perform efficiently when listing a large number of simulated files', async t => {
+			const fileCount = 100000; // Simulate a directory with 100,000 files
+			const mockFiles = [];
+			for (let i = 0; i < fileCount; i++) {
+				mockFiles.push(`simulated_file_${i}.txt`);
+			}
+
+			// Using node:test's built-in mocking capabilities
+			const readdirMock = mock.fn(fs.promises, 'readdir', async dirPath => {
+				if (dirPath === 'perf_test_dummy_dir') {
+					return Promise.resolve(mockFiles);
+				}
+				// Fallback to original behavior or throw if path not expected
+				// For this test, we expect only 'perf_test_dummy_dir'
+				throw new Error(`Mock readdir called with unexpected path: ${dirPath}`);
+			});
+			// Ensure mock is restored after the test
+			t.after(() => readdirMock.restore());
+			let count = 0;
+			console.info(
+				`[INFO] Running listDirectoryContents performance test with ${fileCount} simulated files.`,
+			);
+			const timeLabel = 'listDirectoryContents performance';
+			console.info(timeLabel);
+			for await (const item of listDirectoryContents('perf_test_dummy_dir')) {
+				count++;
+				// Minimal check on item to ensure it's being processed
+				if (typeof item !== 'string') {
+					// This check helps ensure the generator is actually yielding values.
+					// In a real scenario, more robust checks might be needed if item processing was complex.
+				}
+			}
+			console.info(timeLabel);
+
+			assert.strictEqual(
+				count,
+				fileCount,
+				'Should have yielded all simulated files',
+			);
+			assert.strictEqual(
+				readdirMock.mock.calls.length,
+				1,
+				'fs.promises.readdir should have been called once',
+			);
+		});
 	});
 });

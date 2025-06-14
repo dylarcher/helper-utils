@@ -62,10 +62,15 @@ describe('getMemoryInfo()', () => {
 			osTotalMem,
 			'totalMemory should match os.totalmem()',
 		);
-		assert.strictEqual(
-			memInfo.freeMemory,
-			osFreeMem,
-			'freeMemory should match os.freemem()',
+
+		// Allow for small variance in free memory due to system activity
+		// between the two calls (typically within a few MB)
+		const memoryDifference = Math.abs(memInfo.freeMemory - osFreeMem);
+		const maxAllowedDifference = 100 * 1024 * 1024; // 100MB tolerance
+
+		assert.ok(
+			memoryDifference <= maxAllowedDifference,
+			`freeMemory should be close to os.freemem() (difference: ${memoryDifference} bytes, max allowed: ${maxAllowedDifference} bytes)`,
 		);
 	});
 

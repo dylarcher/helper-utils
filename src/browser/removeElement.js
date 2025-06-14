@@ -11,7 +11,7 @@ export function removeElement(element) {
 		if (typeof element.parentNode.removeChild === 'function') {
 			element.parentNode.removeChild(element);
 		}
-	} catch (error) {
+	} catch (_error) {
 		// Silently handle errors when removing elements
 	}
 }

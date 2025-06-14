@@ -31,11 +31,11 @@ describe('system exports', () => {
 		];
 
 		// Verify all expected exports exist
-		expectedExports.forEach((name) => {
+		expectedExports.forEach(elementName => {
 			assert.strictEqual(
-				typeof system[name],
+				typeof system[elementName],
 				'function',
-				`${name} should be exported as a function`,
+				`${elementName} should be exported as a function`,
 			);
 		});
 
