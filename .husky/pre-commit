@@ -1,8 +1,12 @@
-# Run lint-staged
-npx lint-staged
+# Run lint-staged with allow-empty to let it handle the changes
+npx lint-staged --allow-empty
 
-# Check if there are any staged changes after lint-staged
-if git diff --staged --quiet; then
-  echo "No staged changes after lint-staged. Preventing empty commit."
-  exit 1
+# If lint-staged succeeds and there are still staged changes,
+# check if we should amend the previous commit
+if ! git diff --staged --quiet; then
+  echo "lint-staged made changes. Amending previous commit..."
+  git add .
+  git commit --amend --no-edit --no-verify
+  echo "Changes have been amended to the previous commit."
+  exit 1  # Prevent the original commit from proceeding
 fi
