@@ -48,6 +48,11 @@ import os from 'node:os';
  * // }
  */
 export function getCPUInfo(cpuData) {
+	// If cpuData is explicitly null, return empty array
+	if (cpuData === null) {
+		return [];
+	}
+	
 	const cpus = cpuData || os.cpus(); // Use provided data or fetch from os.cpus()
 
 	if (!cpus || cpus.length === 0) {

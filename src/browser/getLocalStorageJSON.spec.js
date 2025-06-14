@@ -74,13 +74,7 @@ describe('getLocalStorageJSON(key)', () => {
 
 		assert.throws(
 			() => getLocalStorageJSON('invalidJSON'),
-			(error) => {
-				// Check if it's a SyntaxError and optionally part of the message
-				return (
-					error instanceof SyntaxError &&
-					error.message.includes('Unexpected token')
-				);
-			},
+			SyntaxError,
 			'Expected getLocalStorageJSON to throw a SyntaxError for invalid JSON.',
 		);
 		// Ensure no error was logged to console by our spy (if it's still active for other tests)

@@ -32,6 +32,19 @@
  * // Connection Type: effective-type: 4g, rtt: 50, downlink: 10, saveData: false (details vary)
  */
 export function getOSInfo() {
+	// Check if we're in a Node.js environment first
+	if (typeof process !== 'undefined' && process.versions && process.versions.node) {
+		return {
+			platform: 'unknown',
+			userAgent: 'unknown',
+			language: 'unknown',
+			vendor: 'unknown',
+			connection: 'unknown',
+			error:
+				'Navigator object not available. This function is intended for browser environments.',
+		};
+	}
+
 	if (typeof navigator !== 'undefined') {
 		const connection =
 			navigator.connection ||

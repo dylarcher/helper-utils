@@ -135,6 +135,22 @@ describe('getCookie(alias)', () => {
 		assert.strictEqual(result, null);
 	});
 
+	it('should handle invalid cookie format (no equals sign)', () => {
+		global.document = {
+			cookie: 'invalidcookie; validCookie=value',
+		};
+		const result = getCookie('validCookie');
+		assert.strictEqual(result, 'value');
+	});
+
+	it('should handle invalid cookie format (equals as first character)', () => {
+		global.document = {
+			cookie: '=invalidvalue; validCookie=value',
+		};
+		const result = getCookie('validCookie');
+		assert.strictEqual(result, 'value');
+	});
+
 	// Cleanup
 	afterEach(() => {
 		global.document = originalDocument;
