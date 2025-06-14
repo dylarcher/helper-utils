@@ -52,7 +52,7 @@ export default [
 			],
 			semi: ['error', 'always'],
 			'comma-dangle': ['error', 'always-multiline'],
-
+			'no-useless-catch': 'warn',
 			// Best practices
 			eqeqeq: ['error', 'always', { null: 'ignore' }],
 			'no-var': 'error',

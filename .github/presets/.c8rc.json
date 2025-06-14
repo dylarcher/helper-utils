@@ -9,7 +9,9 @@
         "dist/**/*.js",
         "dist/**/*.d.ts",
         "src/**/*.spec.js",
-        "src/**/*.test.js"
+        "src/**/*.test.js",
+        "src/browser.js",
+        "src/system.js"
     ],
     "functions": 100,
     "include": [

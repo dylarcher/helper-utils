@@ -3,13 +3,13 @@
         "editor.codeActionsOnSave": {
             "source.fixAll": "explicit"
         },
-        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "[json]": {
         "editor.codeActionsOnSave": {
             "source.fixAll": "explicit"
         },
-        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "[markdown]": {
         "editor.codeActionsOnSave": {
@@ -33,7 +33,7 @@
         "editor.codeActionsOnSave": {
             "source.fixAll": "explicit"
         },
-        "editor.defaultFormatter": "redhat.vscode-yaml"
+        "editor.defaultFormatter": "googlecloudtools.cloudcode"
     },
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": "explicit"

@@ -1,4 +1,4 @@
-# @dylarcher/js-helpers
+# js-helpers
 
 [![CodeQL](https://github.com/dylarcher/js.helper-utils/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/dylarcher/js.helper-utils/actions/workflows/github-code-scanning/codeql)
 [![Lint](https://github.com/dylarcher/js.helper-utils/actions/workflows/lint.yml/badge.svg)](https://github.com/dylarcher/js.helper-utils/actions/workflows/lint.yml)
@@ -7,10 +7,8 @@
 [![Downloads](https://img.shields.io/npm/dm/js-helpers.svg)](https://www.npmjs.com/package/js-helpers)
 [![Latest](https://img.shields.io/github/last-commit/dylarcher/js.helper-utils.svg)](https://github.com/dylarcher/js.helper-utils/commits/main)
 [![Size](https://img.shields.io/github/repo-size/dylarcher/js.helper-utils.svg)](https://github.com/dylarcher/js.helper-utils)
-[![NPM Version](https://img.shields.io/npm/v/@dylarcher/js-helpers.svg)](https://www.npmjs.com/package/@dylarcher/js-helpers)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A collection of reusable JavaScript helper utility methods for browser and Node.js environments.
+Reusable javascript helper utility methods.
 
 ---
 
@@ -23,8 +21,6 @@ A collection of reusable JavaScript helper utility methods for browser and Node.
   * [Installation](#installation)
 * [Usage](#usage)
   * [Available Utility Methods](#available-utility-methods)
-    * [Browser Utilities](#browser-utilities)
-    * [System Utilities (Node.js)](#system-utilities-nodejs)
 * [Development](#development)
   * [Project Structure](#project-structure)
   * [Available Scripts](#available-scripts)
@@ -39,7 +35,7 @@ A collection of reusable JavaScript helper utility methods for browser and Node.
 
 ## About The Project
 
-`@dylarcher/js-helpers` is a lightweight, zero-dependency library offering a collection of reusable JavaScript utility methods designed to streamline common development tasks.
+`js-helpers` is a lightweight, zero-dependency library offering a collection of reusable JavaScript utility methods designed to streamline common development tasks.
 
 This project aims to provide well-tested, efficient, and easy-to-use functions for your JavaScript projects.
 
@@ -85,12 +81,12 @@ Make sure you have the following installed:
    npm install
    ```
 
-To use `@dylarcher/js-helpers` in your own project:
+To use `js-helpers` in your own project:
 
 ```sh
-npm install @dylarcher/js-helpers
+npm install js-helpers
 # or
-yarn add @dylarcher/js-helpers
+yarn add js-helpers
 ```
 
 ---
@@ -101,143 +97,39 @@ Once installed, you can import and use the utility methods in your project.
 
 ```javascript
 // ESM
-import { addClass, readFileAsync } from '@dylarcher/js-helpers';
-
-// Example for a browser utility
-const myElement = document.getElementById('my-element');
-if (myElement) {
-  addClass(myElement, 'new-class', 'another-class');
-}
-
-// Example for a system utility (if in a Node.js environment)
-async function logFile() {
-  try {
-    const content = await readFileAsync('path/to/my-file.txt');
-    console.log(content);
-  } catch (err) {
-    console.error('Error reading file:', err);
-  }
-}
-logFile();
+import { exampleMethod } from 'js-helpers';
+const result = exampleMethod(data);
+console.info(result);
 ```
 
 ### Available Utility Methods
 
-The library is organized into browser-specific and system-level (Node.js) utilities.
+This section will be updated with a comprehensive list of available utility methods, their parameters, return values, and usage examples as they are developed.
 
-#### Browser Utilities
+* **Method 1:** (Description)
+  * Usage: `method1(params)`
+  * Test Coverage: 0%
+* **Method 2:** (Description)
+  * Usage: `method2(params)`
+  * Test Coverage: 0%
 
-These functions are intended for use in a browser environment.
-
-*   `addClass(element, ...classNames)`: Adds one or more CSS classes to an HTML element.
-*   `copyToClipboardAsync(text)`: Asynchronously copies the given text to the clipboard.
-*   `createElement(tagName, attributes, children)`: Creates an HTML element with specified tag, attributes, and children.
-*   `debounce(func, delay)`: Returns a debounced version of the function that delays invoking `func` until after `delay` milliseconds have elapsed since the last time the debounced function was invoked.
-*   `fetchJSON(url, options)`: Fetches JSON data from a URL.
-*   `findClosest(element, selector)`: Finds the closest ancestor of an element that matches a selector.
-*   `getCookie(name)`: Retrieves the value of a cookie by its name.
-*   `getGlobal()`: Returns the global object (e.g., `window` in browsers).
-*   `getLocalStorageJSON(key)`: Retrieves and parses a JSON value from `localStorage`.
-*   `getOSInfo()`: Returns information about the operating system (primarily from `navigator.userAgentData` or `navigator.platform`).
-*   `getStyle(element, pseudoElt)`: Gets the computed style of an element.
-*   `hasClass(element, className)`: Checks if an element has a specific CSS class.
-*   `hideElement(element)`: Hides an HTML element by setting its `display` style to `none`.
-*   `once(element, eventType, listener, options)`: Adds an event listener that is automatically removed after it executes once.
-*   `onDelegate(parentElement, eventType, selector, callback, options)`: Attaches an event listener to a parent element that only triggers for events on descendant elements matching a selector.
-*   `parseQueryParams(queryString)`: Parses a URL query string into an object of key-value pairs.
-*   `querySelectorAllWrapper(selector, container)`: A wrapper for `querySelectorAll` that returns an array.
-*   `querySelectorWrapper(selector, container)`: A wrapper for `querySelector`.
-*   `querySelectorWrapperAll(selector, container)`: Alias for `querySelectorAllWrapper`.
-*   `removeClass(element, ...classNames)`: Removes one or more CSS classes from an HTML element.
-*   `removeElement(element)`: Removes an HTML element from its parent node.
-*   `setAttribute(element, attributeName, value)`: Sets an attribute on an HTML element.
-*   `setLocalStorageJSON(key, value)`: Stringifies and stores a JSON value in `localStorage`.
-*   `setStyle(element, property, value)`: Sets a style property on an HTML element. Can also take an object of styles.
-*   `throttle(func, limit)`: Returns a throttled version of the function that only invokes `func` at most once per every `limit` milliseconds.
-*   `toggleClass(element, className, force)`: Toggles a CSS class on an HTML element.
-*   `uuid()`: Generates a v4 UUID (primarily using `crypto.randomUUID` if available in the browser).
-
-**Example Usage (Browser):**
-```javascript
-import { createElement, addClass, setStyle } from '@dylarcher/js-helpers';
-
-const newDiv = createElement('div', { id: 'myDiv', 'data-custom': 'value' }, 'Hello World!');
-addClass(newDiv, 'mt-2', 'p-4');
-setStyle(newDiv, { backgroundColor: 'lightblue', borderRadius: '5px' });
-document.body.appendChild(newDiv);
-```
-
-#### System Utilities (Node.js)
-
-These functions are primarily designed for use in a Node.js environment. Some might work in modern browsers if the underlying Node.js modules they depend on (like `crypto`, `fs`, `path`, `os`) have browser-compatible counterparts or polyfills.
-
-*   `createDirectory(dirPath, options)`: Creates a directory, including parent directories if needed.
-*   `decrypt(encryptedTextWithIv, key)`: Decrypts text that was encrypted using AES-256-CBC (expects format 'iv:encryptedText').
-*   `encrypt(text, key, iv)`: Encrypts text using AES-256-CBC.
-*   `env(key, defaultValue)`: Gets an environment variable's value, with an optional default.
-*   `execAsync(command, options)`: Asynchronously executes a shell command.
-*   `fileExists(filePath)`: Checks if a file or directory exists.
-*   `generateHash(data, algorithm, encoding)`: Generates a hash (e.g., SHA256, MD5) of the given data.
-*   `getBasename(p, ext)`: Gets the basename of a path (filename with optional extension removal).
-*   `getCPUInfo()`: Returns information about the system's CPUs.
-*   `getDirname(p)`: Gets the directory name of a path.
-*   `getExtension(p)`: Gets the extension of a path.
-*   `getHostname()`: Returns the system's hostname.
-*   `getMemoryInfo()`: Returns information about system memory (total and free).
-*   `getNetworkInterfaces()`: Returns network interface information.
-*   `isDirectory(dirPath)`: Checks if a path is a directory.
-*   `joinPaths(...paths)`: Joins path segments into a single path.
-*   `listDirectoryContents(dirPath)`: Lists the contents of a directory.
-*   `readFileAsync(filePath, encoding)`: Asynchronously reads the content of a file.
-*   `removeDirectory(dirPath, options)`: Removes a directory, recursively if specified.
-*   `resolvePath(...paths)`: Resolves a sequence of paths or path segments into an absolute path.
-*   `uuid()`: Generates a v4 UUID (primarily using `crypto.randomUUID` from Node.js).
-*   `writeFileAsync(filePath, data, encoding)`: Asynchronously writes data to a file.
-
-**Example Usage (Node.js):**
-```javascript
-import { writeFileAsync, readFileAsync, joinPaths, createDirectory } from '@dylarcher/js-helpers';
-import { homedir } from 'os'; // Node.js core module
-
-async function manageFiles() {
-  const userHome = homedir();
-  const myAppDir = joinPaths(userHome, '.myApp');
-  const myFile = joinPaths(myAppDir, 'example.txt');
-
-  try {
-    await createDirectory(myAppDir);
-    console.log('Directory created:', myAppDir);
-
-    await writeFileAsync(myFile, 'Hello from js-helpers!\nThis is a new line.');
-    console.log('File written:', myFile);
-
-    const content = await readFileAsync(myFile, 'utf8');
-    console.log('File content:', content);
-  } catch (error) {
-    console.error('An error occurred:', error);
-  }
-}
-
-manageFiles();
-```
+> Currently, all methods are under development or pending documentation. Test coverage is 0%.
 
 ---
 
 ## Development
 
-This section outlines how to contribute to the development of `@dylarcher/js-helpers`, including understanding the project structure and using the available npm scripts.
+This section outlines how to contribute to the development of `js-helpers`, including understanding the project structure and using the available npm scripts.
 
 ### Project Structure
 
 ```bash
 .
-├── .github/              # GitHub specific files (workflows, presets, etc.)
-│   └── presets/          # ESLint, Prettier, c8 configs
-├── dist/                 # Compiled JavaScript output (CommonJS/ESM) and type definitions (types.d.ts)
-├── src/                  # JavaScript source files (ES Modules)
-│   ├── browser.js        # Exports browser-specific utilities
-│   ├── system.js         # Exports system-level (Node.js) utilities
-│   └── */*.js            # Individual utility modules
+├── .github/              # GitHub specific files (workflows, linters configs)
+│   └── linters/
+├── dist/                 # Compiled JavaScript output and type definitions
+├── src/                  # TypeScript/JavaScript source files
+│   └── index.ts          # Main entry point for the library
 ├── test/                 # Test files (e.g., *.test.js)
 ├── .gitignore
 ├── package.json          # Project metadata and dependencies
@@ -252,16 +144,15 @@ The `package.json` includes several scripts to help with development:
 | Script             | Description                                                                                                | How to use                |
 | ------------------ | ---------------------------------------------------------------------------------------------------------- | ------------------------- |
 | `prepare`        | Runs `npm dedupe && npm prune`. Executed automatically by npm after `npm install`.                     | (Automatic)               |
-| `format`         | Formats code using Prettier (`.github/presets/.prettierrc.yml`).                                         | `npm run format`        |
+| `format`         | Formats code using Prettier (`.github/linters/.prettierrc.yml`).                                         | `npm run format`        |
 | `format:check`   | Checks code formatting using Prettier without writing changes.                                             | `npm run format:check`  |
-| `lint`           | Lints code using ESLint (`.github/presets/eslint.config.js`) and attempts to fix issues.                 | `npm run lint`          |
+| `lint`           | Lints code using ESLint (`.github/linters/eslint.config.js`) and attempts to fix issues.                 | `npm run lint`          |
 | `lint:check`     | Lints code using ESLint without fixing issues.                                                             | `npm run lint:check`    |
 | `prebuild`       | Runs `lint:check` and `format:check` before building. Executed automatically before `npm run build`. | (Automatic)               |
 | `build`          | Compiles source files from `src/` to `dist/` using `tsc`.                                            | `npm run build`         |
 | `pretest`        | Runs `build` script. Executed automatically before `npm test`.                                         | (Automatic)               |
 | `test`           | Runs tests using `node --no-warnings --experimental-specifier-resolution=node --inspect-brk test ...`.   | `npm test`              |
 | `test:watch`     | Runs tests in watch mode.                                                                                  | `npm run test:watch`    |
-| `test:debug`     | Runs tests with the Node.js inspector attached, pausing at the start.        | `npm run test:debug`    |
 | `c8`             | Base command for `c8` test coverage tool.                                                                | `npm run c8 -- <args>`  |
 | `test:coverage`  | Runs tests and generates a coverage report using `c8`.                                                   | `npm run test:coverage` |
 | `prepublishOnly` | Runs `build` script. Executed automatically before `npm publish`.                                      | (Automatic)               |
@@ -279,7 +170,7 @@ This command will:
 1. (Via `pretest`) Build the project (`npm run build`).
 2. Run test files (e.g., `**/*.test.js`) using the Node.js runtime with specific flags (`--no-warnings`, `--experimental-specifier-resolution=node`, `--inspect-brk`). The `--inspect-brk` flag enables the debugger and pauses execution at the start of the script.
 
-To run tests and generate a coverage report (currently 100%):
+To run tests and generate a coverage report (currently 0%):
 
 ```sh
 npm run test:coverage
@@ -1193,9 +1084,10 @@ To build the project (compile TypeScript/JavaScript from `src/` to `dist/`):
 
 ```sh
 npm run build
+npm run bundle
 ```
 
-The `npm run build` script handles the compilation (using `tsc` - the TypeScript compiler, even for JS projects to leverage its build capabilities and type definition generation) and generates the necessary output files in `dist/`, including type definitions (`types.d.ts`).
+The `npm run build` script handles the compilation, and `npm run bundle` generates the `types.d.ts` file.
 The `prepublishOnly` script automatically runs these before publishing.
 
 ---
