@@ -1,10 +1,12 @@
 # js-helpers
 
 [![CodeQL](https://github.com/dylarcher/js.helper-utils/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/dylarcher/js.helper-utils/actions/workflows/github-code-scanning/codeql)
-[![Checks](https://github.com/dylarcher/js.helper-utils/actions/workflows/checks.yml/badge.svg)](https://github.com/dylarcher/js.helper-utils/actions/workflows/checks.yml)
-[![npm downloads](https://img.shields.io/npm/dm/js-helpers.svg)](https://www.npmjs.com/package/js-helpers)
-[![GitHub last commit](https://img.shields.io/github/last-commit/dylarcher/js.helper-utils.svg)](https://github.com/dylarcher/js.helper-utils/commits/main)
-[![GitHub repo size](https://img.shields.io/github/repo-size/dylarcher/js.helper-utils.svg)](https://github.com/dylarcher/js.helper-utils)
+[![Lint](https://github.com/dylarcher/js.helper-utils/actions/workflows/lint.yml/badge.svg)](https://github.com/dylarcher/js.helper-utils/actions/workflows/lint.yml)
+[![Format](https://github.com/dylarcher/js.helper-utils/actions/workflows/format.yml/badge.svg)](https://github.com/dylarcher/js.helper-utils/actions/workflows/format.yml)
+[![Test](https://github.com/dylarcher/js.helper-utils/actions/workflows/test.yml/badge.svg)](https://github.com/dylarcher/js.helper-utils/actions/workflows/test.yml)
+[![Downloads](https://img.shields.io/npm/dm/js-helpers.svg)](https://www.npmjs.com/package/js-helpers)
+[![Latest](https://img.shields.io/github/last-commit/dylarcher/js.helper-utils.svg)](https://github.com/dylarcher/js.helper-utils/commits/main)
+[![Size](https://img.shields.io/github/repo-size/dylarcher/js.helper-utils.svg)](https://github.com/dylarcher/js.helper-utils)
 
 Reusable javascript helper utility methods.
 
@@ -176,16 +178,16 @@ npm run test:coverage
 
 <table><tr><td>
 <details>
-	<summary>Test coverage results report</summary>
+ <summary>Test coverage results report</summary>
 
 ```sh
 # running `npm run test:coverage`
-	
-	> js-helpers@0.1.0 test:coverage
-	> c8 --config .github/presets/.c8rc.json -- npm test
-	
-	> js-helpers@0.1.0 test
-	> node --no-warnings --test src/**/*.spec.js src/**/*.test.js
+ 
+ > js-helpers@0.1.0 test:coverage
+ > c8 --config .github/presets/.c8rc.json -- npm test
+ 
+ > js-helpers@0.1.0 test
+ > node --no-warnings --test src/**/*.spec.js src/**/*.test.js
 
 ▶ browser
   ✔ should export all expected functions correctly (0.687792ms)
