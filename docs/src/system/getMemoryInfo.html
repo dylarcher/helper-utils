@@ -1,0 +1,14 @@
+<article class="document-class"><p>Get memory usage information.</p><h3>Details</h3><ul><li><strong>@returns</strong> <code>{Object}</code> - Total and free system memory in bytes.</li></ul><pre data-language="js">import os from 'node:os';
+
+/**
+ * Get memory usage information.
+ * @returns {{totalMemory: number, freeMemory: number}} Total and free system memory in bytes.
+ */
+export function getMemoryInfo() {
+	return {
+		totalMemory: os.totalmem(),
+		freeMemory: os.freemem(),
+	};
+}
+
+</pre></article>

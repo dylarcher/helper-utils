@@ -1,0 +1,39 @@
+<article class="document-class"><p>Simplified event delegation. Attaches an event listener to a parent element and only triggers the callback if the event target matches the selector.</p><h3>Details</h3><ul><li><strong>@param</strong> <code>parentElement</code> <code>{Element}</code> - The parent element to attach the listener to.</li><li><strong>@param</strong> <code>eventType</code> <code>{string}</code> - The type of event (e.g., 'click').</li><li><strong>@param</strong> <code>selector</code> <code>{string}</code> - The CSS selector for the target elements.</li><li><strong>@param</strong> <code>callback</code> <code>{Function}</code> - The function to call when the event occurs on a matching target.</li><li><strong>@param</strong> <code>options</code> <code>{Object}</code> - Optional event listener options.</li></ul><hr><h3>Details</h3><ul><li><strong>@type</strong> <code>{Event}</code></li></ul><hr><h3>Details</h3><ul><li><strong>@type</strong> <code>{Element}</code></li></ul><hr><h3>Details</h3><ul><li><strong>@type</strong> <code>{any}</code></li></ul><pre data-language="js">/**
+ * Simplified event delegation. Attaches an event listener to a parent element
+ * and only triggers the callback if the event target matches the selector.
+ * @param {Element} parentElement - The parent element to attach the listener to.
+ * @param {string} eventType - The type of event (e.g., 'click').
+ * @param {string} selector - The CSS selector for the target elements.
+ * @param {Function} callback - The function to call when the event occurs on a matching target.
+ * @param {boolean|object} [options] - Optional event listener options.
+ */
+export function onDelegate(
+	parentElement,
+	eventType,
+	selector,
+	callback,
+	options,
+) {
+	if (!parentElement) {
+		return;
+	}
+	parentElement.addEventListener(
+		eventType,
+		(/** @type {Event} */ _event) =&gt; {
+			const target = /** @type {Element} */ (_event.target);
+			if (target &amp;&amp; typeof target.matches === 'function') {
+				try {
+					if (target.matches(selector)) {
+						callback.call(target, _event);
+					}
+				} catch (/** @type {any} */ _error) {
+					// Silently handle errors in target.matches
+					// This prevents breaking the event delegation chain
+				}
+			}
+		},
+		options,
+	);
+}
+
+</pre></article>

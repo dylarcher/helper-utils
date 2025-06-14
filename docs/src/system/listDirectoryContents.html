@@ -1,0 +1,12 @@
+<article class="document-class"><p>Lists the contents of a directory.</p><h3>Details</h3><ul><li><strong>@param</strong> <code>dirPath</code> <code>{string}</code> - The path of the directory.</li><li><strong>@returns</strong> <code>{Promise&lt;Object&gt;}</code> - A promise that resolves with an array of filenames.</li></ul><pre data-language="js">import fs from 'node:fs/promises';
+
+/**
+ * Lists the contents of a directory.
+ * @param {string} dirPath - The path of the directory.
+ * @returns {Promise&lt;string[]&gt;} A promise that resolves with an array of filenames.
+ */
+export async function listDirectoryContents(dirPath) {
+	return fs.readdir(dirPath);
+}
+
+</pre></article>

@@ -1,0 +1,11 @@
+<article class="document-class"><p>Get network interface information.</p><h3>Details</h3><ul><li><strong>@returns</strong> <code>{NodeJS.Dict&lt;Object&gt;}</code> - An object containing network interface information.</li></ul><pre data-language="js">import os from 'node:os';
+
+/**
+ * Get network interface information.
+ * @returns {NodeJS.Dict&lt;os.NetworkInterfaceInfo[]&gt;} An object containing network interface information.
+ */
+export function getNetworkInterfaces() {
+	return os.networkInterfaces();
+}
+
+</pre></article>

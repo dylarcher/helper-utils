@@ -1,0 +1,19 @@
+<article class="document-class"><p>Get and parse JSON from localStorage.</p><h3>Details</h3><ul><li><strong>@param</strong> <code>key</code> <code>{string}</code> - The key in localStorage.</li><li><strong>@returns</strong> <code>{Object}</code> - The parsed JSON object, or null if key not found or parsing fails.</li></ul><pre data-language="js">/**
+ * Get and parse JSON from localStorage.
+ * @param {string} key - The key in localStorage.
+ * @returns {*|null} The parsed JSON object, or null if key not found or parsing fails.
+ */
+export function getLocalStorageJSON(key) {
+	try {
+		const item = localStorage.getItem(key);
+		return item ? JSON.parse(item) : null;
+	} catch (error) {
+		console.error(
+			`Error getting JSON from localStorage for key &quot;${key}&quot;:`,
+			error,
+		);
+		return null;
+	}
+}
+
+</pre></article>

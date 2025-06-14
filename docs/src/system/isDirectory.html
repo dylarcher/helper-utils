@@ -1,0 +1,17 @@
+<article class="document-class"><p>Checks if a path is a directory.</p><h3>Details</h3><ul><li><strong>@param</strong> <code>dirPath</code> <code>{string}</code> - The path to check.</li><li><strong>@returns</strong> <code>{Promise&lt;boolean&gt;}</code> - True if the path is a directory, false otherwise.</li></ul><pre data-language="js">import fs from 'node:fs/promises';
+
+/**
+ * Checks if a path is a directory.
+ * @param {string} dirPath - The path to check.
+ * @returns {Promise&lt;boolean&gt;} True if the path is a directory, false otherwise.
+ */
+export async function isDirectory(dirPath) {
+	try {
+		const stats = await fs.stat(dirPath);
+		return stats.isDirectory();
+	} catch {
+		return false; // Path does not exist or other error
+	}
+}
+
+</pre></article>

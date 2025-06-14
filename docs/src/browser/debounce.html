@@ -1,0 +1,36 @@
+<article class="document-class"><h3>Details</h3><ul><li><strong>@description</strong> - Creates a debounced version of a function that delays invoking the function until after 'delay' milliseconds have elapsed since the last time it was invoked.</li><li><strong>@param</strong> <code>func</code> <code>{Function}</code> - The function to debounce.</li><li><strong>@param</strong> <code>delay</code> <code>{number}</code> - The delay in milliseconds.</li><li><strong>@returns</strong> <code>{Function}</code> - The debounced function.</li><li><strong>@example</strong> - window.addEventListener('resize', debounce(() =&gt; { console.log('Window resized (debounced)'); }, 250));</li></ul><hr><h3>Details</h3><ul><li><strong>@type</strong></li></ul><hr><h3>Details</h3><ul><li><strong>@description</strong> - The debounced function that will be returned.</li><li><strong>@this</strong> <code>Function</code> <code>{Function}</code></li><li><strong>@param</strong> <code>args</code> <code>{Array&lt;any&gt;}</code> - Arguments to pass to the debounced function.</li><li><strong>@returns</strong> <code>{void}</code></li></ul><pre data-language="js">/**
+ * @description Creates a debounced version of a function that delays invoking the function
+ *              until after 'delay' milliseconds have elapsed since the last time it was invoked.
+ * @param {Function} func - The function to debounce.
+ * @param {number} delay - The delay in milliseconds.
+ * @returns {Function} The debounced function.
+ * @example
+ * window.addEventListener('resize', debounce(() =&gt; {
+ *   console.log('Window resized (debounced)');
+ * }, 250));
+ */
+export function debounce(func, delay) {
+	/** @type {ReturnType&lt;typeof setTimeout&gt; | undefined} */
+	let timeoutId;
+
+	/**
+	 * @description The debounced function that will be returned.
+	 * @this {Function}
+	 * @param {any[]} args - Arguments to pass to the debounced function.
+	 * @returns {void}
+	 */
+	return function (...args) {
+		clearTimeout(timeoutId);
+		timeoutId = setTimeout(() =&gt; {
+			try {
+				func.apply(this, args);
+			} catch (error) {
+				console.error('Error in debounced function:', error);
+				// Don't re-throw the error as it would become an uncaught exception
+				// in the setTimeout context. Just log it.
+			}
+		}, delay);
+	};
+}
+
+</pre></article>

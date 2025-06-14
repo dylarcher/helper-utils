@@ -1,0 +1,12 @@
+<article class="document-class"><p>Removes one or more CSS classes from an element.</p><h3>Details</h3><ul><li><strong>@param</strong> <code>element</code> <code>{Element}</code> - The DOM element.</li><li><strong>@param</strong> <code>classNames</code> <code>{Object}</code> - The CSS class(es) to remove.</li></ul><pre data-language="js">/**
+ * Removes one or more CSS classes from an element.
+ * @param {Element} element - The DOM element.
+ * @param {...string} classNames - The CSS class(es) to remove.
+ */
+export function removeClass(element, ...classNames) {
+	if (element?.classList) {
+		element.classList.remove(...classNames.filter(Boolean));
+	}
+}
+
+</pre></article>

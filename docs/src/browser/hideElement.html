@@ -1,0 +1,25 @@
+<article class="document-class"><h3>Details</h3><ul><li><strong>@description</strong> - Hides a DOM element by setting its display style to 'none'.</li><li><strong>@param</strong> <code>element</code> <code>{HTMLElement}</code> - The DOM element to hide.</li><li><strong>@returns</strong> <code>{void}</code></li><li><strong>@example</strong> - hideElement(document.getElementById('tooltip'));</li></ul><pre data-language="js">/**
+ * @description Hides a DOM element by setting its display style to 'none'.
+ * @param {HTMLElement} element - The DOM element to hide.
+ * @returns {void}
+ * @example
+ * hideElement(document.getElementById('tooltip'));
+ */
+export function hideElement(element) {
+	if (!element?.style) {
+		return;
+	}
+
+	try {
+		if (typeof element.style.setProperty === 'function') {
+			element.style.setProperty('display', 'none');
+		} else {
+			// Fallback for elements without setProperty method
+			element.style.display = 'none';
+		}
+	} catch (error) {
+		// Silently handle errors when setting style properties
+	}
+}
+
+</pre></article>

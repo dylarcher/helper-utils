@@ -1,0 +1,10 @@
+<article class="document-class"><p>Returns the Node.js global object.</p><h3>Details</h3><ul><li><strong>@param</strong> <code>options</code> <code>{object}</code> - Optional parameter (maintained for backward compatibility)</li><li><strong>@returns</strong> <code>{object}</code> - The Node.js global object.</li></ul><pre data-language="js">/**
+ * Returns the Node.js global object.
+ * @param {object} options Optional parameter (maintained for backward compatibility)
+ * @returns {object} The Node.js global object.
+ */
+export function getGlobal(options = {}) {
+	return global;
+}
+
+</pre></article>

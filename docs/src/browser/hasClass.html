@@ -1,0 +1,23 @@
+<article class="document-class"><p>Checks if an element has a specific CSS class.</p><h3>Details</h3><ul><li><strong>@param</strong> <code>element</code> <code>{Element}</code> - The DOM element.</li><li><strong>@param</strong> <code>className</code> <code>{string}</code> - The CSS class to check for.</li><li><strong>@returns</strong> <code>{boolean}</code> - True if the element has the class, false otherwise.</li></ul><pre data-language="js">/**
+ * Checks if an element has a specific CSS class.
+ * @param {Element} element - The DOM element.
+ * @param {string} className - The CSS class to check for.
+ * @returns {boolean} True if the element has the class, false otherwise.
+ */
+export function hasClass(element, className) {
+	if (!element?.classList || !className) {
+		return false;
+	}
+
+	try {
+		return (
+			typeof element.classList.contains === 'function' &amp;&amp;
+			element.classList.contains(className)
+		);
+	} catch (error) {
+		// Handle cases where classList.contains throws an error
+		return false;
+	}
+}
+
+</pre></article>

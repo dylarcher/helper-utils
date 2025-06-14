@@ -1,0 +1,31 @@
+<article class="document-class"><h3>Details</h3><ul><li><strong>@description</strong> - Creates a throttled version of a function that, when invoked repeatedly, will only call the original function at most once per every 'limit' milliseconds.</li><li><strong>@param</strong> <code>func</code> <code>{Function}</code> - The function to throttle.</li><li><strong>@param</strong> <code>limit</code> <code>{number}</code> - The throttle limit in milliseconds.</li><li><strong>@returns</strong> <code>{Function}</code> - The throttled function.</li><li><strong>@example</strong> - document.addEventListener('scroll', throttle(() =&gt; { console.log('Scrolled (throttled)'); }, 100));</li></ul><hr><h3>Details</h3><ul><li><strong>@description</strong> - Executes the provided function if not currently throttled, then prevents further execution until the limit has passed.</li><li><strong>@this</strong> <code>any</code> <code>{any}</code></li><li><strong>@param</strong> <code>args</code> <code>{Array&lt;any&gt;}</code> - Arguments to pass to the throttled function.</li><li><strong>@returns</strong> <code>{any}</code> - The result of the original function call.</li></ul><pre data-language="js">/**
+ * @description Creates a throttled version of a function that, when invoked repeatedly,
+ *              will only call the original function at most once per every 'limit' milliseconds.
+ * @param {Function} func - The function to throttle.
+ * @param {number} limit - The throttle limit in milliseconds.
+ * @returns {Function} The throttled function.
+ * @example
+ * document.addEventListener('scroll', throttle(() =&gt; {
+ *   console.log('Scrolled (throttled)');
+ * }, 100));
+ */
+export function throttle(func, limit) {
+	let lastCall = 0;
+	/**
+	 * @description Executes the provided function if not currently throttled, then prevents further execution until the limit has passed.
+	 * @this {any} - The context with which the throttled function is called.
+	 * @param {any[]} args - Arguments to pass to the throttled function.
+	 * @returns {any} The result of the original function call.
+	 */
+	return function (...args) {
+		const now = Date.now();
+		// With zero limit, execute immediately without throttling
+		if (limit === 0 || now - lastCall &gt;= limit) {
+			lastCall = now;
+			return func.apply(this, args);
+		}
+		return undefined;
+	};
+}
+
+</pre></article>

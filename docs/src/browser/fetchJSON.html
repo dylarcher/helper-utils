@@ -1,0 +1,50 @@
+<article class="document-class"><p>Simplified fetch for JSON requests/responses.</p><h3>Details</h3><ul><li><strong>@param</strong> <code>url</code> <code>{string}</code> - The URL to fetch.</li><li><strong>@param</strong> <code>options</code> - Fetch options.</li><li><strong>@returns</strong> <code>{Promise&lt;any&gt;}</code> - A promise that resolves with the parsed JSON response.</li></ul><hr><h3>Details</h3><ul><li><strong>@type</strong> <code>{Record&lt;string, string&gt;}</code></li></ul><pre data-language="js">/**
+ * Simplified fetch for JSON requests/responses.
+ * @param {string} url - The URL to fetch.
+ * @param {{
+ *  method?: string,
+ *  headers?: Record&lt;string, string&gt;,
+ *  body?: any,
+ *  [key: string]: any
+ * }} [options={}] - Fetch options.
+ * @returns {Promise&lt;any&gt;} A promise that resolves with the parsed JSON response.
+ */
+export async function fetchJSON(url, options = {}) {
+	/** @type {Record&lt;string, string&gt;} */
+	const defaultHeaders = {
+		Accept: 'application/json',
+	};
+
+	if (
+		options.body &amp;&amp;
+		typeof options.body === 'object' &amp;&amp;
+		!(options.body instanceof FormData)
+	) {
+		options.body = JSON.stringify(options.body);
+		defaultHeaders['Content-Type'] = 'application/json';
+	}
+
+	options.headers = { ...defaultHeaders, ...(options.headers || {}) };
+
+	const response = await fetch(url, options);
+
+	if (!response.ok) {
+		const errorData = await response.text(); // Try to get error text
+		throw new Error(
+			`HTTP error ${response.status}: ${response.statusText}. Body: ${errorData}`,
+		);
+	}
+
+	// Handle cases where response might be empty but still OK (e.g., 204 No Content)
+	const contentType = response.headers.get('content-type');
+	if (
+		response.status === 204 ||
+		!contentType ||
+		!contentType.includes('application/json')
+	) {
+		return null; // Or response.text() if plain text is expected for some OK statuses
+	}
+	return response.json();
+}
+
+</pre></article>

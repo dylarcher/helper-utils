@@ -1,0 +1,18 @@
+<article class="document-class"><p>Gets the directory name of a path.</p><h3>Details</h3><ul><li><strong>@param</strong> <code>p</code> <code>{string}</code> - The path to evaluate.</li><li><strong>@returns</strong> <code>{string}</code> - The directory name.</li></ul><pre data-language="js">import path from 'node:path';
+
+/**
+ * Gets the directory name of a path.
+ * @param {string} p - The path to evaluate.
+ * @returns {string} The directory name.
+ */
+export function getDirname(p) {
+	if (!p || typeof p !== 'string') {
+		return '.';
+	}
+
+	// For cross-platform path handling, always use the Node.js implementation
+	// which is thoroughly tested and handles all edge cases correctly
+	return path.dirname(p);
+}
+
+</pre></article>

@@ -1,0 +1,16 @@
+<article class="document-class"><p>Get OS information.</p><h3>Details</h3><ul><li><strong>@returns</strong> <code>{Object}</code> - OS information.</li></ul><pre data-language="js">import os from 'node:os';
+
+/**
+ * Get OS information.
+ * @returns {{platform: string, release: string, type: string, arch: string}} OS information.
+ */
+export function getOSInfo() {
+	return {
+		platform: os.platform(),
+		release: os.release(),
+		type: os.type(),
+		arch: os.arch(),
+	};
+}
+
+</pre></article>

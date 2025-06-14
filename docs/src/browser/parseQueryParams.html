@@ -1,0 +1,17 @@
+<article class="document-class"><p>Parse URL query string into an object. Uses <code>window.location.search</code> by default.</p><h3>Details</h3><ul><li><strong>@param</strong> <code>queryString</code> <code>{Object}</code> - The query string to parse.</li><li><strong>@returns</strong> <code>{Record&lt;string, string&gt;}</code> - An object representation of the query parameters.</li></ul><hr><h3>Details</h3><ul><li><strong>@type</strong> <code>{Record&lt;string, string&gt;}</code></li></ul><pre data-language="js">/**
+ * Parse URL query string into an object.
+ * Uses `window.location.search` by default.
+ * @param {string} [queryString=window.location.search] - The query string to parse.
+ * @returns {Record&lt;string, string&gt;} An object representation of the query parameters.
+ */
+export function parseQueryParams(queryString = window.location.search) {
+	const params = new URLSearchParams(queryString);
+	/** @type {Record&lt;string, string&gt;} */
+	const result = {};
+	for (const [key, value] of params.entries()) {
+		result[key] = value;
+	}
+	return result;
+}
+
+</pre></article>
