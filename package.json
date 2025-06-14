@@ -89,7 +89,7 @@
 		"check": "npm run lint:check && npm run format:check && npm run test",
 		"clean:install": "rimraf node_modules package-lock.json && npm install",
 		"prebuild": "npm run check",
-		"prepare": "husky install && npm dedupe -s && npm prune -s",
+		"prepare": "husky install && npm dedupe && npm prune",
 		"prepublishOnly": "npm run build",
 		"prettier": "prettier . --config .github/presets/.prettierrc.yml --ignore-unknown",
 		"publish:npm": "npm publish",
