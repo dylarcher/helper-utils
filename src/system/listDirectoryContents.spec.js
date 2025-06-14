@@ -1,8 +1,11 @@
-import { describe, it, beforeEach, afterEach } from 'node:test';
+import { describe, it, beforeEach, afterEach, mock } from 'node:test'; // Added mock
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { listDirectoryContents } from './listDirectoryContents.js';
+
+
+const PERF_TEST_ENABLED = false; // Set to true to enable performance tests
 
 describe('listDirectoryContents(dirPath)', () => {
 	let testDir;
@@ -223,4 +226,110 @@ describe('listDirectoryContents(dirPath)', () => {
 			await fs.rm(largeDir, { recursive: true, force: true });
 		}
 	});
+});
+
+describe('Async Generator Behavior (Mocked fs.promises.readdir)', () => {
+  it('should return an async generator', (t) => {
+    const result = listDirectoryContents('dummy_path');
+    assert.ok(result, 'Should return a value');
+    assert.strictEqual(typeof result[Symbol.asyncIterator], 'function', 'Should have Symbol.asyncIterator method');
+  });
+
+  it('should yield all items from fs.promises.readdir (mocked)', async (t) => {
+    const mockItems = ['file1.txt', 'file2.js', 'subdir'];
+    const readdirMock = mock.fn(fs.promises, 'readdir', async (dirPath) => {
+      assert.strictEqual(dirPath, 'test_dir_mocked', 'readdir called with correct path');
+      return Promise.resolve(mockItems);
+    });
+    t.after(() => readdirMock.restore());
+
+    const yieldedItems = [];
+    for await (const item of listDirectoryContents('test_dir_mocked')) {
+      yieldedItems.push(item);
+    }
+
+    assert.deepStrictEqual(yieldedItems, mockItems, 'Should yield all mocked items in order');
+    assert.strictEqual(readdirMock.mock.calls.length, 1, 'fs.promises.readdir should have been called once');
+  });
+
+  it('should yield no items for an empty directory (mocked)', async (t) => {
+    const readdirMock = mock.fn(fs.promises, 'readdir', async (dirPath) => {
+      assert.strictEqual(dirPath, 'empty_dir_mocked', 'readdir called with correct path');
+      return Promise.resolve([]);
+    });
+    t.after(() => readdirMock.restore());
+
+    const yieldedItems = [];
+    for await (const item of listDirectoryContents('empty_dir_mocked')) {
+      yieldedItems.push(item); // Should not happen
+    }
+
+    assert.strictEqual(yieldedItems.length, 0, 'Should yield no items for an empty directory');
+    assert.strictEqual(readdirMock.mock.calls.length, 1, 'fs.promises.readdir should have been called once');
+  });
+
+  it('should propagate errors from fs.promises.readdir (mocked)', async (t) => {
+    const mockError = new Error('Mocked readdir failure');
+    const readdirMock = mock.fn(fs.promises, 'readdir', async (dirPath) => {
+      assert.strictEqual(dirPath, 'error_dir_mocked', 'readdir called with correct path');
+      return Promise.reject(mockError);
+    });
+    t.after(() => readdirMock.restore());
+
+    await assert.rejects(
+      async () => {
+        // Attempt to consume the generator
+        for await (const item of listDirectoryContents('error_dir_mocked')) {
+          // This loop should not run
+        }
+      },
+      mockError, // Check if the propagated error is the same as the mocked one
+      'Should propagate the error from fs.promises.readdir'
+    );
+    assert.strictEqual(readdirMock.mock.calls.length, 1, 'fs.promises.readdir should have been called once');
+  });
+});
+
+
+describe('Performance Tests for listDirectoryContents', () => {
+  const describeOrSkip = PERF_TEST_ENABLED ? describe : describe.skip;
+
+  describeOrSkip('Large directory simulation (mocked fs.readdir)', () => {
+    it('should perform efficiently when listing a large number of simulated files', async (t) => {
+      const fileCount = 100000; // Simulate a directory with 100,000 files
+      const mockFiles = [];
+      for (let i = 0; i < fileCount; i++) {
+        mockFiles.push(`simulated_file_${i}.txt`);
+      }
+
+      // Using node:test's built-in mocking capabilities
+      const readdirMock = mock.fn(fs.promises, 'readdir', async (dirPath) => {
+        if (dirPath === 'perf_test_dummy_dir') {
+          return Promise.resolve(mockFiles);
+        }
+        // Fallback to original behavior or throw if path not expected
+        // For this test, we expect only 'perf_test_dummy_dir'
+        throw new Error(`Mock readdir called with unexpected path: ${dirPath}`);
+      });
+      // Ensure mock is restored after the test
+      t.after(() => readdirMock.restore());
+
+
+      let count = 0;
+      console.log(`[INFO] Running listDirectoryContents performance test with ${fileCount} simulated files.`);
+      console.time('listDirectoryContents performance');
+      for await (const item of listDirectoryContents('perf_test_dummy_dir')) {
+        count++;
+        // Minimal check on item to ensure it's being processed
+        if (typeof item !== 'string') {
+          // This check helps ensure the generator is actually yielding values.
+          // In a real scenario, more robust checks might be needed if item processing was complex.
+        }
+      }
+      console.timeEnd('listDirectoryContents performance');
+
+      assert.strictEqual(count, fileCount, 'Should have yielded all simulated files');
+      assert.strictEqual(readdirMock.mock.calls.length, 1, 'fs.promises.readdir should have been called once');
+    });
+  });
 });

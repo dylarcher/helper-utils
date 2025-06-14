@@ -151,3 +151,67 @@ describe('encrypt(text, key, iv)', () => {
 		);
 	});
 });
+
+describe('encrypt(text, key, iv) - Error Handling and Input Validation', () => {
+	const testText = 'Some text to encrypt';
+	const validKey = crypto.randomBytes(32); // AES-256 needs 32-byte key
+	const validIv = crypto.randomBytes(16);  // AES-CBC needs 16-byte IV
+
+	it('should throw an error for invalid key length', () => {
+		const shortKey = crypto.randomBytes(16); // Invalid length
+		const longKey = crypto.randomBytes(48);  // Invalid length
+
+		assert.throws(
+			() => encrypt(testText, shortKey, validIv),
+			(err) => err.message.includes('Invalid key length') || err.code === 'ERR_CRYPTO_INVALID_KEYLEN',
+			'Should throw for a 16-byte key'
+		);
+		assert.throws(
+			() => encrypt(testText, longKey, validIv),
+			(err) => err.message.includes('Invalid key length') || err.code === 'ERR_CRYPTO_INVALID_KEYLEN',
+			'Should throw for a 48-byte key'
+		);
+		assert.throws(
+			() => encrypt(testText, Buffer.from('invalidkey'), validIv), // Non-buffer or wrong size buffer
+			(err) => err.message.includes('Invalid key length') || err.code === 'ERR_CRYPTO_INVALID_KEYLEN' || err.code === 'ERR_INVALID_ARG_TYPE',
+			'Should throw for a key of incorrect type/length'
+		);
+	});
+
+	it('should throw an error for invalid IV length', () => {
+		const shortIv = crypto.randomBytes(8); // Invalid length
+		const longIv = crypto.randomBytes(24);  // Invalid length
+
+		assert.throws(
+			() => encrypt(testText, validKey, shortIv),
+			(err) => err.message.includes('Invalid IV length') || err.code === 'ERR_CRYPTO_INVALID_IVLEN',
+			'Should throw for an 8-byte IV'
+		);
+		assert.throws(
+			() => encrypt(testText, validKey, longIv),
+			(err) => err.message.includes('Invalid IV length') || err.code === 'ERR_CRYPTO_INVALID_IVLEN',
+			'Should throw for a 24-byte IV'
+		);
+		assert.throws(
+			() => encrypt(testText, validKey, Buffer.from('invalidiv')), // Non-buffer or wrong size buffer
+			(err) => err.message.includes('Invalid IV length') || err.code === 'ERR_CRYPTO_INVALID_IVLEN' || err.code === 'ERR_INVALID_ARG_TYPE',
+			'Should throw for an IV of incorrect type/length'
+		);
+	});
+
+    it('should throw if key is not a Buffer', () => {
+        assert.throws(
+            () => encrypt(testText, 'not a buffer key', validIv),
+            (err) => err.code === 'ERR_INVALID_ARG_TYPE' || err.message.includes('Key must be a buffer'),
+            'Should throw if key is a string'
+        );
+    });
+
+    it('should throw if IV is not a Buffer', () => {
+        assert.throws(
+            () => encrypt(testText, validKey, 'not a buffer iv'),
+            (err) => err.code === 'ERR_INVALID_ARG_TYPE' || err.message.includes('IV must be a buffer'),
+            'Should throw if IV is a string'
+        );
+    });
+});
