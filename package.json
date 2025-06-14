@@ -57,7 +57,7 @@
 		"format:check": "npm run prettier --check",
 		"lint": "npm run eslint -- --fix",
 		"lint:check": "npm run eslint",
-		"check": "npm run lint:check && npm run format:check && npm run test",
+		"check": "npm run lint:check && npm run format:check && npm test",
 		"clean:install": "rimraf node_modules package-lock.json && npm install",
 		"prebuild": "npm run lint:check && npm run format:check && npm run test",
 		"prepare": "husky install && npm dedupe -s && npm prune -s",
@@ -109,7 +109,7 @@
 	},
 	"engines": {
 		"node": ">=22.16.0",
-		"npm": ">=10.9.2"
+		"npm": ">=10.8.2"
 	},
 	"private": false,
 	"publishConfig": {
