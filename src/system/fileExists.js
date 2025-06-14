@@ -40,7 +40,8 @@ import fs from 'node:fs/promises';
  *   // Example with an invalid path (e.g., containing null byte) might lead to fs.access throwing
  *   // try {
  *   //   console.info(await fileExists('path\0with_null_byte')); // false, fs.access throws
- *   // } catch(e) { /* This function's catch handles it */ }
+ *   // } catch(e) { // This function's catch handles it
+ *   // }
  *
  *   // await cleanupExamples(); // Call this if running the example standalone
  * }

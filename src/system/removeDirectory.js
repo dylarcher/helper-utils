@@ -39,7 +39,7 @@ import fs from 'node:fs/promises';
  * //   await writeFile('./temp_dir_to_remove/file.txt', 'content');
  * //   await writeFile('./temp_dir_is_file.txt', 'this is a file');
  * // }
- * // async function cleanupExample() { /* ... potentially recreate or use different names ... */ }
+ * // async function cleanupExample() { // ... potentially recreate or use different names ... }
  *
  * async function manageDirectories() {
  *   // await setupExample();
@@ -78,7 +78,7 @@ import fs from 'node:fs/promises';
  *
  *   // await cleanupExample(); // Or specific rm calls
  *   // try { await fs.unlink('./temp_dir_is_file.txt'); } catch(e) {}
- * }
+ * // } // Correctly commented out closing brace for the example function
  *
  * // manageDirectories();
  */

@@ -1,8 +1,9 @@
-import { describe, it } from 'node:test';
+import { describe, it, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { findClosest } from './findClosest.js';
+import { setupBrowserMocks, restoreGlobals } from '../../utils/test.utils.js';
 
-// Mock Element class for testing
+// Mock Element class for testing (used by some tests, others use JSDOM)
 class MockElement {
 	constructor(tagName, className = '', id = '') {
 		this.tagName = tagName.toLowerCase();
@@ -139,5 +140,28 @@ describe('findClosest(element, selector)', () => {
 
 		const result = findClosest(div, '');
 		assert.strictEqual(result, null);
+	});
+
+	it('should return null if selector is invalid and causes an error', () => {
+		const realDiv = document.createElement('div'); // Uses JSDOM from setupBrowserMocks
+		document.body.appendChild(realDiv);
+		const child = document.createElement('span');
+		realDiv.appendChild(child);
+
+		// An invalid selector like ':[invalid]' will cause element.closest to throw a SyntaxError.
+		const result = findClosest(child, ':[invalid-selector]');
+		assert.strictEqual(result, null, 'Should return null for an invalid selector.');
+
+		// Cleanup
+		document.body.removeChild(realDiv);
+	});
+
+	// Setup JSDOM for tests that need it (like the invalid selector test)
+	beforeEach(() => {
+		setupBrowserMocks();
+	});
+
+	afterEach(() => {
+		restoreGlobals();
 	});
 });

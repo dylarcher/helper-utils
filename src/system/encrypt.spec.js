@@ -150,4 +150,65 @@ describe('encrypt(text, key, iv)', () => {
 			'Encrypted text should decrypt back to original',
 		);
 	});
+
+	it('should throw error for invalid key length', () => {
+		const originalText = 'Test';
+		const invalidKey = crypto.randomBytes(31); // Invalid length
+		assert.throws(
+			() => encrypt(originalText, invalidKey, testIv),
+			(error) => {
+				assert.strictEqual(error instanceof Error, true);
+				assert.strictEqual(
+					error.message,
+					'Invalid key length. Key must be 32 bytes for AES-256-CBC.',
+				);
+				return true;
+			},
+			'Should throw error for key length not equal to 32 bytes.',
+		);
+
+		const longKey = crypto.randomBytes(33); // Invalid length
+		assert.throws(
+			() => encrypt(originalText, longKey, testIv),
+			(error) => {
+				assert.strictEqual(error instanceof Error, true);
+				assert.strictEqual(
+					error.message,
+					'Invalid key length. Key must be 32 bytes for AES-256-CBC.',
+				);
+				return true;
+			},
+			'Should throw error for key length not equal to 32 bytes (long).',
+		);
+	});
+
+	it('should throw error for invalid IV length', () => {
+		const originalText = 'Test';
+		const invalidIv = crypto.randomBytes(15); // Invalid length
+		assert.throws(
+			() => encrypt(originalText, testKey, invalidIv),
+			(error) => {
+				assert.strictEqual(error instanceof Error, true);
+				assert.strictEqual(
+					error.message,
+					'Invalid IV length. IV must be 16 bytes for AES-CBC.',
+				);
+				return true;
+			},
+			'Should throw error for IV length not equal to 16 bytes.',
+		);
+		const longIv = crypto.randomBytes(17); // Invalid length
+		assert.throws(
+			() => encrypt(originalText, testKey, longIv),
+			(error) => {
+				assert.strictEqual(error instanceof Error, true);
+				assert.strictEqual(
+					error.message,
+					'Invalid IV length. IV must be 16 bytes for AES-CBC.',
+				);
+				return true;
+			},
+			'Should throw error for IV length not equal to 16 bytes (long).',
+		);
+	});
 });
