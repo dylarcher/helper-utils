@@ -3,7 +3,7 @@ name: c8
 
 on:
   pull_request:
-    types: [edited,opened,reopened,synchronize]
+    types: [edited, opened, reopened, synchronize]
 
 jobs:
   c8:
@@ -40,7 +40,9 @@ jobs:
         run: npm run test:coverage
 
       - name: Create Dummy Coverage Report # This step is for testing in the subtask
-        if: github.event_name == 'pull_request' && startsWith(github.ref, 'refs/heads/feature/')
+        if:
+          github.event_name == 'pull_request' && startsWith(github.ref,
+          'refs/heads/feature/')
         run: |
           mkdir -p coverage
           echo '{ "total": { "lines": { "pct": 88.88 } } }' > coverage/coverage-summary.json
@@ -55,7 +57,7 @@ jobs:
           echo "summary=$summary_text" >> $GITHUB_OUTPUT
 
       - name: Comment PR with Coverage
-        uses: peter-evans/create-or-update-comment@v4
+        uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           issue-number: ${{ github.event.pull_request.number }}
