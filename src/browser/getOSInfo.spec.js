@@ -14,7 +14,8 @@ describe('getOSInfo() - in Node.js environment', () => {
 			language: 'unknown',
 			vendor: 'unknown',
 			connection: 'unknown',
-			error: 'Navigator object not available. This function is intended for browser environments.',
+			error:
+				'Navigator object not available. This function is intended for browser environments.',
 		});
 	});
 
@@ -24,11 +25,27 @@ describe('getOSInfo() - in Node.js environment', () => {
 		assert.strictEqual(typeof result, 'object', 'Result should be an object.');
 		assert.ok(result !== null, 'Result should not be null.');
 
-		assert.strictEqual(result.platform, 'unknown', 'Platform should be "unknown".');
-		assert.strictEqual(result.userAgent, 'unknown', 'UserAgent should be "unknown".');
-		assert.strictEqual(result.language, 'unknown', 'Language should be "unknown".');
+		assert.strictEqual(
+			result.platform,
+			'unknown',
+			'Platform should be "unknown".',
+		);
+		assert.strictEqual(
+			result.userAgent,
+			'unknown',
+			'UserAgent should be "unknown".',
+		);
+		assert.strictEqual(
+			result.language,
+			'unknown',
+			'Language should be "unknown".',
+		);
 		assert.strictEqual(result.vendor, 'unknown', 'Vendor should be "unknown".');
-		assert.strictEqual(result.connection, 'unknown', 'Connection should be "unknown".');
+		assert.strictEqual(
+			result.connection,
+			'unknown',
+			'Connection should be "unknown".',
+		);
 		assert.strictEqual(
 			result.error,
 			'Navigator object not available. This function is intended for browser environments.',
@@ -39,7 +56,11 @@ describe('getOSInfo() - in Node.js environment', () => {
 	it('should return consistent results on multiple calls in Node.js environment', () => {
 		const result1 = getOSInfo();
 		const result2 = getOSInfo();
-		assert.deepStrictEqual(result1, result2, 'Results from multiple calls should be identical.');
+		assert.deepStrictEqual(
+			result1,
+			result2,
+			'Results from multiple calls should be identical.',
+		);
 	});
 
 	it('should return an immutable-like result (new object each time)', () => {
@@ -49,8 +70,16 @@ describe('getOSInfo() - in Node.js environment', () => {
 
 		const result2 = getOSInfo();
 		// result2 should be a fresh object with the default "unknown" values.
-		assert.strictEqual(result2.platform, 'unknown', 'Platform in new result should be "unknown".');
-		assert.notStrictEqual(result1.platform, result2.platform, "Platform of result1 should have been 'modified' locally and different from result2's platform.");
+		assert.strictEqual(
+			result2.platform,
+			'unknown',
+			'Platform in new result should be "unknown".',
+		);
+		assert.notStrictEqual(
+			result1.platform,
+			result2.platform,
+			"Platform of result1 should have been 'modified' locally and different from result2's platform.",
+		);
 	});
 
 	// The following tests would be for a browser environment or with a mocked navigator
@@ -99,7 +128,11 @@ describe('getOSInfo() - in Node.js environment', () => {
 			assert.strictEqual(result.userAgent, 'TestUserAgent/1.0');
 			assert.strictEqual(result.language, 'test-LG');
 			assert.strictEqual(result.vendor, 'TestVendor');
-			assert.strictEqual(result.error, undefined, "Error property should not be present");
+			assert.strictEqual(
+				result.error,
+				undefined,
+				'Error property should not be present',
+			);
 		});
 
 		it('should report "available (no specific details)" for connection if connection object exists but has no known properties', () => {
@@ -115,7 +148,10 @@ describe('getOSInfo() - in Node.js environment', () => {
 				saveData: true,
 			};
 			const result = getOSInfo();
-			assert.strictEqual(result.connection, 'effective-type: 4g, rtt: 100, downlink: 5, saveData: true');
+			assert.strictEqual(
+				result.connection,
+				'effective-type: 4g, rtt: 100, downlink: 5, saveData: true',
+			);
 		});
 
 		it('should use mozConnection if navigator.connection is not available', () => {

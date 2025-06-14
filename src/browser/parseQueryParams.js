@@ -51,7 +51,10 @@
 export function parseQueryParams(queryString) {
 	let effectiveQueryString = queryString;
 	if (typeof queryString === 'undefined') {
-		if (typeof window !== 'undefined' && typeof window.location !== 'undefined') {
+		if (
+			typeof window !== 'undefined' &&
+			typeof window.location !== 'undefined'
+		) {
 			effectiveQueryString = window.location.search;
 		} else {
 			// In non-browser environment or if window.location is somehow unavailable,

@@ -10,14 +10,23 @@ describe('getGlobal()', () => {
 
 	afterEach(() => {
 		// Restore all potentially modified globals
-		if (originalGlobalThis !== undefined) global.globalThis = originalGlobalThis;
-		else delete global.globalThis;
+		if (originalGlobalThis !== undefined) {
+			global.globalThis = originalGlobalThis;
+		} else {
+			delete global.globalThis;
+		}
 
-		if (originalSelf !== undefined) global.self = originalSelf;
-		else delete global.self;
+		if (originalSelf !== undefined) {
+			global.self = originalSelf;
+		} else {
+			delete global.self;
+		}
 
-		if (originalWindow !== undefined) global.window = originalWindow;
-		else delete global.window;
+		if (originalWindow !== undefined) {
+			global.window = originalWindow;
+		} else {
+			delete global.window;
+		}
 
 		// global.global cannot be deleted as it's the context itself in Node.
 		// If it was truly deleted in the test, Node environment would break.
@@ -55,10 +64,14 @@ describe('getGlobal()', () => {
 		// This test is tricky because `global` is the actual global scope in Node tests.
 		// The function's `typeof global !== 'undefined'` check will be true.
 		// So, it should return the Node.js global object.
-		assert.strictEqual(getGlobal(), global, "Should return the Node.js global object.");
+		assert.strictEqual(
+			getGlobal(),
+			global,
+			'Should return the Node.js global object.',
+		);
 	});
 
-	it('should use Function(\'return this\')() if other globals are not found', () => {
+	it("should use Function('return this')() if other globals are not found", () => {
 		delete global.globalThis;
 		delete global.self;
 		delete global.window;
@@ -71,15 +84,23 @@ describe('getGlobal()', () => {
 
 		const result = getGlobal();
 		// Function('return this')() in Node returns the global object.
-		assert.strictEqual(typeof result, 'object', 'Fallback should return an object');
+		assert.strictEqual(
+			typeof result,
+			'object',
+			'Fallback should return an object',
+		);
 		assert.ok(result !== null);
 		// In Node, Function('return this')() returns the main global object.
-		assert.strictEqual(result, originalGlobal, "Function('return this') should return the Node global");
+		assert.strictEqual(
+			result,
+			originalGlobal,
+			"Function('return this') should return the Node global",
+		);
 
 		global.global = realGlobalProperty; // Restore
 	});
 
-	it('should return empty object and log error if Function(\'return this\')() fails', () => {
+	it("should return empty object and log error if Function('return this')() fails", () => {
 		delete global.globalThis;
 		delete global.self;
 		delete global.window;
@@ -87,16 +108,29 @@ describe('getGlobal()', () => {
 		delete global.global;
 
 		const originalFunction = global.Function;
-		global.Function = () => { throw new Error('CSP restriction'); }; // Mock Function constructor to throw
+		global.Function = () => {
+			throw new Error('CSP restriction');
+		}; // Mock Function constructor to throw
 
-		let consoleErrors = [];
+		const consoleErrors = [];
 		const originalConsoleError = console.error;
-		console.error = (...args) => { consoleErrors.push(args); };
+		console.error = (...args) => {
+			consoleErrors.push(args);
+		};
 
 		const result = getGlobal();
-		assert.deepStrictEqual(result, {}, 'Should return empty object on Function fallback failure.');
-		assert.strictEqual(consoleErrors.length, 1, "Should have logged an error.");
-		assert.ok(consoleErrors[0][0].includes("Unable to determine global object reliably."), "Error message mismatch.");
+		assert.deepStrictEqual(
+			result,
+			{},
+			'Should return empty object on Function fallback failure.',
+		);
+		assert.strictEqual(consoleErrors.length, 1, 'Should have logged an error.');
+		assert.ok(
+			consoleErrors[0][0].includes(
+				'Unable to determine global object reliably.',
+			),
+			'Error message mismatch.',
+		);
 
 		console.error = originalConsoleError; // Restore console
 		global.Function = originalFunction; // Restore Function

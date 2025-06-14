@@ -200,7 +200,11 @@ describe('parseQueryParams(queryString)', () => {
 		delete global.window; // Simulate non-browser environment
 
 		const result = parseQueryParams(); // Call with no arguments
-		assert.deepStrictEqual(result, {}, "Should return empty object for empty effective query string.");
+		assert.deepStrictEqual(
+			result,
+			{},
+			'Should return empty object for empty effective query string.',
+		);
 
 		global.window = originalWindow; // Restore
 	});

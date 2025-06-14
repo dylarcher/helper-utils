@@ -91,7 +91,8 @@ export async function removeDirectory(
 		const stats = await fs.stat(dirPath);
 		if (!stats.isDirectory()) {
 			// If it's not a directory, and force is not set, throw an error.
-			if (!options.force) { // Check the force option passed to this function
+			if (!options.force) {
+				// Check the force option passed to this function
 				throw new Error(`Path is not a directory: ${dirPath}`);
 			}
 			// If force is true, and it's not a directory (e.g. a file),
@@ -102,7 +103,8 @@ export async function removeDirectory(
 		// If force is true, suppress this error and let fs.rm handle it
 		// (fs.rm with force:true will not error on non-existence).
 		// If force is false, re-throw the error from fs.stat.
-		if (!options.force) { // Check the force option passed to this function
+		if (!options.force) {
+			// Check the force option passed to this function
 			throw error;
 		}
 	}

@@ -22,20 +22,23 @@
  * // globalObj.myGlobalVar = 'test';
  * // console.info(globalObj.myGlobalVar);
  */
-export function getGlobal(options = {}) { // eslint-disable-line no-unused-vars
+export function getGlobal(options = {}) {
 	// Modern standard: globalThis
 	if (typeof globalThis !== 'undefined') {
 		return globalThis;
 	}
 
 	// Fallbacks for older environments or specific contexts
-	if (typeof self !== 'undefined') { // self is standard in workers and newer browser window contexts
+	if (typeof self !== 'undefined') {
+		// self is standard in workers and newer browser window contexts
 		return self;
 	}
-	if (typeof window !== 'undefined') { // window is standard in browser environments
+	if (typeof window !== 'undefined') {
+		// window is standard in browser environments
 		return window;
 	}
-	if (typeof global !== 'undefined') { // global is standard in Node.js
+	if (typeof global !== 'undefined') {
+		// global is standard in Node.js
 		return global;
 	}
 
@@ -45,7 +48,7 @@ export function getGlobal(options = {}) { // eslint-disable-line no-unused-vars
 		return Function('return this')();
 	} catch (e) {
 		// If Function('return this')() is disallowed or fails.
-		console.error("Unable to determine global object reliably.", e);
+		console.error('Unable to determine global object reliably.', e);
 		// Returning a plain object as a final fallback, though its utility is limited.
 		// Depending on the use case, throwing an error or returning null might be preferred.
 		return {};

@@ -60,28 +60,56 @@ describe('getCPUInfo()', () => {
 		// If os.cpus() returns empty or undefined (highly unlikely for a running system),
 		// getCPUInfo should also return empty.
 		if (!osResult || osResult.length === 0) {
-			assert.deepStrictEqual(getCPUInfo(), [], 'Should return empty array if os.cpus() is empty/null.');
+			assert.deepStrictEqual(
+				getCPUInfo(),
+				[],
+				'Should return empty array if os.cpus() is empty/null.',
+			);
 			return;
 		}
 
 		const ourResult = getCPUInfo(); // Uses actual os.cpus()
 
-		assert.strictEqual(ourResult.length, osResult.length, 'Should return same number of CPUs as os.cpus()');
+		assert.strictEqual(
+			ourResult.length,
+			osResult.length,
+			'Should return same number of CPUs as os.cpus()',
+		);
 		for (let i = 0; i < ourResult.length; i++) {
-			assert.strictEqual(ourResult[i].model, osResult[i].model || 'unknown', 'Model should match or be unknown');
-			assert.strictEqual(ourResult[i].speed, osResult[i].speed > 0 ? osResult[i].speed : 0, 'Speed should match or be 0');
-			assert.deepStrictEqual(ourResult[i].times, osResult[i].times, 'Times should match');
+			assert.strictEqual(
+				ourResult[i].model,
+				osResult[i].model || 'unknown',
+				'Model should match or be unknown',
+			);
+			assert.strictEqual(
+				ourResult[i].speed,
+				osResult[i].speed > 0 ? osResult[i].speed : 0,
+				'Speed should match or be 0',
+			);
+			assert.deepStrictEqual(
+				ourResult[i].times,
+				osResult[i].times,
+				'Times should match',
+			);
 		}
 	});
 
 	it('should return empty array if cpuData is null', () => {
 		const result = getCPUInfo(null);
-		assert.deepStrictEqual(result, [], 'Should return empty array for null cpuData.');
+		assert.deepStrictEqual(
+			result,
+			[],
+			'Should return empty array for null cpuData.',
+		);
 	});
 
 	it('should return empty array if cpuData is an empty array', () => {
 		const result = getCPUInfo([]);
-		assert.deepStrictEqual(result, [], 'Should return empty array for empty cpuData array.');
+		assert.deepStrictEqual(
+			result,
+			[],
+			'Should return empty array for empty cpuData array.',
+		);
 	});
 
 	it('should use actual os.cpus() if cpuData is undefined', () => {
@@ -91,10 +119,18 @@ describe('getCPUInfo()', () => {
 		const ourResult = getCPUInfo(undefined); // Explicitly pass undefined
 
 		if (!osResult || osResult.length === 0) {
-			assert.deepStrictEqual(ourResult, [], 'Should return empty array if os.cpus() is empty/null when cpuData is undefined.');
+			assert.deepStrictEqual(
+				ourResult,
+				[],
+				'Should return empty array if os.cpus() is empty/null when cpuData is undefined.',
+			);
 			return;
 		}
-		assert.strictEqual(ourResult.length, osResult.length, 'Should process os.cpus() when cpuData is undefined.');
+		assert.strictEqual(
+			ourResult.length,
+			osResult.length,
+			'Should process os.cpus() when cpuData is undefined.',
+		);
 		assert.strictEqual(ourResult[0].model, osResult[0].model || 'unknown');
 	});
 

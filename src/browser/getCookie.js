@@ -19,7 +19,11 @@
  * const nonExistent = getCookie('nonExistentCookie'); // null
  */
 export function getCookie(alias) {
-	if (typeof document === 'undefined' || !document.cookie || document.cookie === '') {
+	if (
+		typeof document === 'undefined' ||
+		!document.cookie ||
+		document.cookie === ''
+	) {
 		return null;
 	}
 

@@ -76,7 +76,10 @@ describe('getLocalStorageJSON(key)', () => {
 			() => getLocalStorageJSON('invalidJSON'),
 			(error) => {
 				// Check if it's a SyntaxError and optionally part of the message
-				return error instanceof SyntaxError && error.message.includes('Unexpected token');
+				return (
+					error instanceof SyntaxError &&
+					error.message.includes('Unexpected token')
+				);
 			},
 			'Expected getLocalStorageJSON to throw a SyntaxError for invalid JSON.',
 		);
@@ -106,7 +109,10 @@ describe('getLocalStorageJSON(key)', () => {
 		assert.throws(
 			() => getLocalStorageJSON('anyKey'),
 			(error) => {
-				return error instanceof Error && error.message === 'localStorage is not available in this environment.';
+				return (
+					error instanceof Error &&
+					error.message === 'localStorage is not available in this environment.'
+				);
 			},
 			'Expected getLocalStorageJSON to throw an error when localStorage is not available.',
 		);

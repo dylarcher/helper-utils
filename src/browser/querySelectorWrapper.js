@@ -56,7 +56,7 @@ export function querySelectorWrapper(selector, container) {
 			? container // Use the passed 'container', even if it's null/undefined
 			: typeof document !== 'undefined'
 				? document // If no 'container' passed, default to global document
-				: null;    // If no document (e.g., non-browser), and no container passed, use null.
+				: null; // If no document (e.g., non-browser), and no container passed, use null.
 
 	// Validate the determined container.
 	if (!targetContainer || typeof targetContainer.querySelector !== 'function') {

@@ -150,7 +150,11 @@ describe('findClosest(element, selector)', () => {
 
 		// An invalid selector like ':[invalid]' will cause element.closest to throw a SyntaxError.
 		const result = findClosest(child, ':[invalid-selector]');
-		assert.strictEqual(result, null, 'Should return null for an invalid selector.');
+		assert.strictEqual(
+			result,
+			null,
+			'Should return null for an invalid selector.',
+		);
 
 		// Cleanup
 		document.body.removeChild(realDiv);

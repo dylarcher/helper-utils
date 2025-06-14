@@ -67,7 +67,9 @@ const ALGORITHM = 'aes-256-cbc'; // AES-256 uses a 32-byte key and a 16-byte IV.
 export function encrypt(text, key, iv) {
 	// Validate key and IV lengths to provide clearer errors before crypto module does.
 	if (key.length !== 32) {
-		throw new Error('Invalid key length. Key must be 32 bytes for AES-256-CBC.');
+		throw new Error(
+			'Invalid key length. Key must be 32 bytes for AES-256-CBC.',
+		);
 	}
 	if (iv.length !== 16) {
 		throw new Error('Invalid IV length. IV must be 16 bytes for AES-CBC.');

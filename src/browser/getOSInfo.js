@@ -33,16 +33,28 @@
  */
 export function getOSInfo() {
 	if (typeof navigator !== 'undefined') {
-		const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+		const connection =
+			navigator.connection ||
+			navigator.mozConnection ||
+			navigator.webkitConnection;
 		let connectionInfo = 'unknown';
 		if (connection) {
 			// Construct a string from available connection properties
 			const parts = [];
-			if (connection.effectiveType) parts.push(`effective-type: ${connection.effectiveType}`);
-			if (connection.rtt) parts.push(`rtt: ${connection.rtt}`);
-			if (connection.downlink) parts.push(`downlink: ${connection.downlink}`);
-			if (typeof connection.saveData !== 'undefined') parts.push(`saveData: ${connection.saveData}`);
-			connectionInfo = parts.length > 0 ? parts.join(', ') : 'available (no specific details)';
+			if (connection.effectiveType) {
+				parts.push(`effective-type: ${connection.effectiveType}`);
+			}
+			if (connection.rtt) {
+				parts.push(`rtt: ${connection.rtt}`);
+			}
+			if (connection.downlink) {
+				parts.push(`downlink: ${connection.downlink}`);
+			}
+			if (typeof connection.saveData !== 'undefined') {
+				parts.push(`saveData: ${connection.saveData}`);
+			}
+			connectionInfo =
+				parts.length > 0 ? parts.join(', ') : 'available (no specific details)';
 		}
 
 		return {
@@ -59,6 +71,7 @@ export function getOSInfo() {
 		language: 'unknown',
 		vendor: 'unknown',
 		connection: 'unknown',
-		error: 'Navigator object not available. This function is intended for browser environments.',
+		error:
+			'Navigator object not available. This function is intended for browser environments.',
 	};
 }

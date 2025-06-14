@@ -150,7 +150,10 @@ describe('setLocalStorageJSON(key, value)', () => {
 		assert.throws(
 			() => setLocalStorageJSON('circular', circularObj),
 			(error) => {
-				return error instanceof TypeError && error.message.includes('circular structure');
+				return (
+					error instanceof TypeError &&
+					error.message.includes('circular structure')
+				);
 			},
 			'Expected setLocalStorageJSON to re-throw a TypeError for circular references.',
 		);
@@ -165,7 +168,10 @@ describe('setLocalStorageJSON(key, value)', () => {
 		assert.throws(
 			() => setLocalStorageJSON('anyKey', 'anyValue'),
 			(error) => {
-				return error instanceof Error && error.message === 'localStorage is not available in this environment.';
+				return (
+					error instanceof Error &&
+					error.message === 'localStorage is not available in this environment.'
+				);
 			},
 			'Expected setLocalStorageJSON to throw an error when localStorage is not available.',
 		);
