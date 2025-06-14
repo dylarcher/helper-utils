@@ -74,7 +74,7 @@
         "format:check": "npm run prettier --check",
         "lint": "npm run eslint -- --fix",
         "lint:check": "npm run eslint",
-        "prebuild": "npm run lint:check && npm run format:check",
+        "prebuild": "npm run lint:check && npm run format:check && npm run test",
         "prepare": "npm dedupe -s && npm prune -s",
         "prepublishOnly": "npm run build",
         "prettier": "prettier . --config .github/presets/.prettierrc.yml --ignore-unknown",
@@ -82,7 +82,16 @@
         "test": "node --no-warnings --test src/**/*.spec.js src/**/*.test.js",
         "test:coverage": "c8 --config .github/presets/.c8rc.json npm test",
         "test:debug": "node --inspect-brk --test src/**/*.spec.js src/**/*.test.js",
-        "test:watch": "npm test --watch"
+        "test:watch": "npm test --watch",
+        "changelog:unreleased": "npx auto-changelog --commit-limit false --unreleased-only --template keepachangelog",
+        "changelog:released": "npx auto-changelog --package --output CHANGELOG.md --template keepachangelog --commit-limit false",
+        "version": "npm run changelog:released && git add CHANGELOG.md",
+        "postversion": "git push && git push --tags && npm run publish:npm",
+        "version:patch": "npm version patch -m \"chore(release-patch): v%s\"",
+        "version:minor": "npm version minor -m \"chore(release-minor): v%s\"",
+        "version:major": "npm version major -m \"chore(release-major): v%s\"",
+        "version:alpha": "npm version prerelease --preid=alpha -m \"chore(prerelease-alpha): v%s\"",
+        "version:beta": "npm version prerelease --preid=beta -m \"chore(prerelease-beta): v%s\""
     },
     "type": "module",
     "version": "1.1.0"
