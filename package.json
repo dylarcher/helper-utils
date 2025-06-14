@@ -1,98 +1,120 @@
 {
-    "author": "Dylan Archer <dylarcher@gmail.com> (@dylarcher)",
-    "bugs": {
-        "url": "https://github.com/dylarcher/js.helper-utils/issues"
-    },
-    "description": "Reusable javascript helper utility methods.",
-    "devDependencies": {
-        "@stedi/prettier-plugin-jsonata": "2.1.3",
-        "@types/node": "24.0.1",
-        "c8": "10.1.3",
-        "eslint": "9.28.0",
-        "eslint-config-prettier": "10.1.5",
-        "eslint-plugin-markdown": "5.1.0",
-        "eslint-plugin-prettier": "5.4.1",
-        "eslint-plugin-yaml": "1.0.3",
-        "prettier": "3.5.3",
-        "prettier-plugin-glsl": "0.2.1",
-        "prettier-plugin-properties": "0.3.0",
-        "rimraf": "6.0.1",
-        "typescript": "5.8.3"
-    },
-    "engines": {
-        "node": ">=22.16.0",
-        "npm": ">=10.9.2"
-    },
-    "exports": {
-        "*": {
-            "import": "./dist/*.js",
-            "require": "./dist/*.js",
-            "types": "./dist/types.d.ts"
-        },
-        ".": {
-            "import": "./dist/index.js",
-            "require": "./dist/index.js",
-            "types": "./dist/types.d.ts"
-        }
-    },
-    "files": [
-        "dist",
-        "src"
-    ],
-    "homepage": "https://dylarcher.github.io/js.helper-utils/",
-    "keywords": [
-        "helper",
-        "utils",
-        "utilities",
-        "javascript",
-        "library",
-        "methods",
-        "functions"
-    ],
-    "license": "MIT",
-    "main": "dist/index.js",
-    "name": "@dylarcher/js-helpers",
-    "overrides": {
-        "glob": "^10.4.5",
-        "inflight": "npm:lru-cache@^10.2.0"
-    },
-    "packageManager": "npm@11.4.1",
-    "private": false,
-    "publishConfig": {
-        "access": "public",
-        "registry": "https://registry.npmjs.org/"
-    },
-    "publisher": "darcher",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/dylarcher/js.helper-utils.git"
-    },
-    "scripts": {
-        "build": "rimraf dist && tsc",
-        "eslint": "eslint --config .github/presets/eslint.config.js --ext .js --report-unused-disable-directives",
-        "format": "npm run prettier --write",
-        "format:check": "npm run prettier --check",
-        "lint": "npm run eslint -- --fix",
-        "lint:check": "npm run eslint",
-        "prebuild": "npm run lint:check && npm run format:check && npm run test",
-        "prepare": "npm dedupe -s && npm prune -s",
-        "prepublishOnly": "npm run build",
-        "prettier": "prettier . --config .github/presets/.prettierrc.yml --ignore-unknown",
-        "publish:npm": "npm publish",
-        "test": "node --no-warnings --test src/**/*.spec.js src/**/*.test.js",
-        "test:coverage": "c8 --config .github/presets/.c8rc.json npm test",
-        "test:debug": "node --inspect-brk --test src/**/*.spec.js src/**/*.test.js",
-        "test:watch": "npm test --watch",
-        "changelog:unreleased": "npx auto-changelog --commit-limit false --unreleased-only --template keepachangelog",
-        "changelog:released": "npx auto-changelog --package --output CHANGELOG.md --template keepachangelog --commit-limit false",
-        "version": "npm run changelog:released && git add CHANGELOG.md",
-        "postversion": "git push && git push --tags && npm run publish:npm",
-        "version:patch": "npm version patch -m \"chore(release-patch): v%s\"",
-        "version:minor": "npm version minor -m \"chore(release-minor): v%s\"",
-        "version:major": "npm version major -m \"chore(release-major): v%s\"",
-        "version:alpha": "npm version prerelease --preid=alpha -m \"chore(prerelease-alpha): v%s\"",
-        "version:beta": "npm version prerelease --preid=beta -m \"chore(prerelease-beta): v%s\""
-    },
-    "type": "module",
-    "version": "1.2.0"
+	"name": "@dylarcher/js-helpers",
+	"version": "1.2.0",
+	"description": "Reusable javascript helper utility methods.",
+	"author": "Dylan Archer <dylarcher@gmail.com> (@dylarcher)",
+	"license": "MIT",
+	"keywords": [
+		"helper",
+		"utils",
+		"utilities",
+		"javascript",
+		"library",
+		"methods",
+		"functions"
+	],
+	"homepage": "https://dylarcher.github.io/js.helper-utils/",
+	"bugs": {
+		"url": "https://github.com/dylarcher/js.helper-utils/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/dylarcher/js.helper-utils.git"
+	},
+	"funding": {
+		"type": "individual",
+		"url": "https://example.com/donate"
+	},
+	"contributors": [],
+	"publisher": "darcher",
+	"directories": {
+		"lib": "dist",
+		"doc": "docs",
+		"test": "src"
+	},
+	"type": "module",
+	"files": [
+		"dist",
+		"src"
+	],
+	"main": "dist/index.js",
+	"exports": {
+		"*": {
+			"import": "./dist/*.js",
+			"require": "./dist/*.js",
+			"types": "./dist/*.d.ts"
+		},
+		".": {
+			"import": "./dist/index.js",
+			"require": "./dist/index.js",
+			"types": "./dist/types.d.ts"
+		}
+	},
+	"scripts": {
+		"build": "rimraf dist && tsc",
+		"eslint": "eslint --config .github/presets/eslint.config.js --ext .js --report-unused-disable-directives",
+		"format": "npm run prettier --write",
+		"format:check": "npm run prettier --check",
+		"lint": "npm run eslint -- --fix",
+		"lint:check": "npm run eslint",
+		"check": "npm run lint:check && npm run format:check && npm test",
+		"clean:install": "rimraf node_modules package-lock.json && npm install",
+		"prebuild": "npm run lint:check && npm run format:check && npm run test",
+		"prepare": "husky install && npm dedupe -s && npm prune -s",
+		"prepublishOnly": "npm run build",
+		"prettier": "prettier . --config .github/presets/.prettierrc.yml --ignore-unknown",
+		"publish:npm": "npm publish",
+		"test": "node --no-warnings --test src/**/*.spec.js src/**/*.test.js",
+		"test:coverage": "c8 --config .github/presets/.c8rc.json npm test",
+		"test:debug": "node --inspect-brk --test src/**/*.spec.js src/**/*.test.js",
+		"test:watch": "npm test --watch",
+		"changelog:unreleased": "npx auto-changelog --commit-limit false --unreleased-only --template keepachangelog",
+		"changelog:released": "npx auto-changelog --package --output CHANGELOG.md --template keepachangelog --commit-limit false",
+		"version": "npm run changelog:released && git add CHANGELOG.md",
+		"postversion": "git push && git push --tags && npm run publish:npm",
+		"version:patch": "npm version patch -m \"chore(release-patch): v%s\"",
+		"version:minor": "npm version minor -m \"chore(release-minor): v%s\"",
+		"version:major": "npm version major -m \"chore(release-major): v%s\"",
+		"version:alpha": "npm version prerelease --preid=alpha -m \"chore(prerelease-alpha): v%s\"",
+		"version:beta": "npm version prerelease --preid=beta -m \"chore(prerelease-beta): v%s\""
+	},
+	"lint-staged": {
+		"*.js": [
+			"eslint --config .github/presets/eslint.config.js --fix",
+			"prettier --config .github/presets/.prettierrc.yml --write"
+		],
+		"*.{json,md,yml,yaml}": [
+			"prettier --config .github/presets/.prettierrc.yml --write"
+		]
+	},
+	"devDependencies": {
+		"@stedi/prettier-plugin-jsonata": "2.1.3",
+		"@types/node": "24.0.1",
+		"c8": "10.1.3",
+		"eslint": "9.28.0",
+		"eslint-config-prettier": "10.1.5",
+		"eslint-plugin-markdown": "5.1.0",
+		"eslint-plugin-prettier": "5.4.1",
+		"eslint-plugin-yaml": "1.0.3",
+		"husky": "9.1.7",
+		"lint-staged": "16.1.0",
+		"prettier": "3.5.3",
+		"prettier-plugin-glsl": "0.2.1",
+		"prettier-plugin-properties": "0.3.0",
+		"rimraf": "6.0.1",
+		"typescript": "5.8.3"
+	},
+	"overrides": {
+		"glob": "^10.4.5"
+	},
+	"engines": {
+		"node": ">=22.16.0",
+		"npm": ">=10.8.2"
+	},
+	"private": false,
+	"publishConfig": {
+		"access": "public",
+		"registry": "https://registry.npmjs.org/"
+	},
+	"packageManager": "npm@11.4.1"
 }
