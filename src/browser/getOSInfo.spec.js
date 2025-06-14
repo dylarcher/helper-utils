@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { getOSInfo } from './getOSInfo.js';
 
 describe('getOSInfo()', () => {
-	let originalOs;
+	let _originalOs;
 
 	beforeEach(() => {
 		// Note: This test is complex because it imports a Node.js module
@@ -101,9 +101,7 @@ describe('getOSInfo()', () => {
 
 		// Common OS types
 		const commonTypes = ['Linux', 'Darwin', 'Windows_NT'];
-		const hasCommonType = commonTypes.some((type) =>
-			result.type.includes(type),
-		);
+		const hasCommonType = commonTypes.some(type => result.type.includes(type));
 
 		// Should either be a common type or some other valid OS type
 		assert.ok(hasCommonType || result.type.length > 0);

@@ -20,7 +20,7 @@ export function querySelectorWrapper(selector, container) {
 
 	try {
 		return targetContainer.querySelector(selector);
-	} catch (error) {
+	} catch (_error) {
 		return null;
 	}
 }

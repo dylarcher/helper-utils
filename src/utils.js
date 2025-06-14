@@ -4,5 +4,5 @@
  * e.g., import { getUniqueElements, anotherUtility } from './utils';
  */
 
-export * from './utils/getUniqueElements.js';
+export { getUniqueElements } from './utils/getUniqueElements.js';
 // Add other exports here as more utilities are created in the ./utils/ directory.

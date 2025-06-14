@@ -14,7 +14,7 @@ export function hasClass(element, className) {
 			typeof element.classList.contains === 'function' &&
 			element.classList.contains(className)
 		);
-	} catch (error) {
+	} catch (_error) {
 		// Handle cases where classList.contains throws an error
 		return false;
 	}

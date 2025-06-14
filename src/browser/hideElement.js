@@ -17,7 +17,7 @@ export function hideElement(element) {
 			// Fallback for elements without setProperty method
 			element.style.display = 'none';
 		}
-	} catch (error) {
+	} catch (_error) {
 		// Silently handle errors when setting style properties
 	}
 }
