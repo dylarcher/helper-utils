@@ -21,7 +21,7 @@ export function querySelectorAllWrapper(selector, container) {
 
 	try {
 		return Array.from(targetContainer.querySelectorAll(selector));
-	} catch (error) {
+	} catch (_error) {
 		return [];
 	}
 }

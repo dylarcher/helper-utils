@@ -10,12 +10,12 @@ class MockElement {
 		const setAdd = this.classList.add.bind(this.classList);
 		// Define classList.add, classList.contains, and className for compatibility
 		this.classList.add = (...names) =>
-			names.forEach((name) => {
-				if (typeof name === 'string' && name.trim() !== '') {
-					setAdd(name); // Use Set's original add method
+			names.forEach(elementName => {
+				if (typeof elementName === 'string' && elementName.trim() !== '') {
+					setAdd(elementName); // Use Set's original add method
 				}
 			});
-		this.classList.contains = (name) => this.classList.has(name);
+		this.classList.contains = name => this.classList.has(name);
 	}
 
 	// Getter to simulate the className property

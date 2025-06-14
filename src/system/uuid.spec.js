@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import * as crypto from 'node:crypto';
+import * as cryptoModule from 'node:crypto';
 import { uuid } from './uuid.js';
 
 describe('uuid()', () => {
@@ -64,9 +64,9 @@ describe('uuid()', () => {
 		assert.notStrictEqual(uuid1, uuid3, 'Should generate different UUIDs');
 	});
 
-	it('should be consistent with crypto.randomUUID()', () => {
+	it('should be consistent with cryptoModule.randomUUID()', () => {
 		const ourResult = uuid();
-		const cryptoResult = crypto.randomUUID();
+		const cryptoResult = cryptoModule.randomUUID();
 
 		// Both should follow the same format
 		const uuidRegex =
@@ -142,7 +142,7 @@ describe('uuid()', () => {
 		}
 
 		// Check that we're getting varied first characters
-		const firstChars = results.map((uuid) => uuid[0]);
+		const firstChars = results.map(uuidStr => uuidStr[0]);
 		const uniqueFirstChars = new Set(firstChars);
 
 		// Should have some variety (not all the same character)

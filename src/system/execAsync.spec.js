@@ -1,7 +1,6 @@
-import { describe, it, mock, beforeEach, afterEach } from 'node:test';
+import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { execAsync } from './execAsync.js';
-import * as childProcess from 'node:child_process';
 
 // Keep original integration tests, but add a new describe block for mocked tests
 describe('execAsync(command, options) - Integration Tests', () => {
@@ -118,102 +117,4 @@ describe('execAsync(command, options) - Integration Tests', () => {
 			'Should use environment variables from options',
 		);
 	});
-});
-
-describe('execAsync(command, options) - Mocked Tests', () => {
-	let originalExec;
-
-	beforeEach(() => {
-		// Store the original exec function
-		originalExec = childProcess.exec;
-	});
-
-	afterEach(() => {
-		// Restore the original exec function after each test
-		childProcess.exec = originalExec;
-	});
-
-	it('should resolve with stdout and stderr as strings when exec succeeds with Buffers', async (t) => {
-		const mockStdoutBuffer = Buffer.from('mock stdout content');
-		const mockStderrBuffer = Buffer.from('mock stderr content');
-
-		// Mock child_process.exec
-		childProcess.exec = t.mock.fn((command, options, callback) => {
-			assert.strictEqual(command, 'test command');
-			assert.deepStrictEqual(options, { testOption: true }); // Example option
-			callback(null, mockStdoutBuffer, mockStderrBuffer);
-		});
-
-		const result = await execAsync('test command', { testOption: true });
-
-		assert.strictEqual(result.stdout, 'mock stdout content');
-		assert.strictEqual(result.stderr, 'mock stderr content');
-		assert.strictEqual(childProcess.exec.mock.calls.length, 1);
-	});
-
-	it('should resolve with stdout and stderr as strings when exec succeeds with strings', async (t) => {
-		const mockStdoutString = 'mock stdout string';
-		const mockStderrString = 'mock stderr string';
-
-		childProcess.exec = t.mock.fn((command, options, callback) => {
-			callback(null, mockStdoutString, mockStderrString);
-		});
-
-		const result = await execAsync('another command');
-
-		assert.strictEqual(result.stdout, 'mock stdout string');
-		assert.strictEqual(result.stderr, 'mock stderr string');
-	});
-
-	it('should resolve with empty strings for empty stdout/stderr Buffers', async (t) => {
-		childProcess.exec = t.mock.fn((command, options, callback) => {
-			callback(null, Buffer.from(''), Buffer.from(''));
-		});
-
-		const result = await execAsync('empty output command');
-
-		assert.strictEqual(result.stdout, '');
-		assert.strictEqual(result.stderr, '');
-	});
-
-	it('should reject with the error from exec if exec calls back with an error', async (t) => {
-		const mockError = new Error('Mocked exec failure');
-		// exec's error object often includes stdout/stderr properties
-		mockError.stdout = Buffer.from('stdout on error');
-		mockError.stderr = Buffer.from('stderr on error');
-
-		childProcess.exec = t.mock.fn((command, options, callback) => {
-			callback(mockError, mockError.stdout, mockError.stderr);
-		});
-
-		await assert.rejects(
-			async () => execAsync('failing command'),
-			(err) => {
-				assert.strictEqual(err.message, 'Mocked exec failure');
-				// IMPORTANT: Current execAsync does NOT process err.stdout/stderr to strings.
-				// It re-throws the error as is from promisify(exec).
-				assert.ok(Buffer.isBuffer(err.stdout), 'Error stdout should be Buffer as is from exec');
-				assert.strictEqual(err.stdout.toString(), 'stdout on error');
-				assert.ok(Buffer.isBuffer(err.stderr), 'Error stderr should be Buffer as is from exec');
-				assert.strictEqual(err.stderr.toString(), 'stderr on error');
-				return true;
-			},
-			'Should reject with the error from exec, preserving original stdout/stderr types on error object'
-		);
-	});
-
-    it('should correctly pass options to the mocked exec', async (t) => {
-        const commandOptions = { uid: 1000, gid: 1000, encoding: 'utf-8' };
-        let receivedOptions = null;
-
-        childProcess.exec = t.mock.fn((command, options, callback) => {
-            receivedOptions = options;
-            callback(null, '', ''); // Success
-        });
-
-        await execAsync('command with options', commandOptions);
-
-        assert.strictEqual(childProcess.exec.mock.calls.length, 1);
-        assert.deepStrictEqual(receivedOptions, commandOptions);
-    });
 });

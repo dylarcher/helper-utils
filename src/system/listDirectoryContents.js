@@ -8,14 +8,8 @@ import fs from 'node:fs/promises';
  * @returns {AsyncGenerator<string, void, undefined>} An async generator that yields the names of files and subdirectories.
  */
 export async function* listDirectoryContents(dirPath) {
-	try {
-		const items = await fs.readdir(dirPath);
-		for (const item of items) {
-			yield item;
-		}
-	} catch (error) {
-		// Rethrow the error to be handled by the caller
-		// This is a common pattern for generators, allowing the consumer to decide on error handling.
-		throw error;
+	const items = await fs.readdir(dirPath);
+	for (const item of items) {
+		yield item;
 	}
 }

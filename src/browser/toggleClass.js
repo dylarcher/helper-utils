@@ -9,7 +9,7 @@ export function toggleClass(element, className, force) {
 	if (element?.classList && className) {
 		try {
 			element.classList.toggle(className, force);
-		} catch (error) {
+		} catch (_error) {
 			// Silently handle errors
 		}
 	}

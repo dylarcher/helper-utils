@@ -172,7 +172,7 @@ describe('joinPaths(...paths)', () => {
 			['path with spaces', 'file & symbols!.txt'],
 		];
 
-		testCases.forEach((testCase) => {
+		testCases.forEach(testCase => {
 			const ourResult = joinPaths(...testCase);
 			const nodeResult = path.join(...testCase);
 			assert.strictEqual(
@@ -189,7 +189,7 @@ describe('joinPaths(...paths)', () => {
 			const result = joinPaths('path', null, 'file.txt');
 			const nodeResult = path.join('path', null, 'file.txt');
 			assert.strictEqual(result, nodeResult, 'Should handle null like Node.js');
-		} catch (error) {
+		} catch (_error) {
 			// If Node.js throws, our function should behave similarly
 			assert.throws(() => {
 				joinPaths('path', null, 'file.txt');

@@ -8,7 +8,6 @@ export function getCookie(alias) {
 		return null;
 	}
 
-	const nameEQ = `${alias}=`;
 	const ca = document.cookie.split(';');
 	for (let i = 0; i < ca.length; i++) {
 		const c = ca[i].trimStart();
