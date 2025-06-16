@@ -1,10 +1,19 @@
 import os from 'node:os';
 
 /**
+ * @typedef {object} CpuTimes
+ * @property {number} user - The number of milliseconds the CPU has spent in user mode.
+ * @property {number} nice - The number of milliseconds the CPU has spent in nice mode.
+ * @property {number} sys - The number of milliseconds the CPU has spent in sys mode.
+ * @property {number} idle - The number of milliseconds the CPU has spent in idle mode.
+ * @property {number} irq - The number of milliseconds the CPU has spent in irq mode.
+ */
+
+/**
  * @typedef {object} SimplifiedCpuInfo
  * @property {string} model - The model name of the CPU. Defaults to 'unknown' if not available.
  * @property {number} speed - The clock speed of the CPU in MHz. Defaults to 0 if the speed is invalid or not available.
- * @property {import('node:os').CpuTimes} times - An object detailing the CPU time spent in different modes (user, nice, sys, idle, irq).
+ * @property {CpuTimes} times - An object detailing the CPU time spent in different modes (user, nice, sys, idle, irq).
  */
 
 /**

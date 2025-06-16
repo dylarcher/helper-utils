@@ -9,7 +9,7 @@ import os from 'node:os';
  * Each key maps to an array of `NetworkInterfaceInfo` objects, as each interface can have
  * multiple assigned network addresses (e.g., an IPv4 and an IPv6 address).
  *
- * @returns {Record<string, import('node:os').NetworkInterfaceInfo[]>} An object where each key
+ * @returns {Record<string, import('node:os').NetworkInterfaceInfo[]> | undefined} An object where each key
  *   is a network interface name (e.g., 'en0', 'lo0') and the value is an array of objects,
  *   each describing an assigned network address for that interface.
  *   Returns `undefined` if the system call fails (though `os.networkInterfaces` typically returns
@@ -84,5 +84,7 @@ export function getNetworkInterfaces() {
 	// to arrays of NetworkInterfaceInfo objects.
 	// It can, in very rare cases, throw if the system call fails.
 	// It might return undefined in some edge cases according to some typings, though typically an object.
-	return os.networkInterfaces();
+	return /** @type {Record<string, import('node:os').NetworkInterfaceInfo[]> | undefined} */ (
+		os.networkInterfaces()
+	);
 }

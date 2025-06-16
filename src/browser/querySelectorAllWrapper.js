@@ -53,7 +53,7 @@ export function querySelectorAllWrapper(selector, container) {
 	try {
 		// Execute querySelectorAll and convert NodeList to Array.
 		return Array.from(targetContainer.querySelectorAll(selector));
-	} catch (error) {
+	} catch (_error) {
 		// Catch errors (e.g., invalid selector) and return an empty array.
 		// console.error(`Error in querySelectorAllWrapper with selector "${selector}":`, error); // Optional: for debugging
 		return [];

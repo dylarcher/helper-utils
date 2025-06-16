@@ -35,7 +35,7 @@ export function hideElement(element) {
 			// Fallback for environments or elements where setProperty might not be standard (older browsers, SVG elements in some cases)
 			element.style.display = 'none';
 		}
-	} catch (error) {
+	} catch (_error) {
 		// Silently handle potential errors, e.g., if the style property is somehow locked or unwritable.
 		// console.error('Failed to hide element:', error); // Optional: for debugging
 	}

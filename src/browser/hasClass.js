@@ -50,7 +50,7 @@ export function hasClass(element, className) {
 			typeof element.classList.contains === 'function' &&
 			element.classList.contains(className)
 		);
-	} catch (error) {
+	} catch (_error) {
 		// Silently handle errors from classList.contains (e.g., invalid character in className)
 		// console.error(`Error checking class "${className}":`, error); // Optional: for debugging
 		return false;

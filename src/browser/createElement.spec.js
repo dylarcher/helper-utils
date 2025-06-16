@@ -9,7 +9,7 @@ import {
 } from '../../utils/test.utils.js';
 
 // Mock Element class for testing
-class MockElement {
+class _MockElement {
 	constructor(tagName, className = '', id = '') {
 		this.tagName = tagName.toLowerCase();
 		this.className = className;

@@ -9,7 +9,7 @@ import fs from 'node:fs/promises';
  * (defaults to 'utf8').
  *
  * @param {string} filePath - The file system path to the file to be read.
- * @param {import('node:buffer').BufferEncoding} [encoding='utf8'] - Optional. The character encoding to use
+ * @param {'ascii' | 'utf8' | 'utf-8' | 'utf16le' | 'ucs2' | 'ucs-2' | 'base64' | 'base64url' | 'latin1' | 'binary' | 'hex'} [encoding='utf8'] - Optional. The character encoding to use
  *   for decoding the file. Common values include 'utf8', 'ascii', 'base64'.
  *   If an encoding is provided, the promise resolves with a string; otherwise,
  *   Node.js's `fs.readFile` without an encoding option would resolve with a Buffer.
@@ -63,5 +63,5 @@ export async function readFileAsync(filePath, encoding = 'utf8') {
 	// fs.readFile with an encoding option returns a string.
 	// If encoding option was omitted or null, it would return a Buffer.
 	// This implementation always provides an encoding, defaulting to 'utf8'.
-	return fs.readFile(filePath, { encoding });
+	return /** @type {Promise<string>} */ (fs.readFile(filePath, { encoding }));
 }

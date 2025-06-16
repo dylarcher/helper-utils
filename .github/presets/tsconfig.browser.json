@@ -1,6 +1,13 @@
 {
 	"extends": "../../tsconfig.json",
-	"include": ["src/browser/**/*"],
+	"include": ["../../src/browser/**/*.js"],
+	"files": ["../../src/browser.js"],
+	"exclude": [
+		"../../src/*",
+		"../../src/system",
+		"../../src/browser/**/*.test.js",
+		"../../src/browser/**/*.spec.js"
+	],
 	"compilerOptions": {
 		"lib": ["DOM", "DOM.Iterable"],
 		"paths": {

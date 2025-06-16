@@ -5,6 +5,7 @@
 		"baseUrl": ".",
 		"rootDir": "src",
 		"skipDefaultLibCheck": true,
+		"skipLibCheck": true,
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
 		"declaration": true,
@@ -16,8 +17,9 @@
 		"target": "ES2020",
 		"paths": {
 			"@/*": ["src/*"],
-			"@spec/*": ["tests/*"],
-			"@www/*": ["docs/*"]
+			"@spec/*": ["dist/.coverage/*"],
+			"@demo/*": ["docs/*"],
+			"#conf/*": [".github/presets/*"]
 		},
 	},
 	"exclude": ["node_modules", "docs", "dist", "test", "utils", "src/**/*.spec.js", "src/**/*.test.js"],

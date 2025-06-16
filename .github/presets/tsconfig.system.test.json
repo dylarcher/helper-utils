@@ -1,6 +1,14 @@
 {
 	"extends": "./tsconfig.system.json",
-	"include": ["src/system/**/*.spec.js", "src/system/**/*.test.js"],
+	"exclude": [
+		"../../src/**/*.js"
+	],
+	"include": [
+		"../../src/system.spec.js",
+		"../../src/system.test.js",
+		"../../src/system/**/*.spec.js", 
+		"../../src/system/**/*.test.js",
+	],
 	"typeAcquisition": {
 		"enable": true,
 		"include": ["c8"]

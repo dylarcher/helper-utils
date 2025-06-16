@@ -44,7 +44,7 @@ export function debounce(func, delay) {
 
 	// The returned function is what gets called directly.
 	// It manages the setTimeout behavior.
-	return function (...args) {
+	return /** @this {any} */ function (...args) {
 		// `this` context of this returned function is preserved for `func.apply`
 		const context = this;
 

@@ -1,9 +1,16 @@
 {
 	"extends": "../../tsconfig.json",
-	"include": ["src/system/**/*"],
+	"include": ["../../src/system/**/*.js"],
+	"files": ["../../src/system.js"],
+	"exclude": [
+		"../../src/*",
+		"../../src/browser",
+		"../../src/system/**/*.test.js",
+		"../../src/system/**/*.spec.js"
+	],
 	"compilerOptions": {
 		"paths": {
-			"#node/*": ["src/system/*"]
+			"#util/*": ["src/system/*"]
 		}
 	},
 	"typeAcquisition": {

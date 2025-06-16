@@ -53,22 +53,17 @@
  * // }
  */
 export function setLocalStorageJSON(key, value) {
-	try {
-		// Ensure localStorage is available before trying to use it.
-		if (typeof localStorage === 'undefined' || localStorage === null) {
-			throw new Error('localStorage is not available in this environment.');
-		}
-
-		// JSON.stringify converts undefined and functions to undefined.
-		// To avoid issues with localStorage.setItem (which might stringify undefined differently
-		// or throw errors in some implementations if passed undefined directly),
-		// we explicitly convert such cases to the string 'null'.
-		const stringified = JSON.stringify(value);
-		const finalValue = stringified === undefined ? 'null' : stringified;
-		localStorage.setItem(key, finalValue);
-		return true;
-	} catch (error) {
-		// Re-throw the original error for the caller to handle.
-		throw error;
+	// Ensure localStorage is available before trying to use it.
+	if (typeof localStorage === 'undefined' || localStorage === null) {
+		throw new Error('localStorage is not available in this environment.');
 	}
+
+	// JSON.stringify converts undefined and functions to undefined.
+	// To avoid issues with localStorage.setItem (which might stringify undefined differently
+	// or throw errors in some implementations if passed undefined directly),
+	// we explicitly convert such cases to the string 'null'.
+	const stringified = JSON.stringify(value);
+	const finalValue = stringified === undefined ? 'null' : stringified;
+	localStorage.setItem(key, finalValue);
+	return true;
 }

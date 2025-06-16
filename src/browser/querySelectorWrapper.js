@@ -66,7 +66,7 @@ export function querySelectorWrapper(selector, container) {
 	try {
 		// Execute querySelector.
 		return targetContainer.querySelector(selector);
-	} catch (error) {
+	} catch (_error) {
 		// Catch errors (e.g., invalid selector syntax) and return null.
 		// console.error(`Error in querySelectorWrapper with selector "${selector}":`, error); // Optional: for debugging
 		return null;

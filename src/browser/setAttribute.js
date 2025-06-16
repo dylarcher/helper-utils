@@ -49,7 +49,7 @@ export function setAttribute(element, attributeName, value) {
 
 	try {
 		element.setAttribute(attributeName, value);
-	} catch (error) {
+	} catch (_error) {
 		// Silently handle errors, e.g., if attributeName is invalid for XML/HTML.
 		// console.error(`Error setting attribute "${attributeName}" on element:`, error); // Optional: for debugging
 	}

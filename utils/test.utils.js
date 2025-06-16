@@ -42,7 +42,7 @@ export function setupJSDOM(
 	// Use Object.defineProperty for read-only properties
 	try {
 		global.navigator = window.navigator;
-	} catch (e) {
+	} catch (_e) {
 		Object.defineProperty(global, 'navigator', {
 			value: window.navigator,
 			configurable: true,
@@ -52,7 +52,7 @@ export function setupJSDOM(
 
 	try {
 		global.location = window.location;
-	} catch (e) {
+	} catch (_e) {
 		Object.defineProperty(global, 'location', {
 			value: window.location,
 			configurable: true,

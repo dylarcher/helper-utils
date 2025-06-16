@@ -32,7 +32,7 @@
  * // handleCopyText(''); // Copies an empty string
  */
 export async function copyToClipboardAsync(text) {
-	if (!navigator.clipboard) {
+	if (typeof navigator === 'undefined' || !navigator.clipboard) {
 		return Promise.reject(
 			new Error(
 				'Clipboard API not available. Use a fallback or ensure secure context (HTTPS).',

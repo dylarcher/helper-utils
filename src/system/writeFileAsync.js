@@ -12,7 +12,7 @@ import fs from 'node:fs/promises';
  *
  * @param {string} filePath - The path to the file where data will be written.
  * @param {string | Buffer} data - The data to write to the file. Can be a string or a Buffer.
- * @param {import('node:buffer').BufferEncoding} [encoding='utf8'] - Optional. The character encoding to use
+ * @param {'ascii' | 'utf8' | 'utf-8' | 'utf16le' | 'ucs2' | 'ucs-2' | 'base64' | 'base64url' | 'latin1' | 'binary' | 'hex'} [encoding='utf8'] - Optional. The character encoding to use
  *   if `data` is a string. This parameter is ignored if `data` is a Buffer.
  * @returns {Promise<void>} A promise that resolves when the file has been successfully written.
  *   The promise does not resolve with any value.

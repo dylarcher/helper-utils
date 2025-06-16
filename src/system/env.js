@@ -58,6 +58,7 @@ export function env(key, defaultValue) {
 	// Check if the environment variable is defined.
 	// An environment variable set to an empty string (e.g., MY_VAR=) is considered defined.
 	if (value === undefined) {
+		// @ts-ignore
 		return defaultValue;
 	}
 	return value; // Environment variables are always strings.

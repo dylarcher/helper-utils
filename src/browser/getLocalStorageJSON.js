@@ -41,26 +41,20 @@
  * }
  */
 export function getLocalStorageJSON(key) {
-	try {
-		// Ensure localStorage is available before trying to use it.
-		if (typeof localStorage === 'undefined' || localStorage === null) {
-			throw new Error('localStorage is not available in this environment.');
-		}
-
-		const item = localStorage.getItem(key);
-
-		// If the item does not exist in localStorage, getItem returns null.
-		// This is a valid case, distinct from stored JSON 'null' or parsing errors.
-		if (item === null) {
-			return null;
-		}
-
-		// Attempt to parse. If item is 'null' (string), JSON.parse will return null.
-		// If item is malformed JSON, JSON.parse will throw a SyntaxError.
-		return JSON.parse(item);
-	} catch (error) {
-		// Re-throw the original error (e.g., SyntaxError from JSON.parse,
-		// or the "localStorage not available" error) for the caller to handle.
-		throw error;
+	// Ensure localStorage is available before trying to use it.
+	if (typeof localStorage === 'undefined' || localStorage === null) {
+		throw new Error('localStorage is not available in this environment.');
 	}
+
+	const item = localStorage.getItem(key);
+
+	// If the item does not exist in localStorage, getItem returns null.
+	// This is a valid case, distinct from stored JSON 'null' or parsing errors.
+	if (item === null) {
+		return null;
+	}
+
+	// Attempt to parse. If item is 'null' (string), JSON.parse will return null.
+	// If item is malformed JSON, JSON.parse will throw a SyntaxError.
+	return JSON.parse(item);
 }

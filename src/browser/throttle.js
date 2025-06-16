@@ -62,6 +62,7 @@ export function throttle(func, limit) {
 		if (limit === 0 || now - lastCall >= limit) {
 			lastCall = now; // Update the timestamp of the last call
 			// Execute the original function with preserved context and arguments
+			// @ts-ignore
 			lastResult = func.apply(this, args);
 			return lastResult;
 		}
