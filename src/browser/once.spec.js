@@ -15,13 +15,13 @@ class MockEventTarget {
 		this.listeners.get(eventType).push({ listener, options });
 	}
 
-	dispatchEvent(event) {
-		const listeners = this.listeners.get(event.type) || [];
+	dispatchEvent(evt) {
+		const listeners = this.listeners.get(evt.type) || [];
 		const listenersToRemove = [];
 
 		// Execute all listeners first
 		listeners.forEach(({ listener, options }) => {
-			listener.call(this, event);
+			listener.call(this, evt);
 			// Mark for removal if once
 			if (options && options.once) {
 				listenersToRemove.push(listener);
@@ -29,14 +29,14 @@ class MockEventTarget {
 		});
 
 		// Remove once listeners after execution
-		listenersToRemove.forEach((listener) => {
-			this.removeEventListener(event.type, listener);
+		listenersToRemove.forEach(listener => {
+			this.removeEventListener(evt.type, listener);
 		});
 	}
 
 	removeEventListener(eventType, listener) {
 		const listeners = this.listeners.get(eventType) || [];
-		const index = listeners.findIndex((l) => l.listener === listener);
+		const index = listeners.findIndex(l => l.listener === listener);
 		if (index !== -1) {
 			listeners.splice(index, 1);
 		}
@@ -55,9 +55,9 @@ describe('once(element, eventType, listener, options)', () => {
 	});
 
 	it('should add event listener with once option', () => {
-		const listener = (event) => {
+		const listener = evt => {
 			callCount++;
-			lastEvent = event;
+			lastEvent = evt;
 		};
 
 		once(mockElement, 'click', listener);
@@ -158,9 +158,9 @@ describe('once(element, eventType, listener, options)', () => {
 	});
 
 	it('should pass event object to listener', () => {
-		const listener = (event) => {
+		const listener = evt => {
 			callCount++;
-			lastEvent = event;
+			lastEvent = evt;
 		};
 
 		once(mockElement, 'custom', listener);
@@ -181,14 +181,14 @@ describe('once(element, eventType, listener, options)', () => {
 		});
 
 		// Trigger all events
-		events.forEach((eventType) => {
+		events.forEach(eventType => {
 			mockElement.dispatchEvent({ type: eventType });
 		});
 
 		assert.strictEqual(callCount, events.length);
 
 		// Trigger again - should not increment
-		events.forEach((eventType) => {
+		events.forEach(eventType => {
 			mockElement.dispatchEvent({ type: eventType });
 		});
 
@@ -217,7 +217,7 @@ describe('once(element, eventType, listener, options)', () => {
 	});
 
 	it('should preserve listener context', () => {
-		const context = { value: 'test-context' };
+		const _context = { value: 'test-context' };
 		let receivedContext;
 
 		function contextListener() {

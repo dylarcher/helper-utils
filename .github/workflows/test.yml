@@ -3,7 +3,7 @@ name: c8
 
 on:
   pull_request:
-    types: [edited,opened,reopened,synchronize]
+    types: [edited, opened, reopened, synchronize]
 
 jobs:
   c8:
@@ -12,6 +12,7 @@ jobs:
     permissions:
       contents: read
       packages: write
+      pull-requests: write # Added permission
 
     strategy:
       fail-fast: true

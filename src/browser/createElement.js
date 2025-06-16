@@ -74,28 +74,28 @@ export function createElement(
 	/**
 	 * Appends a child (string or Node) to the element.
 	 * @param {string | Node} child
-	 * @param {Element} parent
+	 * @param {Element} parentElement
 	 * @returns {void}
 	 */
-	function appendChild(child, parent) {
+	function appendChild(child, parentElement) {
 		if (typeof child === 'string') {
-			parent.appendChild(document.createTextNode(child));
+			parentElement.appendChild(document.createTextNode(child));
 		} else if (child) {
 			// Handle any object that might be a DOM node
 			// In tests, we don't have real Node instances but objects with similar interface
-			parent.appendChild(child);
+			parentElement.appendChild(child);
 		}
 	}
 
 	/**
 	 * Appends multiple children (string or Node) to the element.
 	 * @param {Array<string | Node>} descendants
-	 * @param {Element} parent
+	 * @param {Element} parentElement
 	 * @returns {void}
 	 */
-	function appendChildren(descendants, parent) {
+	function appendChildren(descendants, parentElement) {
 		for (const descendant of descendants) {
-			appendChild(descendant, parent);
+			appendChild(descendant, parentElement);
 		}
 	}
 

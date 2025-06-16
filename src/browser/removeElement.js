@@ -36,7 +36,9 @@ export function removeElement(element) {
 	try {
 		// element.parentNode is confirmed to exist from the guard clause above.
 		// removeChild is a standard method on Node.
-		element.parentNode.removeChild(element);
+		if (typeof element.parentNode.removeChild === 'function') {
+			element.parentNode.removeChild(element);
+		}
 	} catch (error) {
 		// Silently handle potential errors during removal.
 		// This could happen if the element was already removed or the DOM state changed unexpectedly.

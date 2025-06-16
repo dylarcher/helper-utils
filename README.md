@@ -8,41 +8,47 @@
 [![Latest](https://img.shields.io/github/last-commit/dylarcher/js.helper-utils.svg)](https://github.com/dylarcher/js.helper-utils/commits/main)
 [![Size](https://img.shields.io/github/repo-size/dylarcher/js.helper-utils.svg)](https://github.com/dylarcher/js.helper-utils)
 
-Reusable javascript helper utility methods.
+A collection of reusable JavaScript helper utility methods for browser and
+Node.js environments.
 
 ---
 
 ## Table of Contents
 
-* [About The Project](#about-the-project)
-  * [Built With](#built-with)
-* [Getting Started](#getting-started)
-  * [Prerequisites](#prerequisites)
-  * [Installation](#installation)
-* [Usage](#usage)
-  * [Available Utility Methods](#available-utility-methods)
-* [Development](#development)
-  * [Project Structure](#project-structure)
-  * [Available Scripts](#available-scripts)
-  * [Running Tests](#running-tests)
-  * [Linting and Formatting](#linting-and-formatting)
-  * [Building the Project](#building-the-project)
-* [Contributing](#contributing)
-* [License](#license)
-* [Contact](#contact)
+- [About The Project](#about-the-project)
+  - [Built With](#built-with)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+- [Usage](#usage)
+  - [Available Utility Methods](#available-utility-methods)
+    - [Browser Utilities](#browser-utilities)
+    - [System Utilities (Node.js)](#system-utilities-nodejs)
+- [Development](#development)
+  - [Project Structure](#project-structure)
+  - [Available Scripts](#available-scripts)
+  - [Running Tests](#running-tests)
+  - [Linting and Formatting](#linting-and-formatting)
+  - [Building the Project](#building-the-project)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
 
 ---
 
 ## About The Project
 
-`js-helpers` is a lightweight, zero-dependency library offering a collection of reusable JavaScript utility methods designed to streamline common development tasks.
+`@dylarcher/js-helpers` is a lightweight, zero-dependency library offering a
+collection of reusable JavaScript utility methods designed to streamline common
+development tasks.
 
-This project aims to provide well-tested, efficient, and easy-to-use functions for your JavaScript projects.
+This project aims to provide well-tested, efficient, and easy-to-use functions
+for your JavaScript projects.
 
 ### Built With
 
-* Node.js
-* TypeScript (for type definitions and compilation)
+- Node.js
+- TypeScript (for type definitions and compilation)
 
 ---
 
@@ -54,13 +60,13 @@ To get a local copy up and running follow these simple steps.
 
 Make sure you have the following installed:
 
-* Node.js (version >=18.20.8 recommended)
+- Node.js (version >=18.20.8 recommended)
 
   ```sh
   node -v
   ```
 
-* npm (version >=10.8.2 recommended)
+- npm (version >=10.8.2 recommended)
 
   ```sh
   npm -v
@@ -97,29 +103,178 @@ Once installed, you can import and use the utility methods in your project.
 
 ```javascript
 // ESM
-import { exampleMethod } from 'js-helpers';
-const result = exampleMethod(data);
-console.info(result);
+import { addClass, readFileAsync } from '@dylarcher/js-helpers';
+
+// Example for a browser utility
+const myElement = document.getElementById('my-element');
+if (myElement) {
+ addClass(myElement, 'new-class', 'another-class');
+}
+
+// Example for a system utility (if in a Node.js environment)
+async function logFile() {
+ try {
+  const content = await readFileAsync('path/to/my-file.txt');
+  console.info(content);
+ } catch (err) {
+  console.error('Error reading file:', err);
+ }
+}
+logFile();
 ```
 
 ### Available Utility Methods
 
-This section will be updated with a comprehensive list of available utility methods, their parameters, return values, and usage examples as they are developed.
+The library is organized into browser-specific and system-level (Node.js)
+utilities.
 
-* **Method 1:** (Description)
-  * Usage: `method1(params)`
-  * Test Coverage: 0%
-* **Method 2:** (Description)
-  * Usage: `method2(params)`
-  * Test Coverage: 0%
+#### Browser Utilities
 
-> Currently, all methods are under development or pending documentation. Test coverage is 0%.
+These functions are intended for use in a browser environment.
+
+- `addClass(element, ...classNames)`: Adds one or more CSS classes to an HTML
+  element.
+- `copyToClipboardAsync(text)`: Asynchronously copies the given text to the
+  clipboard.
+- `createElement(tagName, attributes, children)`: Creates an HTML element with
+  specified tag, attributes, and children.
+- `debounce(func, delay)`: Returns a debounced version of the function that
+  delays invoking `func` until after `delay` milliseconds have elapsed since the
+  last time the debounced function was invoked.
+- `fetchJSON(url, options)`: Fetches JSON data from a URL.
+- `findClosest(element, selector)`: Finds the closest ancestor of an element
+  that matches a selector.
+- `getCookie(name)`: Retrieves the value of a cookie by its name.
+- `getGlobal()`: Returns the global object (e.g., `window` in browsers).
+- `getLocalStorageJSON(key)`: Retrieves and parses a JSON value from
+  `localStorage`.
+- `getOSInfo()`: Returns information about the operating system (primarily from
+  `navigator.userAgentData` or `navigator.platform`).
+- `getStyle(element, pseudoElt)`: Gets the computed style of an element.
+- `hasClass(element, className)`: Checks if an element has a specific CSS class.
+- `hideElement(element)`: Hides an HTML element by setting its `display` style
+  to `none`.
+- `once(element, eventType, listener, options)`: Adds an event listener that is
+  automatically removed after it executes once.
+- `onDelegate(parentElement, eventType, selector, callback, options)`: Attaches
+  an event listener to a parent element that only triggers for events on
+  descendant elements matching a selector.
+- `parseQueryParams(queryString)`: Parses a URL query string into an object of
+  key-value pairs.
+- `querySelectorAllWrapper(selector, container)`: A wrapper for
+  `querySelectorAll` that returns an array.
+- `querySelectorWrapper(selector, container)`: A wrapper for `querySelector`.
+- `querySelectorWrapperAll(selector, container)`: Alias for
+  `querySelectorAllWrapper`.
+- `removeClass(element, ...classNames)`: Removes one or more CSS classes from an
+  HTML element.
+- `removeElement(element)`: Removes an HTML element from its parent node.
+- `setAttribute(element, attributeName, value)`: Sets an attribute on an HTML
+  element.
+- `setLocalStorageJSON(key, value)`: Stringifies and stores a JSON value in
+  `localStorage`.
+- `setStyle(element, property, value)`: Sets a style property on an HTML
+  element. Can also take an object of styles.
+- `throttle(func, limit)`: Returns a throttled version of the function that only
+  invokes `func` at most once per every `limit` milliseconds.
+- `toggleClass(element, className, force)`: Toggles a CSS class on an HTML
+  element.
+- `uuid()`: Generates a v4 UUID (primarily using `crypto.randomUUID` if
+  available in the browser).
+
+**Example Usage (Browser):**
+
+```javascript
+import { createElement, addClass, setStyle } from '@dylarcher/js-helpers';
+
+const newDiv = createElement(
+ 'div',
+ { id: 'myDiv', 'data-custom': 'value' },
+ 'Hello World!',
+);
+addClass(newDiv, 'mt-2', 'p-4');
+setStyle(newDiv, { backgroundColor: 'lightblue', borderRadius: '5px' });
+document.body.appendChild(newDiv);
+```
+
+#### System Utilities (Node.js)
+
+These functions are primarily designed for use in a Node.js environment. Some
+might work in modern browsers if the underlying Node.js modules they depend on
+(like `crypto`, `fs`, `path`, `os`) have browser-compatible counterparts or
+polyfills.
+
+- `createDirectory(dirPath, options)`: Creates a directory, including parent
+  directories if needed.
+- `decrypt(encryptedTextWithIv, key)`: Decrypts text that was encrypted using
+  AES-256-CBC (expects format 'iv:encryptedText').
+- `encrypt(text, key, iv)`: Encrypts text using AES-256-CBC.
+- `env(key, defaultValue)`: Gets an environment variable's value, with an
+  optional default.
+- `execAsync(command, options)`: Asynchronously executes a shell command.
+- `fileExists(filePath)`: Checks if a file or directory exists.
+- `generateHash(data, algorithm, encoding)`: Generates a hash (e.g., SHA256,
+  MD5) of the given data.
+- `getBasename(p, ext)`: Gets the basename of a path (filename with optional
+  extension removal).
+- `getCPUInfo()`: Returns information about the system's CPUs.
+- `getDirname(p)`: Gets the directory name of a path.
+- `getExtension(p)`: Gets the extension of a path.
+- `getHostname()`: Returns the system's hostname.
+- `getMemoryInfo()`: Returns information about system memory (total and free).
+- `getNetworkInterfaces()`: Returns network interface information.
+- `isDirectory(dirPath)`: Checks if a path is a directory.
+- `joinPaths(...paths)`: Joins path segments into a single path.
+- `listDirectoryContents(dirPath)`: Lists the contents of a directory.
+- `readFileAsync(filePath, encoding)`: Asynchronously reads the content of a
+  file.
+- `removeDirectory(dirPath, options)`: Removes a directory, recursively if
+  specified.
+- `resolvePath(...paths)`: Resolves a sequence of paths or path segments into an
+  absolute path.
+- `uuid()`: Generates a v4 UUID (primarily using `crypto.randomUUID` from
+  Node.js).
+- `writeFileAsync(filePath, data, encoding)`: Asynchronously writes data to a
+  file.
+
+**Example Usage (Node.js):**
+
+```javascript
+import {
+ writeFileAsync,
+ readFileAsync,
+ joinPaths,
+ createDirectory,
+} from '@dylarcher/js-helpers';
+import { homedir } from 'os'; // Node.js core module
+
+async function manageFiles() {
+ const userHome = homedir();
+ const myAppDir = joinPaths(userHome, '.myApp');
+ const myFile = joinPaths(myAppDir, 'example.txt');
+
+ try {
+  await createDirectory(myAppDir);
+  console.info('Directory created:', myAppDir);
+
+  await writeFileAsync(myFile, 'Hello from js-helpers!\nThis is a new line.');
+  console.info('File written:', myFile);
+
+  const content = await readFileAsync(myFile, 'utf8');
+  console.info('File content:', content);
+ } catch (error) {
+  console.error('An error occurred:', error);
+ }
+}
+
+manageFiles();
+```
+
 
 ---
 
 ## Development
 
-This section outlines how to contribute to the development of `js-helpers`, including understanding the project structure and using the available npm scripts.
 
 ### Project Structure
 
@@ -141,21 +296,6 @@ This section outlines how to contribute to the development of `js-helpers`, incl
 
 The `package.json` includes several scripts to help with development:
 
-| Script             | Description                                                                                                | How to use                |
-| ------------------ | ---------------------------------------------------------------------------------------------------------- | ------------------------- |
-| `prepare`        | Runs `npm dedupe && npm prune`. Executed automatically by npm after `npm install`.                     | (Automatic)               |
-| `format`         | Formats code using Prettier (`.github/linters/.prettierrc.yml`).                                         | `npm run format`        |
-| `format:check`   | Checks code formatting using Prettier without writing changes.                                             | `npm run format:check`  |
-| `lint`           | Lints code using ESLint (`.github/linters/eslint.config.js`) and attempts to fix issues.                 | `npm run lint`          |
-| `lint:check`     | Lints code using ESLint without fixing issues.                                                             | `npm run lint:check`    |
-| `prebuild`       | Runs `lint:check` and `format:check` before building. Executed automatically before `npm run build`. | (Automatic)               |
-| `build`          | Compiles source files from `src/` to `dist/` using `tsc`.                                            | `npm run build`         |
-| `pretest`        | Runs `build` script. Executed automatically before `npm test`.                                         | (Automatic)               |
-| `test`           | Runs tests using `node --no-warnings --experimental-specifier-resolution=node --inspect-brk test ...`.   | `npm test`              |
-| `test:watch`     | Runs tests in watch mode.                                                                                  | `npm run test:watch`    |
-| `c8`             | Base command for `c8` test coverage tool.                                                                | `npm run c8 -- <args>`  |
-| `test:coverage`  | Runs tests and generates a coverage report using `c8`.                                                   | `npm run test:coverage` |
-| `prepublishOnly` | Runs `build` script. Executed automatically before `npm publish`.                                      | (Automatic)               |
 
 ### Running Tests
 
@@ -168,7 +308,10 @@ npm test
 This command will:
 
 1. (Via `pretest`) Build the project (`npm run build`).
-2. Run test files (e.g., `**/*.test.js`) using the Node.js runtime with specific flags (`--no-warnings`, `--experimental-specifier-resolution=node`, `--inspect-brk`). The `--inspect-brk` flag enables the debugger and pauses execution at the start of the script.
+2. Run test files (e.g., `**/*.test.js`) using the Node.js runtime with specific
+   flags (`--no-warnings`, `--experimental-specifier-resolution=node`,
+   `--inspect-brk`). The `--inspect-brk` flag enables the debugger and pauses
+   execution at the start of the script.
 
 To run tests and generate a coverage report (currently 0%):
 
@@ -182,10 +325,10 @@ npm run test:coverage
 
 ```sh
 # running `npm run test:coverage`
- 
+
  > js-helpers@0.1.0 test:coverage
  > c8 --config .github/presets/.c8rc.json -- npm test
- 
+
  > js-helpers@0.1.0 test
  > node --no-warnings --test src/**/*.spec.js src/**/*.test.js
 
@@ -978,62 +1121,62 @@ npm run test:coverage
 ℹ todo 0
 ℹ duration_ms 688.931125
 -----------------------------|---------|----------|---------|---------|-------------------
-File                         | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+File                         | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
 -----------------------------|---------|----------|---------|---------|-------------------
-All files                    |     100 |      100 |     100 |     100 |                   
- src                         |     100 |      100 |     100 |     100 |                   
-  browser.js                 |     100 |      100 |     100 |     100 |                   
-  system.js                  |     100 |      100 |     100 |     100 |                   
- src/browser                 |     100 |      100 |     100 |     100 |                   
-  addClass.js                |     100 |      100 |     100 |     100 |                   
-  copyToClipboardAsync.js    |     100 |      100 |     100 |     100 |                   
-  createElement.js           |     100 |      100 |     100 |     100 |                   
-  debounce.js                |     100 |      100 |     100 |     100 |                   
-  fetchJSON.js               |     100 |      100 |     100 |     100 |                   
-  findClosest.js             |     100 |      100 |     100 |     100 |                   
-  getCookie.js               |     100 |      100 |     100 |     100 |                   
-  getGlobal.js               |     100 |      100 |     100 |     100 |                   
-  getLocalStorageJSON.js     |     100 |      100 |     100 |     100 |                   
-  getOSInfo.js               |     100 |      100 |     100 |     100 |                   
-  getStyle.js                |     100 |      100 |     100 |     100 |                   
-  hasClass.js                |     100 |      100 |     100 |     100 |                   
-  hideElement.js             |     100 |      100 |     100 |     100 |                   
-  onDelegate.js              |     100 |      100 |     100 |     100 |                   
-  once.js                    |     100 |      100 |     100 |     100 |                   
-  parseQueryParams.js        |     100 |      100 |     100 |     100 |                   
-  querySelectorAllWrapper.js |     100 |      100 |     100 |     100 |                   
-  querySelectorWrapper.js    |     100 |      100 |     100 |     100 |                   
-  removeClass.js             |     100 |      100 |     100 |     100 |                   
-  removeElement.js           |     100 |      100 |     100 |     100 |                   
-  setAttribute.js            |     100 |      100 |     100 |     100 |                   
-  setLocalStorageJSON.js     |     100 |      100 |     100 |     100 |                   
-  setStyle.js                |     100 |      100 |     100 |     100 |                   
-  throttle.js                |     100 |      100 |     100 |     100 |                   
-  toggleClass.js             |     100 |      100 |     100 |     100 |                   
-  uuid.js                    |     100 |      100 |     100 |     100 |                   
- src/system                  |     100 |      100 |     100 |     100 |                   
-  createDirectory.js         |     100 |      100 |     100 |     100 |                   
-  decrypt.js                 |     100 |      100 |     100 |     100 |                   
-  encrypt.js                 |     100 |      100 |     100 |     100 |                   
-  env.js                     |     100 |      100 |     100 |     100 |                   
-  execAsync.js               |     100 |      100 |     100 |     100 |                   
-  fileExists.js              |     100 |      100 |     100 |     100 |                   
-  generateHash.js            |     100 |      100 |     100 |     100 |                   
-  getBaseName.js             |     100 |      100 |     100 |     100 |                   
-  getCPUInfo.js              |     100 |      100 |     100 |     100 |                   
-  getDirname.js              |     100 |      100 |     100 |     100 |                   
-  getExtension.js            |     100 |      100 |     100 |     100 |                   
-  getHostname.js             |     100 |      100 |     100 |     100 |                   
-  getMemoryInfo.js           |     100 |      100 |     100 |     100 |                   
-  getNetworkInterfaces.js    |     100 |      100 |     100 |     100 |                   
-  isDirectory.js             |     100 |      100 |     100 |     100 |                   
-  joinPaths.js               |     100 |      100 |     100 |     100 |                   
-  listDirectoryContents.js   |     100 |      100 |     100 |     100 |                   
-  readFileAsync.js           |     100 |      100 |     100 |     100 |                   
-  removeDirectory.js         |     100 |      100 |     100 |     100 |                   
-  resolvePath.js             |     100 |      100 |     100 |     100 |                   
-  uuid.js                    |     100 |      100 |     100 |     100 |                   
-  writeFileAsync.js          |     100 |      100 |     100 |     100 |                   
+All files                    |     100 |      100 |     100 |     100 |
+ src                         |     100 |      100 |     100 |     100 |
+  browser.js                 |     100 |      100 |     100 |     100 |
+  system.js                  |     100 |      100 |     100 |     100 |
+ src/browser                 |     100 |      100 |     100 |     100 |
+  addClass.js                |     100 |      100 |     100 |     100 |
+  copyToClipboardAsync.js    |     100 |      100 |     100 |     100 |
+  createElement.js           |     100 |      100 |     100 |     100 |
+  debounce.js                |     100 |      100 |     100 |     100 |
+  fetchJSON.js               |     100 |      100 |     100 |     100 |
+  findClosest.js             |     100 |      100 |     100 |     100 |
+  getCookie.js               |     100 |      100 |     100 |     100 |
+  getGlobal.js               |     100 |      100 |     100 |     100 |
+  getLocalStorageJSON.js     |     100 |      100 |     100 |     100 |
+  getOSInfo.js               |     100 |      100 |     100 |     100 |
+  getStyle.js                |     100 |      100 |     100 |     100 |
+  hasClass.js                |     100 |      100 |     100 |     100 |
+  hideElement.js             |     100 |      100 |     100 |     100 |
+  onDelegate.js              |     100 |      100 |     100 |     100 |
+  once.js                    |     100 |      100 |     100 |     100 |
+  parseQueryParams.js        |     100 |      100 |     100 |     100 |
+  querySelectorAllWrapper.js |     100 |      100 |     100 |     100 |
+  querySelectorWrapper.js    |     100 |      100 |     100 |     100 |
+  removeClass.js             |     100 |      100 |     100 |     100 |
+  removeElement.js           |     100 |      100 |     100 |     100 |
+  setAttribute.js            |     100 |      100 |     100 |     100 |
+  setLocalStorageJSON.js     |     100 |      100 |     100 |     100 |
+  setStyle.js                |     100 |      100 |     100 |     100 |
+  throttle.js                |     100 |      100 |     100 |     100 |
+  toggleClass.js             |     100 |      100 |     100 |     100 |
+  uuid.js                    |     100 |      100 |     100 |     100 |
+ src/system                  |     100 |      100 |     100 |     100 |
+  createDirectory.js         |     100 |      100 |     100 |     100 |
+  decrypt.js                 |     100 |      100 |     100 |     100 |
+  encrypt.js                 |     100 |      100 |     100 |     100 |
+  env.js                     |     100 |      100 |     100 |     100 |
+  execAsync.js               |     100 |      100 |     100 |     100 |
+  fileExists.js              |     100 |      100 |     100 |     100 |
+  generateHash.js            |     100 |      100 |     100 |     100 |
+  getBaseName.js             |     100 |      100 |     100 |     100 |
+  getCPUInfo.js              |     100 |      100 |     100 |     100 |
+  getDirname.js              |     100 |      100 |     100 |     100 |
+  getExtension.js            |     100 |      100 |     100 |     100 |
+  getHostname.js             |     100 |      100 |     100 |     100 |
+  getMemoryInfo.js           |     100 |      100 |     100 |     100 |
+  getNetworkInterfaces.js    |     100 |      100 |     100 |     100 |
+  isDirectory.js             |     100 |      100 |     100 |     100 |
+  joinPaths.js               |     100 |      100 |     100 |     100 |
+  listDirectoryContents.js   |     100 |      100 |     100 |     100 |
+  readFileAsync.js           |     100 |      100 |     100 |     100 |
+  removeDirectory.js         |     100 |      100 |     100 |     100 |
+  resolvePath.js             |     100 |      100 |     100 |     100 |
+  uuid.js                    |     100 |      100 |     100 |     100 |
+  writeFileAsync.js          |     100 |      100 |     100 |     100 |
 -----------------------------|---------|----------|---------|---------|-------------------
 ```
 
@@ -1052,31 +1195,32 @@ npm run test:watch
 
 This project uses ESLint for linting and Prettier for code formatting.
 
-* **Check formatting:**
+- **Check formatting:**
 
   ```sh
   npm run format:check
   ```
 
-* **Apply formatting:**
+- **Apply formatting:**
 
   ```sh
   npm run format
   ```
 
-* **Check for linting errors:**
+- **Check for linting errors:**
 
   ```sh
   npm run lint:check
   ```
 
-* **Apply linting fixes:**
+- **Apply linting fixes:**
 
   ```sh
   npm run lint
   ```
 
-It's recommended to set up your editor to use these tools for a better development experience.
+It's recommended to set up your editor to use these tools for a better
+development experience.
 
 ### Building the Project
 
@@ -1087,14 +1231,14 @@ npm run build
 npm run bundle
 ```
 
-The `npm run build` script handles the compilation, and `npm run bundle` generates the `types.d.ts` file.
-The `prepublishOnly` script automatically runs these before publishing.
 
 ---
 
 ## Contributing
 
-Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+Contributions are what make the open-source community such an amazing place to
+learn, inspire, and create. Any contributions you make are **greatly
+appreciated**.
 
 1. Fork the Project
 2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
@@ -1108,7 +1252,8 @@ Please ensure your code adheres to the existing style and all tests pass.
 
 ## License
 
-Distributed under the MIT License. See `LICENSE` file (if one exists) or `package.json` for more information.
+Distributed under the MIT License. See `LICENSE` file (if one exists) or
+`package.json` for more information.
 
 ---
 
@@ -1116,5 +1261,7 @@ Distributed under the MIT License. See `LICENSE` file (if one exists) or `packag
 
 Dylan Archer - @dylarcher - <dylarcher@gmail.com>
 
-Project Link: [https://github.com/dylarcher/js.helper-utils](https://github.com/dylarcher/js.helper-utils)
-Homepage: [https://dylarcher.github.io/js.helper-utils/](https://dylarcher.github.io/js.helper-utils/)
+Project Link:
+[https://github.com/dylarcher/js.helper-utils](https://github.com/dylarcher/js.helper-utils)
+Homepage:
+[https://dylarcher.github.io/js.helper-utils/](https://dylarcher.github.io/js.helper-utils/)

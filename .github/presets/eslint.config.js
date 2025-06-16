@@ -97,4 +97,26 @@ export default [
 			'object-curly-newline': 'off', // Handled by Prettier
 		},
 	},
+	// Test file configuration - MUST come last to override previous rules
+	{
+		files: ['**/*.spec.js', '**/*.test.js', '**/test.utils.js'],
+		languageOptions: {
+			globals: {
+				...globals.node,
+				// Node.js test runner globals
+				describe: 'readonly',
+				it: 'readonly',
+				test: 'readonly',
+				expect: 'readonly',
+				beforeEach: 'readonly',
+				afterEach: 'readonly',
+				before: 'readonly',
+				after: 'readonly',
+			},
+		},
+		rules: {
+			// Relax no-shadow for test files since test globals are common
+			'no-shadow': 'off',
+		},
+	},
 ];

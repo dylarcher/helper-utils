@@ -40,7 +40,7 @@ describe('createDirectory(dirPath, options)', () => {
 	});
 
 	it('should use custom options', async () => {
-		const result = await createDirectory(testDir, { recursive: false });
+		const _result = await createDirectory(testDir, { recursive: false });
 
 		const stats = await fs.stat(testDir);
 		assert.ok(stats.isDirectory(), 'Directory should be created');

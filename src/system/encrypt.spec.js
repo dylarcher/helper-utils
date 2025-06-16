@@ -1,11 +1,11 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import * as crypto from 'node:crypto';
+import * as cryptoModule from 'node:crypto';
 import { encrypt } from './encrypt.js';
 
 describe('encrypt(text, key, iv)', () => {
-	const testKey = crypto.randomBytes(32); // 256-bit key for AES-256
-	const testIv = crypto.randomBytes(16); // 128-bit IV for AES-CBC
+	const testKey = cryptoModule.randomBytes(32); // 256-bit key for AES-256
+	const testIv = cryptoModule.randomBytes(16); // 128-bit IV for AES-CBC
 
 	it('should encrypt text using AES-256-CBC', () => {
 		const originalText = 'Hello, World!';
@@ -69,8 +69,8 @@ describe('encrypt(text, key, iv)', () => {
 
 	it('should produce different output with different IVs', () => {
 		const originalText = 'Same text';
-		const iv1 = crypto.randomBytes(16);
-		const iv2 = crypto.randomBytes(16);
+		const iv1 = cryptoModule.randomBytes(16);
+		const iv2 = cryptoModule.randomBytes(16);
 
 		const encrypted1 = encrypt(originalText, testKey, iv1);
 		const encrypted2 = encrypt(originalText, testKey, iv2);
@@ -84,8 +84,8 @@ describe('encrypt(text, key, iv)', () => {
 
 	it('should produce different output with different keys', () => {
 		const originalText = 'Same text';
-		const key1 = crypto.randomBytes(32);
-		const key2 = crypto.randomBytes(32);
+		const key1 = cryptoModule.randomBytes(32);
+		const key2 = cryptoModule.randomBytes(32);
 
 		const encrypted1 = encrypt(originalText, key1, testIv);
 		const encrypted2 = encrypt(originalText, key2, testIv);
@@ -140,7 +140,7 @@ describe('encrypt(text, key, iv)', () => {
 		// Manually decrypt to verify compatibility
 		const [ivHex, encryptedHex] = encryptedResult.split(':');
 		const iv = Buffer.from(ivHex, 'hex');
-		const decipher = crypto.createDecipheriv('aes-256-cbc', testKey, iv);
+		const decipher = cryptoModule.createDecipheriv('aes-256-cbc', testKey, iv);
 		let decrypted = decipher.update(encryptedHex, 'hex', 'utf8');
 		decrypted += decipher.final('utf8');
 
@@ -209,6 +209,88 @@ describe('encrypt(text, key, iv)', () => {
 				return true;
 			},
 			'Should throw error for IV length not equal to 16 bytes (long).',
+		);
+	});
+});
+
+describe('encrypt(text, key, iv) - Error Handling and Input Validation', () => {
+	const testText = 'Some text to encrypt';
+	const validKey = cryptoModule.randomBytes(32); // AES-256 needs 32-byte key
+	const validIv = cryptoModule.randomBytes(16); // AES-CBC needs 16-byte IV
+
+	it('should throw an error for invalid key length', () => {
+		const shortKey = cryptoModule.randomBytes(16); // Invalid length
+		const longKey = cryptoModule.randomBytes(48); // Invalid length
+
+		assert.throws(
+			() => encrypt(testText, shortKey, validIv),
+			err =>
+				err.message.includes('Invalid key length') ||
+				err.code === 'ERR_CRYPTO_INVALID_KEYLEN',
+			'Should throw for a 16-byte key',
+		);
+		assert.throws(
+			() => encrypt(testText, longKey, validIv),
+			err =>
+				err.message.includes('Invalid key length') ||
+				err.code === 'ERR_CRYPTO_INVALID_KEYLEN',
+			'Should throw for a 48-byte key',
+		);
+		assert.throws(
+			() => encrypt(testText, Buffer.from('invalidkey'), validIv), // Non-buffer or wrong size buffer
+			err =>
+				err.message.includes('Invalid key length') ||
+				err.code === 'ERR_CRYPTO_INVALID_KEYLEN' ||
+				err.code === 'ERR_INVALID_ARG_TYPE',
+			'Should throw for a key of incorrect type/length',
+		);
+	});
+
+	it('should throw an error for invalid IV length', () => {
+		const shortIv = cryptoModule.randomBytes(8); // Invalid length
+		const longIv = cryptoModule.randomBytes(24); // Invalid length
+
+		assert.throws(
+			() => encrypt(testText, validKey, shortIv),
+			err =>
+				err.message.includes('Invalid IV length') ||
+				err.code === 'ERR_CRYPTO_INVALID_IVLEN',
+			'Should throw for an 8-byte IV',
+		);
+		assert.throws(
+			() => encrypt(testText, validKey, longIv),
+			err =>
+				err.message.includes('Invalid IV length') ||
+				err.code === 'ERR_CRYPTO_INVALID_IVLEN',
+			'Should throw for a 24-byte IV',
+		);
+		assert.throws(
+			() => encrypt(testText, validKey, Buffer.from('invalidiv')), // Non-buffer or wrong size buffer
+			err =>
+				err.message.includes('Invalid IV length') ||
+				err.code === 'ERR_CRYPTO_INVALID_IVLEN' ||
+				err.code === 'ERR_INVALID_ARG_TYPE',
+			'Should throw for an IV of incorrect type/length',
+		);
+	});
+
+	it('should throw if key is not a Buffer', () => {
+		assert.throws(
+			() => encrypt(testText, 'not a buffer key', validIv),
+			err =>
+				err.code === 'ERR_INVALID_ARG_TYPE' ||
+				err.message.includes('Key must be a buffer'),
+			'Should throw if key is a string',
+		);
+	});
+
+	it('should throw if IV is not a Buffer', () => {
+		assert.throws(
+			() => encrypt(testText, validKey, 'not a buffer iv'),
+			err =>
+				err.code === 'ERR_INVALID_ARG_TYPE' ||
+				err.message.includes('IV must be a buffer'),
+			'Should throw if IV is a string',
 		);
 	});
 });

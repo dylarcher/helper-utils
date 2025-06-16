@@ -65,6 +65,14 @@ const ALGORITHM = 'aes-256-cbc'; // AES-256 uses a 32-byte key and a 16-byte IV.
  * }
  */
 export function encrypt(text, key, iv) {
+	// Validate input types
+	if (!Buffer.isBuffer(key)) {
+		throw new TypeError('Key must be a buffer');
+	}
+	if (!Buffer.isBuffer(iv)) {
+		throw new TypeError('IV must be a buffer');
+	}
+
 	// Validate key and IV lengths to provide clearer errors before crypto module does.
 	if (key.length !== 32) {
 		throw new Error(

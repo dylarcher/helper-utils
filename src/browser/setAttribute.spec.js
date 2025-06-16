@@ -12,8 +12,8 @@ class MockElement {
 		this.attributes[name] = String(value);
 	}
 
-	getAttribute(name) {
-		return this.attributes[name] || null;
+	getAttribute(elementName) {
+		return this.attributes[elementName] || null;
 	}
 }
 

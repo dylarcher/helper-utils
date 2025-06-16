@@ -1,20 +1,20 @@
 import fs from 'node:fs/promises';
 
 /**
- * Asynchronously lists the contents (files and directories) of a given directory.
- * This function is a wrapper around Node.js's `fs.readdir()`.
- * It is specific to Node.js environments.
+ * Asynchronously lists the contents (files and directories) of a given directory using an async generator.
+ * This function is a wrapper around Node.js's `fs.readdir()` that yields each item one by one,
+ * making it memory-efficient for large directories. It is specific to Node.js environments.
  *
- * The returned array contains the names of the files and directories within the
+ * The generator yields the names of the files and directories within the
  * specified `dirPath`, excluding '.' and '..'. The order is not guaranteed.
  *
  * @param {string} dirPath - The file system path to the directory whose contents are to be listed.
- * @returns {Promise<string[]>} A promise that resolves to an array of strings, where each
- *   string is the name of a file or directory within `dirPath`.
+ * @yields {string} The name of a file or subdirectory within the specified directory.
  * @throws {Error} Throws an error if `fs.readdir` fails. Common reasons include:
  *   - `ENOENT`: The path specified in `dirPath` does not exist.
  *   - `ENOTDIR`: The path specified in `dirPath` is a file, not a directory.
  *   - `EACCES`: Permission denied to read the directory.
+ * @returns {AsyncGenerator<string, void, undefined>} An async generator that yields the names of files and subdirectories.
  *
  * @example
  * // Create a dummy directory structure for example:
@@ -34,7 +34,10 @@ import fs from 'node:fs/promises';
  *
  *   const targetDirectory = './example_list_dir';
  *   try {
- *     const contents = await listDirectoryContents(targetDirectory);
+ *     const contents = [];
+ *     for await (const item of listDirectoryContents(targetDirectory)) {
+ *       contents.push(item);
+ *     }
  *     console.info(`Contents of "${targetDirectory}":`, contents.sort());
  *     // Example output: Contents of "./example_list_dir": [ 'file1.txt', 'file2.js', 'subdir' ]
  *   } catch (error) {
@@ -43,7 +46,9 @@ import fs from 'node:fs/promises';
  *
  *   const nonExistentDir = './non_existent_directory';
  *   try {
- *     await listDirectoryContents(nonExistentDir);
+ *     for await (const item of listDirectoryContents(nonExistentDir)) {
+ *       console.info(item); // This won't execute due to error
+ *     }
  *   } catch (error) {
  *     console.error(`Error listing directory "${nonExistentDir}":`, error.message);
  *     // Example output: Error listing directory "./non_existent_directory": ENOENT: no such file or directory...
@@ -51,7 +56,9 @@ import fs from 'node:fs/promises';
  *
  *   const aFile = './example_list_dir/file1.txt'; // Assuming this exists and is a file
  *   try {
- *     await listDirectoryContents(aFile);
+ *     for await (const item of listDirectoryContents(aFile)) {
+ *       console.info(item); // This won't execute due to error
+ *     }
  *   } catch (error) {
  *     console.error(`Error listing directory (path is a file) "${aFile}":`, error.message);
  *     // Example output: Error listing directory (path is a file) "...": ENOTDIR: not a directory...
@@ -62,8 +69,11 @@ import fs from 'node:fs/promises';
  *
  * // showDirectoryContents();
  */
-export async function listDirectoryContents(dirPath) {
+export async function* listDirectoryContents(dirPath) {
 	// fs.readdir() resolves with an array of names of the files in the directory
 	// (excluding '.' and '..').
-	return fs.readdir(dirPath);
+	const items = await fs.readdir(dirPath);
+	for (const item of items) {
+		yield item;
+	}
 }

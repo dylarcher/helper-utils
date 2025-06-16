@@ -46,7 +46,10 @@ export function hasClass(element, className) {
 		// DOMTokenList.contains is a standard method.
 		// The try-catch handles errors if className has invalid characters (spaces, etc.),
 		// which can cause .contains() to throw in stricter environments or older browsers.
-		return element.classList.contains(className);
+		return (
+			typeof element.classList.contains === 'function' &&
+			element.classList.contains(className)
+		);
 	} catch (error) {
 		// Silently handle errors from classList.contains (e.g., invalid character in className)
 		// console.error(`Error checking class "${className}":`, error); // Optional: for debugging

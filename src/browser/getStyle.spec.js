@@ -28,7 +28,7 @@ describe('getStyle(element, pseudoElt)', () => {
 		};
 
 		// Mock window.getComputedStyle
-		global.window.getComputedStyle = (element, pseudoElt) => {
+		global.window.getComputedStyle = (element, _pseudoElt) => {
 			if (element === mockElement) {
 				return mockComputedStyle;
 			}
@@ -68,7 +68,7 @@ describe('getStyle(element, pseudoElt)', () => {
 			'::first-letter',
 		];
 
-		pseudoElements.forEach((pseudo) => {
+		pseudoElements.forEach(pseudo => {
 			let capturedPseudoElt;
 
 			global.window.getComputedStyle = (element, pseudoElt) => {
@@ -149,7 +149,7 @@ describe('getStyle(element, pseudoElt)', () => {
 
 	it('should handle empty style object', () => {
 		const emptyStyles = {
-			getPropertyValue: function (property) {
+			getPropertyValue: function (_property) {
 				return '';
 			},
 		};
