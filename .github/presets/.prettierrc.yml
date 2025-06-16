@@ -19,12 +19,6 @@ htmlWhitespaceSensitivity: css
 proseWrap: always
 singleAttributePerLine: true
 vueIndentScriptAndStyle: false
-ignore:
-  - node_modules/**
-  - dist/**
-  - docs/**
-  - src/**/*.test.js
-  - src/**/*.spec.js
 overrides:
   - files: LICENSE
     options:
