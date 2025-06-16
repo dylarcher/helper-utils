@@ -25,15 +25,20 @@
         "npm": ">=10.9.2"
     },
     "exports": {
-        "*": {
-            "import": "./dist/*.js",
-            "require": "./dist/*.js",
-            "types": "./dist/types.d.ts"
-        },
         ".": {
             "import": "./dist/index.js",
             "require": "./dist/index.js",
             "types": "./dist/types.d.ts"
+        },
+        "./browser": {
+            "import": "./dist/browser.js",
+            "require": "./dist/browser.js",
+            "types": "./dist/browser.d.ts"
+        },
+        "./system": {
+            "import": "./dist/system.js",
+            "require": "./dist/system.js",
+            "types": "./dist/system.d.ts"
         }
     },
     "files": [
@@ -51,7 +56,8 @@
         "functions"
     ],
     "license": "MIT",
-    "main": "dist/index.js",
+    "main": "dist/index.cjs",
+    "module": "dist/index.js",
     "name": "@dylarcher/js-helpers",
     "overrides": {
         "glob": "^10.4.5",
@@ -77,7 +83,7 @@
         "postversion": "git push && git push --tags && npm run publish:npm",
         "prebuild": "npm run lint:check && npm run format:check && npm run test",
         "prepare": "npm dedupe && npm prune",
-        "update": "npm update && npm run build && npm clean-install",
+        "update": "npm update && npm clean-install && npm run build",
         "prepublishOnly": "npm run build",
         "publish:npm": "npm publish --access public --registry https://registry.npmjs.org/",
         "test": "tsc -p .github/presets/tsconfig.system.test.json && tsc -p .github/presets/tsconfig.browser.test.json && node --no-warnings --test src/**/*.spec.js src/**/*.test.js",
@@ -90,6 +96,7 @@
         "version:minor": "npm version minor -m \"chore(release-minor): v%s\"",
         "version:patch": "npm version patch -m \"chore(release-patch): v%s\""
     },
+    "types": "dist/index.d.ts",
     "type": "module",
     "version": "2.0.0"
 }
