@@ -1,8 +1,12 @@
 {
 	"recommendations": [
 		"DavidAnson.vscode-markdownlint",
-		"redhat.vscode-yaml",
 		"dbaeumer.vscode-eslint",
-		"esbenp.prettier-vscode"
+		"esbenp.prettier-vscode",
+		"googlecloudtools.cloudcode",
+		"jock.svg",
+		"PascalReitermann93.vscode-yaml-sort",
+		"redhat.vscode-yaml",
+		"richie5um2.vscode-sort-json"
 	]
 }
