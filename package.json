@@ -73,7 +73,7 @@
         "changelog:released": "npx auto-changelog --package --output CHANGELOG.md --template keepachangelog --commit-limit false",
         "changelog:unreleased": "npx auto-changelog --commit-limit false --unreleased-only --template keepachangelog",
         "eslint": "eslint --config .github/presets/eslint.config.js --ext .js --report-unused-disable-directives",
-        "format": "npm run prettier --write",
+        "format": "npm run prettier -- --write",
         "lint": "npm run eslint -- --fix",
         "postversion": "git push && git push --tags && npm run publish:npm",
         "prebuild": "npm run lint:check && npm run format:check && npm run test",
