@@ -75,7 +75,7 @@
 		"url": "git+https://github.com/dylarcher/js.helper-utils.git"
 	},
 	"scripts": {
-		"build": "tsc && tsc -p .github/presets/tsconfig.browser.json && tsc -p .github/presets/tsconfig.system.json",
+		"build": "rimraf dist && tsc",
 		"changelog:released": "npx auto-changelog --package --output CHANGELOG.md --template keepachangelog --commit-limit false",
         "clean": "rimraf node_modules/ dist/ package-lock.json",
 		"changelog:unreleased": "npx auto-changelog --commit-limit false --unreleased-only --template keepachangelog",
@@ -90,8 +90,8 @@
 		"prepare": "npm dedupe && npm prune",
 		"prepublishOnly": "npm run build",
 		"publish:npm": "npm publish --access public --registry https://registry.npmjs.org/",
-		"test": "tsc -p .github/presets/tsconfig.system.test.json && tsc -p .github/presets/tsconfig.browser.test.json && node --no-warnings --test src/**/*.spec.js src/**/*.test.js",
-		"test:coverage": "c8 --config .github/presets/.c8rc.json -- node --no-warnings --test src/**/*.spec.js src/**/*.test.js",
+		"test": "node --no-warnings --test src/**/*.spec.js src/**/*.test.js",
+		"test:coverage": "c8 --config .github/presets/.c8rc.json --reports-dir=./dist/coverage -- node --no-warnings --test src/**/*.spec.js src/**/*.test.js",
 		"test:debug": "npm test --inspect-brk",
 		"test:watch": "npm test --watch",
 		"update": "npm update && npm clean-install && npm run build",

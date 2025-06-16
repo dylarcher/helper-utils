@@ -11,7 +11,7 @@
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
 		"declaration": true,
-		"lib": ["ES2020"],
+		"lib": ["ES2024", "DOM", "DOM.Iterable"],
 		"module": "ESNext",
 		"moduleResolution": "node",
 		"outDir": "dist",
@@ -33,9 +33,9 @@
 		"src/**/*.spec.js",
 		"src/**/*.test.js"
 	],
-	"include": ["src/**/*"],
+	"include": ["src/**/*.js"],
 	"typeAcquisition": {
 		"enable": true,
-		"include": ["eslint", "prettier"]
+		"include": ["node", "jsdom", "browser", "eslint", "prettier", "c8"]
 	}
 }
