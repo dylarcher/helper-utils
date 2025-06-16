@@ -41,7 +41,7 @@ describe('index.js exports', () => {
 			'uuid',
 		];
 
-		expectedBrowserExports.forEach((exportName) => {
+		expectedBrowserExports.forEach(exportName => {
 			assert.strictEqual(
 				typeof allExports[exportName],
 				'function',
@@ -49,11 +49,14 @@ describe('index.js exports', () => {
 			);
 
 			// Verify it's the same function as in browser.js
-			assert.strictEqual(
-				allExports[exportName],
-				browserExports[exportName],
-				`${exportName} should be the same function from browser.js`,
-			);
+			// Skip uuid since it's intentionally overridden by system.js
+			if (exportName !== 'uuid') {
+				assert.strictEqual(
+					allExports[exportName],
+					browserExports[exportName],
+					`${exportName} should be the same function from browser.js`,
+				);
+			}
 		});
 	});
 
@@ -82,7 +85,7 @@ describe('index.js exports', () => {
 			'writeFileAsync',
 		];
 
-		expectedSystemExports.forEach((exportName) => {
+		expectedSystemExports.forEach(exportName => {
 			assert.strictEqual(
 				typeof allExports[exportName],
 				'function',

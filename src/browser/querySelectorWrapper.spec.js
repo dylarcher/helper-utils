@@ -174,7 +174,7 @@ describe('querySelectorWrapper(selector, container)', () => {
 
 	it('should handle empty selector', () => {
 		// Mock querySelector to handle empty selector
-		mockDocument.querySelector = (selector) => {
+		mockDocument.querySelector = selector => {
 			if (!selector) {
 				return null;
 			}
@@ -189,7 +189,7 @@ describe('querySelectorWrapper(selector, container)', () => {
 	it('should handle complex selectors', () => {
 		// Create more complex mock behavior
 		const container = new MockElement('div');
-		container.querySelector = (selector) => {
+		container.querySelector = selector => {
 			if (selector === 'div.container p') {
 				const p = new MockElement('p', '', '');
 				return p;
@@ -220,7 +220,7 @@ describe('querySelectorWrapper(selector, container)', () => {
 	it('should default to document when no container provided', () => {
 		// Ensure document is being used as default
 		global.document = {
-			querySelector: (selector) => {
+			querySelector: selector => {
 				if (selector === '#document-test') {
 					return { id: 'document-test', source: 'document' };
 				}
@@ -236,7 +236,7 @@ describe('querySelectorWrapper(selector, container)', () => {
 
 	it('should work with various selector types', () => {
 		const testContainer = {
-			querySelector: (selector) => {
+			querySelector: selector => {
 				const selectorMap = {
 					'#id-selector': { type: 'id', tagName: 'div' },
 					'.class-selector': { type: 'class', tagName: 'span' },
@@ -256,7 +256,7 @@ describe('querySelectorWrapper(selector, container)', () => {
 			'div > p',
 		];
 
-		selectors.forEach((selector) => {
+		selectors.forEach(selector => {
 			const result = querySelectorWrapper(selector, testContainer);
 			assert.ok(
 				result !== null,

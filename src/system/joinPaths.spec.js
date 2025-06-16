@@ -172,7 +172,7 @@ describe('joinPaths(...paths)', () => {
 			['path with spaces', 'file & symbols!.txt'],
 		];
 
-		testCases.forEach((testCase) => {
+		testCases.forEach(testCase => {
 			const ourResult = joinPaths(...testCase);
 			const nodeResult = path.join(...testCase);
 			assert.strictEqual(

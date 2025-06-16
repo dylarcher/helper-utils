@@ -11,12 +11,12 @@ class MockElement {
 		const setAdd = this.classList.add.bind(this.classList);
 		// Define classList.add, classList.contains, and className for compatibility
 		this.classList.add = (...names) =>
-			names.forEach((elementName) => {
+			names.forEach(elementName => {
 				if (typeof elementName === 'string' && elementName.trim() !== '') {
 					setAdd(elementName); // Use Set's original add method
 				}
 			});
-		this.classList.contains = (name) => this.classList.has(name);
+		this.classList.contains = name => this.classList.has(name);
 	}
 
 	// Getter to simulate the className property
@@ -169,9 +169,7 @@ describe('addClass(element, ...classNames)', () => {
 
 			// Should not duplicate existing-class
 			const classes = element.className.split(' ');
-			const existingCount = classes.filter(
-				(c) => c === 'existing-class',
-			).length;
+			const existingCount = classes.filter(c => c === 'existing-class').length;
 			assert.strictEqual(existingCount, 1);
 			assert.ok(element.classList.contains('new-class'));
 		});
@@ -179,7 +177,7 @@ describe('addClass(element, ...classNames)', () => {
 		it('should work with various HTML elements in real DOM', () => {
 			const elements = ['div', 'span', 'p', 'section', 'article'];
 
-			elements.forEach((tagName) => {
+			elements.forEach(tagName => {
 				const element = document.createElement(tagName);
 				addClass(element, `${tagName}-class`);
 

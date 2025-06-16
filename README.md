@@ -108,17 +108,17 @@ import { addClass, readFileAsync } from '@dylarcher/js-helpers';
 // Example for a browser utility
 const myElement = document.getElementById('my-element');
 if (myElement) {
- addClass(myElement, 'new-class', 'another-class');
+	addClass(myElement, 'new-class', 'another-class');
 }
 
 // Example for a system utility (if in a Node.js environment)
 async function logFile() {
- try {
-  const content = await readFileAsync('path/to/my-file.txt');
-  console.info(content);
- } catch (err) {
-  console.error('Error reading file:', err);
- }
+	try {
+		const content = await readFileAsync('path/to/my-file.txt');
+		console.info(content);
+	} catch (err) {
+		console.error('Error reading file:', err);
+	}
 }
 logFile();
 ```
@@ -188,9 +188,9 @@ These functions are intended for use in a browser environment.
 import { createElement, addClass, setStyle } from '@dylarcher/js-helpers';
 
 const newDiv = createElement(
- 'div',
- { id: 'myDiv', 'data-custom': 'value' },
- 'Hello World!',
+	'div',
+	{ id: 'myDiv', 'data-custom': 'value' },
+	'Hello World!',
 );
 addClass(newDiv, 'mt-2', 'p-4');
 setStyle(newDiv, { backgroundColor: 'lightblue', borderRadius: '5px' });
@@ -241,30 +241,30 @@ polyfills.
 
 ```javascript
 import {
- writeFileAsync,
- readFileAsync,
- joinPaths,
- createDirectory,
+	writeFileAsync,
+	readFileAsync,
+	joinPaths,
+	createDirectory,
 } from '@dylarcher/js-helpers';
 import { homedir } from 'os'; // Node.js core module
 
 async function manageFiles() {
- const userHome = homedir();
- const myAppDir = joinPaths(userHome, '.myApp');
- const myFile = joinPaths(myAppDir, 'example.txt');
+	const userHome = homedir();
+	const myAppDir = joinPaths(userHome, '.myApp');
+	const myFile = joinPaths(myAppDir, 'example.txt');
 
- try {
-  await createDirectory(myAppDir);
-  console.info('Directory created:', myAppDir);
+	try {
+		await createDirectory(myAppDir);
+		console.info('Directory created:', myAppDir);
 
-  await writeFileAsync(myFile, 'Hello from js-helpers!\nThis is a new line.');
-  console.info('File written:', myFile);
+		await writeFileAsync(myFile, 'Hello from js-helpers!\nThis is a new line.');
+		console.info('File written:', myFile);
 
-  const content = await readFileAsync(myFile, 'utf8');
-  console.info('File content:', content);
- } catch (error) {
-  console.error('An error occurred:', error);
- }
+		const content = await readFileAsync(myFile, 'utf8');
+		console.info('File content:', content);
+	} catch (error) {
+		console.error('An error occurred:', error);
+	}
 }
 
 manageFiles();

@@ -39,7 +39,7 @@ describe('index.js module integration', () => {
 			'uuid',
 		];
 
-		browserExports.forEach((exportName) => {
+		browserExports.forEach(exportName => {
 			assert.strictEqual(
 				typeof index[exportName],
 				'function',
@@ -73,7 +73,7 @@ describe('index.js module integration', () => {
 			'writeFileAsync',
 		];
 
-		systemExports.forEach((exportName) => {
+		systemExports.forEach(exportName => {
 			assert.strictEqual(
 				typeof index[exportName],
 				'function',
@@ -100,7 +100,7 @@ describe('index.js module integration', () => {
 		const allUniqueKeys = [...new Set([...browserKeys, ...systemKeys])];
 
 		// Verify all unique exports are available
-		allUniqueKeys.forEach((key) => {
+		allUniqueKeys.forEach(key => {
 			assert.strictEqual(
 				typeof index[key],
 				'function',
@@ -118,10 +118,10 @@ describe('index.js module integration', () => {
 
 	it('should preserve function identity for browser-only exports', () => {
 		const browserOnlyExports = Object.keys(browser).filter(
-			(key) => !Object.keys(system).includes(key),
+			key => !Object.keys(system).includes(key),
 		);
 
-		browserOnlyExports.forEach((exportName) => {
+		browserOnlyExports.forEach(exportName => {
 			assert.strictEqual(
 				index[exportName],
 				browser[exportName],
@@ -132,10 +132,10 @@ describe('index.js module integration', () => {
 
 	it('should preserve function identity for system-only exports', () => {
 		const systemOnlyExports = Object.keys(system).filter(
-			(key) => !Object.keys(browser).includes(key),
+			key => !Object.keys(browser).includes(key),
 		);
 
-		systemOnlyExports.forEach((exportName) => {
+		systemOnlyExports.forEach(exportName => {
 			assert.strictEqual(
 				index[exportName],
 				system[exportName],

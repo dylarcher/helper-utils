@@ -52,7 +52,7 @@ describe('listDirectoryContents(dirPath)', () => {
 			contents.push(item);
 		}
 
-		testFiles.forEach((file) => {
+		testFiles.forEach(file => {
 			assert.ok(contents.includes(file), `Should include file: ${file}`);
 		});
 
@@ -65,7 +65,7 @@ describe('listDirectoryContents(dirPath)', () => {
 			contents.push(item);
 		}
 
-		contents.forEach((item) => {
+		contents.forEach(item => {
 			assert.ok(
 				!item.includes(path.sep),
 				`Item should be filename only, not path: ${item}`,
@@ -188,7 +188,7 @@ describe('listDirectoryContents(dirPath)', () => {
 			contents.push(item);
 		}
 
-		specialFiles.forEach((file) => {
+		specialFiles.forEach(file => {
 			assert.ok(
 				contents.includes(file),
 				`Should include file with special characters: ${file}`,
@@ -208,7 +208,7 @@ describe('listDirectoryContents(dirPath)', () => {
 			contents.push(item);
 		}
 
-		hiddenFiles.forEach((file) => {
+		hiddenFiles.forEach(file => {
 			assert.ok(contents.includes(file), `Should include hidden file: ${file}`);
 		});
 	});
@@ -261,7 +261,7 @@ describe('listDirectoryContents(dirPath)', () => {
 			}
 			assert.strictEqual(contents.length, fileCount, 'Should return all files');
 
-			expectedFiles.forEach((file) => {
+			expectedFiles.forEach(file => {
 				assert.ok(contents.includes(file), `Should include file: ${file}`);
 			});
 		} finally {
@@ -271,7 +271,7 @@ describe('listDirectoryContents(dirPath)', () => {
 });
 
 describe('Async Generator Behavior (Mocked fs.promises.readdir)', () => {
-	it('should return an async generator', (_t) => {
+	it('should return an async generator', _t => {
 		const result = listDirectoryContents('dummy_path');
 		assert.ok(result, 'Should return a value');
 		assert.strictEqual(
@@ -281,9 +281,9 @@ describe('Async Generator Behavior (Mocked fs.promises.readdir)', () => {
 		);
 	});
 
-	it.skip('should yield all items from fs.promises.readdir (mocked)', async (t) => {
+	it.skip('should yield all items from fs.promises.readdir (mocked)', async t => {
 		const mockItems = ['file1.txt', 'file2.js', 'subdir'];
-		const readdirMock = t.mock.fn(fs, 'readdir', async (dirPath) => {
+		const readdirMock = t.mock.fn(fs, 'readdir', async dirPath => {
 			assert.strictEqual(
 				dirPath,
 				'test_dir_mocked',
@@ -309,8 +309,8 @@ describe('Async Generator Behavior (Mocked fs.promises.readdir)', () => {
 		);
 	});
 
-	it.skip('should yield no items for an empty directory (mocked)', async (t) => {
-		const readdirMock = t.mock.fn(fs, 'readdir', async (dirPath) => {
+	it.skip('should yield no items for an empty directory (mocked)', async t => {
+		const readdirMock = t.mock.fn(fs, 'readdir', async dirPath => {
 			assert.strictEqual(
 				dirPath,
 				'empty_dir_mocked',
@@ -336,9 +336,9 @@ describe('Async Generator Behavior (Mocked fs.promises.readdir)', () => {
 		);
 	});
 
-	it.skip('should propagate errors from fs.promises.readdir (mocked)', async (t) => {
+	it.skip('should propagate errors from fs.promises.readdir (mocked)', async t => {
 		const mockError = new Error('Mocked readdir failure');
-		const readdirMock = t.mock.fn(fs, 'readdir', async (dirPath) => {
+		const readdirMock = t.mock.fn(fs, 'readdir', async dirPath => {
 			assert.strictEqual(
 				dirPath,
 				'error_dir_mocked',
@@ -369,7 +369,7 @@ describe('Performance Tests for listDirectoryContents', () => {
 	const describeOrSkip = PERF_TEST_ENABLED ? describe : describe.skip;
 
 	describeOrSkip('Large directory simulation (mocked fs.readdir)', () => {
-		it('should perform efficiently when listing a large number of simulated files', async (t) => {
+		it('should perform efficiently when listing a large number of simulated files', async t => {
 			const fileCount = 100000; // Simulate a directory with 100,000 files
 			const mockFiles = [];
 			for (let i = 0; i < fileCount; i++) {
@@ -377,7 +377,7 @@ describe('Performance Tests for listDirectoryContents', () => {
 			}
 
 			// Using node:test's built-in mocking capabilities
-			const readdirMock = mock.fn(fs.promises, 'readdir', async (dirPath) => {
+			const readdirMock = mock.fn(fs.promises, 'readdir', async dirPath => {
 				if (dirPath === 'perf_test_dummy_dir') {
 					return Promise.resolve(mockFiles);
 				}

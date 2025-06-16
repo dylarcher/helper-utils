@@ -6,7 +6,7 @@ import { hasClass } from './hasClass.js';
 class MockElement {
 	constructor(classes = []) {
 		this.classList = new Set(classes);
-		this.classList.contains = (className) => this.classList.has(className);
+		this.classList.contains = className => this.classList.has(className);
 	}
 }
 
@@ -133,7 +133,7 @@ describe('hasClass(element, className)', () => {
 	it('should work with real DOM-like element structure', () => {
 		const domLikeElement = {
 			classList: {
-				contains: (className) => {
+				contains: className => {
 					const classes = ['btn', 'btn-primary', 'active'];
 					return classes.includes(className);
 				},

@@ -168,7 +168,7 @@ describe('resolvePath(...paths)', () => {
 			['relative', '/absolute', 'more'],
 		];
 
-		testCases.forEach((testCase) => {
+		testCases.forEach(testCase => {
 			const ourResult = resolvePath(...testCase);
 			const nodeResult = path.resolve(...testCase);
 			assert.strictEqual(
@@ -240,7 +240,7 @@ describe('resolvePath(...paths)', () => {
 			['../../../', 'file.txt'],
 		];
 
-		testCases.forEach((testCase) => {
+		testCases.forEach(testCase => {
 			const ourResult = resolvePath(...testCase);
 			const nodeResult = path.resolve(...testCase);
 			assert.strictEqual(

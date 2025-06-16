@@ -149,7 +149,7 @@ describe('setLocalStorageJSON(key, value)', () => {
 
 		assert.throws(
 			() => setLocalStorageJSON('circular', circularObj),
-			(error) => {
+			error => {
 				return (
 					error instanceof TypeError &&
 					error.message.includes('circular structure')
@@ -167,7 +167,7 @@ describe('setLocalStorageJSON(key, value)', () => {
 
 		assert.throws(
 			() => setLocalStorageJSON('anyKey', 'anyValue'),
-			(error) => {
+			error => {
 				return (
 					error instanceof Error &&
 					error.message === 'localStorage is not available in this environment.'

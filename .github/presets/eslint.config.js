@@ -40,7 +40,34 @@ export default [
 		},
 	},
 	// Prettier integration - must come before our custom rules
-	eslintPluginPrettierRecommended,
+	{
+		...eslintPluginPrettierRecommended,
+		rules: {
+			...eslintPluginPrettierRecommended.rules,
+			'prettier/prettier': [
+				'error',
+				{
+					printWidth: 80,
+					tabWidth: 2,
+					useTabs: true,
+					semi: true,
+					singleQuote: true,
+					quoteProps: 'as-needed',
+					jsxSingleQuote: false,
+					trailingComma: 'all',
+					bracketSpacing: true,
+					bracketSameLine: true,
+					arrowParens: 'avoid',
+					endOfLine: 'lf',
+					embeddedLanguageFormatting: 'auto',
+					htmlWhitespaceSensitivity: 'css',
+					proseWrap: 'always',
+					singleAttributePerLine: true,
+					vueIndentScriptAndStyle: false,
+				},
+			],
+		},
+	},
 	// Custom rules that don't conflict with Prettier
 	{
 		rules: {

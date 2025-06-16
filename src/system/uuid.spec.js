@@ -142,7 +142,7 @@ describe('uuid()', () => {
 		}
 
 		// Check that we're getting varied first characters
-		const firstChars = results.map((uuidStr) => uuidStr[0]);
+		const firstChars = results.map(uuidStr => uuidStr[0]);
 		const uniqueFirstChars = new Set(firstChars);
 
 		// Should have some variety (not all the same character)

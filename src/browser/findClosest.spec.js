@@ -131,7 +131,7 @@ describe('findClosest(element, selector)', () => {
 		const div = new MockElement('div');
 
 		// Mock closest to handle empty selector
-		div.closest = (selector) => {
+		div.closest = selector => {
 			if (!selector) {
 				return null;
 			}

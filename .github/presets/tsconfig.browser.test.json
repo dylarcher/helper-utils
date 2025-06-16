@@ -1,13 +1,11 @@
 {
 	"extends": "./tsconfig.browser.json",
-	"exclude": [
-		"../../src/**/*.js"
-	],
+	"exclude": ["../../src/**/*.js"],
 	"include": [
 		"../../src/browser.spec.js",
 		"../../src/browser.test.js",
-		"../../src/browser/**/*.spec.js", 
-		"../../src/browser/**/*.test.js",
+		"../../src/browser/**/*.spec.js",
+		"../../src/browser/**/*.test.js"
 	],
 	"typeAcquisition": {
 		"enable": true,

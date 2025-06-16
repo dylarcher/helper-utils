@@ -20,9 +20,17 @@
 			"@spec/*": ["dist/coverage/*"],
 			"@demo/*": ["docs/*"],
 			"#conf/*": [".github/presets/*"]
-		},
+		}
 	},
-	"exclude": ["node_modules", "docs", "dist", "test", "utils", "src/**/*.spec.js", "src/**/*.test.js"],
+	"exclude": [
+		"node_modules",
+		"docs",
+		"dist",
+		"test",
+		"utils",
+		"src/**/*.spec.js",
+		"src/**/*.test.js"
+	],
 	"include": ["src"],
 	"typeAcquisition": {
 		"enable": true,

@@ -126,7 +126,7 @@ describe('getDirname(p)', () => {
 			'../parent/dir/file',
 		];
 
-		paths.forEach((testPath) => {
+		paths.forEach(testPath => {
 			const expected = path.dirname(testPath);
 			const result = getDirname(testPath);
 			assert.strictEqual(

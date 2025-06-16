@@ -118,7 +118,7 @@ describe('uuid()', () => {
 			'',
 		];
 
-		testValues.forEach((testValue) => {
+		testValues.forEach(testValue => {
 			global.crypto = {
 				randomUUID: () => testValue,
 			};

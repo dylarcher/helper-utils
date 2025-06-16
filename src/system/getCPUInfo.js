@@ -68,7 +68,7 @@ export function getCPUInfo(cpuData) {
 		return [];
 	}
 
-	return cpus.map((cpu) => ({
+	return cpus.map(cpu => ({
 		model: cpu.model || 'unknown', // Default for model
 		speed: cpu.speed > 0 ? cpu.speed : 0, // Default for speed, ensure positive
 		times: cpu.times, // Direct copy of the times object

@@ -117,7 +117,7 @@ describe('decrypt(encryptedTextWithIv, key)', () => {
 
 		assert.throws(
 			() => decrypt(encryptedWithIv, wrongKey),
-			(err) => err.message.startsWith('Decryption failed:'), // General check for wrapped error
+			err => err.message.startsWith('Decryption failed:'), // General check for wrapped error
 			'Should throw a wrapped error for wrong key',
 		);
 	});
@@ -142,14 +142,14 @@ describe('decrypt(encryptedTextWithIv, key) - Additional Error Handling', () => 
 		const encryptedPayload = `${ivHex}:${encryptedHex}`;
 		assert.throws(
 			() => decrypt(encryptedPayload, 'not 32 bytes long1234567890123'), // Invalid string key length
-			(err) =>
+			err =>
 				err.message.includes('Decryption failed: Invalid key length') ||
 				err.message.includes('ERR_CRYPTO_INVALID_KEYLEN'),
 			'Should throw for string key of invalid length',
 		);
 		assert.throws(
 			() => decrypt(encryptedPayload, Buffer.from('shortkey')), // Invalid Buffer key length
-			(err) =>
+			err =>
 				err.message.includes('Decryption failed: Invalid key length') ||
 				err.message.includes('ERR_CRYPTO_INVALID_KEYLEN'),
 			'Should throw for Buffer key of invalid length',
@@ -176,7 +176,7 @@ describe('decrypt(encryptedTextWithIv, key) - Additional Error Handling', () => 
 
 		assert.throws(
 			() => decrypt(`${shortIvHex}:${validEncryptedPart}`, validKey),
-			(err) =>
+			err =>
 				err.message.includes(
 					'Decryption failed: Invalid initialization vector',
 				) || err.message.includes('ERR_CRYPTO_INVALID_IVLEN'),
@@ -184,7 +184,7 @@ describe('decrypt(encryptedTextWithIv, key) - Additional Error Handling', () => 
 		);
 		assert.throws(
 			() => decrypt(`${longIvHex}:${validEncryptedPart}`, validKey),
-			(err) =>
+			err =>
 				err.message.includes(
 					'Decryption failed: Invalid initialization vector',
 				) || err.message.includes('ERR_CRYPTO_INVALID_IVLEN'),
@@ -222,7 +222,7 @@ describe('decrypt(encryptedTextWithIv, key) - Additional Error Handling', () => 
 		const payload = `${ivHex}:${tamperedEncryptedHex}`;
 		assert.throws(
 			() => decrypt(payload, validKey),
-			(err) =>
+			err =>
 				err.message.includes('Decryption failed: Wrong final block length') ||
 				err.message.includes('bad decrypt'),
 			'Should throw for modified ciphertext content (bad padding or final block)',
@@ -258,7 +258,7 @@ describe('decrypt(encryptedTextWithIv, key) - Additional Error Handling', () => 
 
 		assert.throws(
 			() => decrypt(payload, validKey),
-			(err) =>
+			err =>
 				err.message.includes('Decryption failed: error:') ||
 				err.message.includes('bad decrypt') ||
 				err.message.includes('wrong final block length'),
@@ -283,7 +283,7 @@ describe('decrypt(encryptedTextWithIv, key) - Additional Error Handling', () => 
 		const invalidIvHexFormat = `not-hex-at-all:${encryptedHex}`;
 		assert.throws(
 			() => decrypt(invalidIvHexFormat, validKey),
-			(err) =>
+			err =>
 				err.message.startsWith('Decryption failed:') &&
 				(err.message.includes('Invalid initialization vector') ||
 					err.message.toLowerCase().includes('bad hex string')),

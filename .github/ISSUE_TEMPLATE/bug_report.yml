@@ -1,6 +1,6 @@
 name: Bug report
 description: Create a report to help us fix issues with our library
-title: "[Issue]: "
+title: '[Issue]: '
 labels: [bug, triage, defect, issue, problem]
 assignees: dylarcher
 body:
@@ -42,4 +42,5 @@ body:
     attributes:
       label: Additional context
       description: Provide any other context about the problem.
-      placeholder: e.g. Add additional details here or insert screenshots/recordings.
+      placeholder:
+        e.g. Add additional details here or insert screenshots/recordings.

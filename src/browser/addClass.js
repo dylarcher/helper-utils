@@ -18,9 +18,7 @@
 export function addClass(element, ...classNames) {
 	if (element?.classList) {
 		element.classList.add(
-			...classNames.filter((className) =>
-				Boolean(className && className.trim()),
-			),
+			...classNames.filter(className => Boolean(className && className.trim())),
 		);
 	}
 }
