@@ -31,10 +31,10 @@ describe('getMemoryInfo()', () => {
 		const memInfo = getMemoryInfo();
 		const osFreeMemory = os.freemem();
 		const osTotalMemory = os.totalmem();
-		
+
 		// Allow for small differences due to timing (memory values change constantly)
 		const tolerance = 1024 * 1024; // 1MB tolerance
-		
+
 		assert.ok(
 			Math.abs(memInfo.freeMemory - osFreeMemory) <= tolerance,
 			`freeMemory (${memInfo.freeMemory}) should be within ${tolerance} bytes of os.freemem() (${osFreeMemory})`,
