@@ -1,4 +1,4 @@
-import { describe, it, beforeEach, afterEach, mock } from 'node:test'; // Added mock
+import { describe, it, beforeEach, afterEach } from 'node:test'; // Added mock
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import path from 'node:path';

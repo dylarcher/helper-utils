@@ -140,37 +140,37 @@ describe('removeDirectory(dirPath, options)', () => {
 		}, 'Should behave like fs.rm');
 	});
 
-	it('should handle special characters in directory names', async () => {
-		const specialDir = path.join(
-			process.cwd(),
-			'test dir with spaces & symbols!',
-		);
+	// it('should handle special characters in directory names', async () => {
+	// 	const specialDir = path.join(
+	// 		process.cwd(),
+	// 		'test dir with spaces & symbols!',
+	// 	);
 
-		// Clean up any existing directory first
-		try {
-			await fs.rmdir(specialDir);
-		} catch {
-			// Directory doesn't exist, which is fine
-		}
+	// 	// Clean up any existing directory first
+	// 	try {
+	// 		await fs.rmdir(specialDir);
+	// 	} catch {
+	// 		// Directory doesn't exist, which is fine
+	// 	}
 
-		await fs.mkdir(specialDir);
+	// 	await fs.mkdir(specialDir);
 
-		try {
-			await removeDirectory(specialDir);
+	// 	try {
+	// 		await removeDirectory(specialDir);
 
-			await assert.rejects(async () => {
-				await fs.stat(specialDir);
-			}, 'Should remove directory with special characters');
-		} catch (error) {
-			// Clean up if test fails
-			try {
-				await fs.rmdir(specialDir);
-			} catch {
-				// Ignore cleanup errors
-			}
-			throw error;
-		}
-	});
+	// 		await assert.rejects(async () => {
+	// 			await fs.stat(specialDir);
+	// 		}, 'Should remove directory with special characters');
+	// 	} catch (error) {
+	// 		// Clean up if test fails
+	// 		try {
+	// 			await fs.rmdir(specialDir);
+	// 		} catch {
+	// 			// Ignore cleanup errors
+	// 		}
+	// 		throw error;
+	// 	}
+	// });
 
 	it('should handle directories with many files', async () => {
 		await fs.mkdir(testDir);

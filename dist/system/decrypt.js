@@ -1,7 +1,5 @@
 import * as _crypto from 'node:crypto';
-
 const ALGORITHM = 'aes-256-cbc'; // AES-256 uses a 32-byte key and a 16-byte IV.
-
 /**
  * Decrypts text that was encrypted using AES-256-CBC.
  * This function assumes the initialization vector (IV) is prepended to the ciphertext,
@@ -60,21 +58,20 @@ const ALGORITHM = 'aes-256-cbc'; // AES-256 uses a 32-byte key and a 16-byte IV.
  * }
  */
 export function decrypt(encryptedTextWithIv, key) {
-	const [ivHex, encryptedText] = encryptedTextWithIv.split(':');
-	if (!ivHex || !encryptedText) {
-		throw new Error(
-			'Invalid encrypted text format. Expected ivHex:encryptedHex',
-		);
-	}
-
-	try {
-		const iv = Buffer.from(ivHex, 'hex');
-		const decipher = _crypto.createDecipheriv(ALGORITHM, key, iv);
-		let decrypted = decipher.update(encryptedText, 'hex', 'utf8');
-		decrypted += decipher.final('utf8');
-		return decrypted;
-	} catch (/** @type {any} */ error) {
-		// Rethrow any crypto errors, which would include wrong key errors
-		throw new Error(`Decryption failed: ${error?.message || 'Unknown error'}`);
-	}
+    const [ivHex, encryptedText] = encryptedTextWithIv.split(':');
+    if (!ivHex || !encryptedText) {
+        throw new Error('Invalid encrypted text format. Expected ivHex:encryptedHex');
+    }
+    try {
+        const iv = Buffer.from(ivHex, 'hex');
+        const decipher = _crypto.createDecipheriv(ALGORITHM, key, iv);
+        let decrypted = decipher.update(encryptedText, 'hex', 'utf8');
+        decrypted += decipher.final('utf8');
+        return decrypted;
+    }
+    catch ( /** @type {any} */error) {
+        // Rethrow any crypto errors, which would include wrong key errors
+        throw new Error(`Decryption failed: ${error?.message || 'Unknown error'}`);
+    }
 }
+//# sourceMappingURL=decrypt.js.map

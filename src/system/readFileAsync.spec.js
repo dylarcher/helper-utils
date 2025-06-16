@@ -142,7 +142,7 @@ describe('readFileAsync(filePath, encoding)', () => {
 		} finally {
 			try {
 				await fs.rmdir(testDir);
-			} catch (error) {
+			} catch (_error) {
 				// Directory might already be removed
 			}
 		}
