@@ -169,11 +169,11 @@ describe('createElement(tagName, attributes, children)', () => {
 				undefined,
 				false,
 				0, // This is falsy but should be handled as a string/node
-				''  // Empty string is falsy but should be handled
+				'', // Empty string is falsy but should be handled
 			];
 
 			const element = createElement('div', {}, children);
-			
+
 			// Should have text nodes for 'Valid text', span element, and potentially '0' and ''
 			assert.ok(element.childNodes.length >= 2); // At least text and span
 			assert.strictEqual(element.childNodes[0].textContent, 'Valid text');
@@ -188,7 +188,7 @@ describe('createElement(tagName, attributes, children)', () => {
 			attributes.class = 'test-class';
 
 			const element = createElement('div', attributes);
-			
+
 			// Should only set own properties, not inherited ones
 			assert.strictEqual(element.id, 'test-id');
 			assert.strictEqual(element.className, 'test-class');

@@ -208,7 +208,9 @@ describe('Performance Tests for fetchJSON', () => {
 					json: async () => JSON.parse(largeJSONText), // This simulates the parsing step.
 				};
 				// Ensure headers.get works as expected
-				const originalHeadersGet = mockResponse.headers.get.bind(mockResponse.headers);
+				const originalHeadersGet = mockResponse.headers.get.bind(
+					mockResponse.headers,
+				);
 				mockResponse.headers.get = key => {
 					return originalHeadersGet(key.toLowerCase());
 				};

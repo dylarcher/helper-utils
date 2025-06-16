@@ -1,54 +1,54 @@
 {
     "[css]": {
         "editor.codeActionsOnSave": {
-            "source.fixAll.eslint": true
+            "source.fixAll.eslint": "explicit"
         },
         "editor.defaultFormatter": "dbaeumer.vscode-eslint"
     },
     "[html]": {
         "editor.codeActionsOnSave": {
-            "source.fixAll.eslint": true,
-            "source.fixAll.html": true
+            "source.fixAll.eslint": "explicit",
+            "source.fixAll.html": "explicit"
         },
         "editor.defaultFormatter": "dbaeumer.vscode-eslint"
     },
     "[javascript]": {
         "editor.codeActionsOnSave": {
-            "source.fixAll.eslint": true,
-            "source.fixAll.ts": true
+            "source.fixAll.eslint": "explicit",
+            "source.fixAll.ts": "explicit"
         },
         "editor.defaultFormatter": "dbaeumer.vscode-eslint"
     },
     "[json]": {
         "editor.codeActionsOnSave": {
-            "source.fixAll.eslint": true,
-            "source.fixAll.json": true,
-            "source.fixAll.sortJSON": true
+            "source.fixAll.eslint": "explicit",
+            "source.fixAll.json": "explicit",
+            "source.fixAll.sortJSON": "explicit"
         },
         "editor.defaultFormatter": "dbaeumer.vscode-eslint"
     },
     "[markdown]": {
         "editor.codeActionsOnSave": {
-            "source.fixAll.eslint": true,
-            "source.fixAll.markdown": true,
-            "source.fixAll.markdownlint": true,
-            "source.fixAll.md": true
+            "source.fixAll.eslint": "explicit",
+            "source.fixAll.markdown": "explicit",
+            "source.fixAll.markdownlint": "explicit",
+            "source.fixAll.md": "explicit"
         },
         "editor.defaultFormatter": "dbaeumer.vscode-eslint"
     },
     "[svg]": {
         "editor.codeActionsOnSave": {
-            "source.fixAll.eslint": true,
-            "source.fixAll.svg": true,
-            "source.fixAll.svgo": true
+            "source.fixAll.eslint": "explicit",
+            "source.fixAll.svg": "explicit",
+            "source.fixAll.svgo": "explicit"
         },
         "editor.defaultFormatter": "dbaeumer.vscode-eslint"
     },
     "[yaml]": {
         "editor.codeActionsOnSave": {
-            "source.fixAll.eslint": true,
-            "source.fixAll.sort": true,
-            "source.fixAll.yaml": true
+            "source.fixAll.eslint": "explicit",
+            "source.fixAll.sort": "explicit",
+            "source.fixAll.yaml": "explicit"
         },
         "editor.defaultFormatter": "dbaeumer.vscode-eslint"
     },

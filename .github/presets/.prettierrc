@@ -27,7 +27,7 @@
       "options": {
         "parser": "json"
       }
-    },,
+    },
     {
       "files": ".c8rc",
       "options": {

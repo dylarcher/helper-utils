@@ -338,10 +338,10 @@ describe('decrypt(encryptedTextWithIv, key) - Additional Error Handling', () => 
 			},
 		);
 	});
-	it('should handle error without message property triggering Unknown error fallback', (t) => {
+	it('should handle error without message property triggering Unknown error fallback', t => {
 		// Use Node.js test mocking to replace the Buffer.from method temporarily
 		const originalBufferFrom = Buffer.from;
-		
+
 		// Mock Buffer.from to throw an error without a message property when called with 'hex'
 		const mockBufferFrom = t.mock.fn((input, encoding) => {
 			if (encoding === 'hex' && input === '1234567890abcdef1234567890abcdef') {
@@ -350,14 +350,14 @@ describe('decrypt(encryptedTextWithIv, key) - Additional Error Handling', () => 
 			}
 			return originalBufferFrom(input, encoding);
 		});
-		
+
 		// Replace Buffer.from temporarily
 		Buffer.from = mockBufferFrom;
-		
+
 		try {
 			const validIv = '1234567890abcdef1234567890abcdef';
 			const validEncrypted = 'abcdef1234567890abcdef1234567890';
-			
+
 			assert.throws(
 				() => {
 					decrypt(`${validIv}:${validEncrypted}`, testKey);

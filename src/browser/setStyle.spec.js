@@ -247,7 +247,7 @@ describe('setStyle(element, property, value)', () => {
 		const elementWithNullStyle = { style: null };
 		assert.doesNotThrow(() => setStyle(elementWithNullStyle, 'color', 'red'));
 
-		// Test when property is empty string 
+		// Test when property is empty string
 		setStyle(mockElement, '', 'value');
 		assert.strictEqual(mockElement.style[''], undefined); // Empty string property should not be set
 
@@ -282,10 +282,10 @@ describe('setStyle(element, property, value)', () => {
 	});
 
 	it('should handle when property is string but value is undefined', () => {
-		// This tests the branch where property is string and property is truthy, 
+		// This tests the branch where property is string and property is truthy,
 		// but value is undefined
 		setStyle(mockElement, 'color'); // No value passed
-		
+
 		// The function should not set the property when value is undefined
 		assert.strictEqual(mockElement.style.color, undefined);
 	});
