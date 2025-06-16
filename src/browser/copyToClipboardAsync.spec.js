@@ -16,7 +16,7 @@ describe('copyToClipboardAsync(text)', () => {
 		// Mock navigator.clipboard
 		global.navigator = {
 			clipboard: {
-				writeText: async _text => {
+				writeText: async (_text) => {
 					// Simulate successful clipboard write
 					return Promise.resolve();
 				},
@@ -55,7 +55,7 @@ describe('copyToClipboardAsync(text)', () => {
 	it('should handle empty string', async () => {
 		global.navigator = {
 			clipboard: {
-				writeText: async text => {
+				writeText: async (text) => {
 					assert.strictEqual(text, '');
 					return Promise.resolve();
 				},
@@ -70,7 +70,7 @@ describe('copyToClipboardAsync(text)', () => {
 
 		global.navigator = {
 			clipboard: {
-				writeText: async text => {
+				writeText: async (text) => {
 					assert.strictEqual(text, specialText);
 					return Promise.resolve();
 				},

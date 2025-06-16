@@ -8,7 +8,7 @@ describe('utils exports', () => {
 		const expectedExports = ['getUniqueElements'];
 
 		// Verify all expected exports exist
-		expectedExports.forEach(functionName => {
+		expectedExports.forEach((functionName) => {
 			assert.strictEqual(
 				typeof utils[functionName],
 				'function',

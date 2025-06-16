@@ -52,7 +52,7 @@ export function getCPUInfo(cpuData) {
 	if (cpuData === null) {
 		return [];
 	}
-	
+
 	const cpus = cpuData || os.cpus(); // Use provided data or fetch from os.cpus()
 
 	if (!cpus || cpus.length === 0) {

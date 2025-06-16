@@ -147,13 +147,13 @@ describe('removeElement(element)', () => {
 			new MockElement('input', 'test-input'),
 		];
 
-		elements.forEach(element => {
+		elements.forEach((element) => {
 			parentElement.appendChild(element);
 		});
 
 		assert.strictEqual(parentElement.children.length, 6); // 5 + original child
 
-		elements.forEach(element => {
+		elements.forEach((element) => {
 			removeElement(element);
 		});
 
@@ -163,7 +163,7 @@ describe('removeElement(element)', () => {
 	it('should handle parent with custom removeChild implementation', () => {
 		let removeChildCalled = false;
 		const customParent = {
-			removeChild: child => {
+			removeChild: (child) => {
 				removeChildCalled = true;
 				child.parentNode = null;
 				return child;
@@ -237,7 +237,7 @@ describe('removeElement(element)', () => {
 	it('should work in DOM-like environment', () => {
 		// Simulate more realistic DOM behavior
 		const mockDocument = {
-			createElement: tagName => new MockElement(tagName),
+			createElement: (tagName) => new MockElement(tagName),
 		};
 
 		const container = mockDocument.createElement('div');

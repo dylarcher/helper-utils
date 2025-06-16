@@ -10,7 +10,7 @@ describe('utils', () => {
 		// Test that all exports are functions
 		const expectedExports = ['getUniqueElements'];
 
-		expectedExports.forEach(exportName => {
+		expectedExports.forEach((exportName) => {
 			assert.strictEqual(typeof allExports[exportName], 'function');
 		});
 

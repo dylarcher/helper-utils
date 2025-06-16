@@ -7,7 +7,7 @@ class MockElement {
 	constructor(initialClasses = []) {
 		this.classList = new Set(initialClasses);
 		this.classList.remove = (...classNames) => {
-			classNames.forEach(className => {
+			classNames.forEach((className) => {
 				if (className) {
 					this.classList.delete(className);
 				}
@@ -71,7 +71,7 @@ describe('removeClass(element, ...classNames)', () => {
 		removeClass(mockElement, '');
 
 		// All classes should remain unchanged
-		originalClasses.forEach(className => {
+		originalClasses.forEach((className) => {
 			assert.ok(mockElement.classList.has(className));
 		});
 	});
@@ -180,7 +180,7 @@ describe('removeClass(element, ...classNames)', () => {
 				classes: new Set(['a', 'b', 'c']),
 				remove: function (...classNames) {
 					const filtered = classNames.filter(Boolean);
-					filtered.forEach(name => this.classes.delete(name));
+					filtered.forEach((name) => this.classes.delete(name));
 				},
 			},
 		};

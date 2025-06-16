@@ -33,7 +33,7 @@ export function getCookie(alias) {
 		// Handle spaces around equals sign
 		if (trimmedCookie.includes('=')) {
 			const separatorIndex = trimmedCookie.indexOf('=');
-			
+
 			// If '=' is not found, or if it's the first char (no name), this cookie part is skipped.
 			// A valid cookie name must exist.
 			if (separatorIndex <= 0) {

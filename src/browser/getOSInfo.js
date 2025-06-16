@@ -33,7 +33,11 @@
  */
 export function getOSInfo() {
 	// Check if we're in a Node.js environment first
-	if (typeof process !== 'undefined' && process.versions && process.versions.node) {
+	if (
+		typeof process !== 'undefined' &&
+		process.versions &&
+		process.versions.node
+	) {
 		return {
 			platform: 'unknown',
 			userAgent: 'unknown',

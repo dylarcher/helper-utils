@@ -68,7 +68,7 @@ describe('getCPUInfo()', () => {
 			return;
 		}
 
-		const ourResult = getCPUInfo(); // Uses actual os.cpus()
+		const ourResult = getCPUInfo(osResult); // Pass the same data for deterministic results
 
 		assert.strictEqual(
 			ourResult.length,

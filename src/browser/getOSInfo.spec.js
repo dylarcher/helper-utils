@@ -53,7 +53,7 @@ describe('getOSInfo() - in Node.js environment', () => {
 
 	it('should return valid platform values when providing Node.js OS info', () => {
 		const result = getOSInfo();
-		
+
 		if (!result.error) {
 			const validPlatforms = [
 				'aix',
@@ -74,7 +74,7 @@ describe('getOSInfo() - in Node.js environment', () => {
 
 	it('should return valid architecture values when providing Node.js OS info', () => {
 		const result = getOSInfo();
-		
+
 		if (!result.error && result.arch) {
 			const validArchitectures = [
 				'arm',
@@ -109,7 +109,9 @@ describe('getOSInfo() - in Node.js environment', () => {
 		if (!result.error && result.type) {
 			// Common OS types
 			const commonTypes = ['Linux', 'Darwin', 'Windows_NT'];
-			const hasCommonType = commonTypes.some(type => result.type.includes(type));
+			const hasCommonType = commonTypes.some((type) =>
+				result.type.includes(type),
+			);
 
 			// Should either be a common type or some other valid OS type
 			assert.ok(hasCommonType || result.type.length > 0);
@@ -135,7 +137,11 @@ describe('getOSInfo() - in Node.js environment', () => {
 				'unknown',
 				'Language should be "unknown".',
 			);
-			assert.strictEqual(result.vendor, 'unknown', 'Vendor should be "unknown".');
+			assert.strictEqual(
+				result.vendor,
+				'unknown',
+				'Vendor should be "unknown".',
+			);
 			assert.strictEqual(
 				result.connection,
 				'unknown',
@@ -209,7 +215,7 @@ describe('getOSInfo() - in Node.js environment', () => {
 		});
 
 		it.skip('should report "available (no specific details)" for connection if connection object exists but has no known properties', () => {
-			// Cannot reliably mock navigator in Node.js environment  
+			// Cannot reliably mock navigator in Node.js environment
 		});
 
 		it.skip('should correctly stringify connection properties if present', () => {

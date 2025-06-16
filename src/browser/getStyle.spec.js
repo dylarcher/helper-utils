@@ -68,7 +68,7 @@ describe('getStyle(element, pseudoElt)', () => {
 			'::first-letter',
 		];
 
-		pseudoElements.forEach(pseudo => {
+		pseudoElements.forEach((pseudo) => {
 			let capturedPseudoElt;
 
 			global.window.getComputedStyle = (element, pseudoElt) => {

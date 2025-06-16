@@ -38,7 +38,7 @@ export function restoreGlobals() {
 		}
 	}
 	// Clear the stored values
-	Object.keys(originalGlobals).forEach(key => delete originalGlobals[key]);
+	Object.keys(originalGlobals).forEach((key) => delete originalGlobals[key]);
 }
 
 /**
@@ -47,14 +47,14 @@ export function restoreGlobals() {
 export function createMockLocalStorage() {
 	const storage = new Map();
 	return {
-		getItem: key => storage.get(key) || null,
+		getItem: (key) => storage.get(key) || null,
 		setItem: (key, value) => storage.set(key, String(value)),
-		removeItem: key => storage.delete(key),
+		removeItem: (key) => storage.delete(key),
 		clear: () => storage.clear(),
 		get length() {
 			return storage.size;
 		},
-		key: index => Array.from(storage.keys())[index] || null,
+		key: (index) => Array.from(storage.keys())[index] || null,
 	};
 }
 
@@ -73,7 +73,7 @@ export function createMockDocument() {
 	}
 
 	const mockDocument = {
-		createElement: tagName => {
+		createElement: (tagName) => {
 			const element = {
 				tagName: tagName.toLowerCase(),
 				attributes: {},
@@ -83,10 +83,10 @@ export function createMockDocument() {
 				classList: {
 					_classes: new Set(),
 					add(...classes) {
-						classes.forEach(cls => this._classes.add(cls));
+						classes.forEach((cls) => this._classes.add(cls));
 					},
 					remove(...classes) {
-						classes.forEach(cls => this._classes.delete(cls));
+						classes.forEach((cls) => this._classes.delete(cls));
 					},
 					contains(cls) {
 						return this._classes.has(cls);
@@ -162,7 +162,7 @@ export function createMockDocument() {
 						return;
 					}
 					this._eventListeners[event] = this._eventListeners[event].filter(
-						listener => listener.handler !== handler,
+						(listener) => listener.handler !== handler,
 					);
 				},
 			};
@@ -174,27 +174,29 @@ export function createMockDocument() {
 
 			return element;
 		},
-		createTextNode: text => new MockTextNode(text),
-		querySelector: selector => elements.get(selector) || null,
-		querySelectorAll: selector => {
+		createTextNode: (text) => new MockTextNode(text),
+		querySelector: (selector) => elements.get(selector) || null,
+		querySelectorAll: (selector) => {
 			// Basic selector implementation for testing
 			if (selector.startsWith('.')) {
 				const className = selector.slice(1);
 				return Array.from(elements.values()).filter(
-					el => el.classList && el.classList.contains(className),
+					(el) => el.classList && el.classList.contains(className),
 				);
 			}
 			if (selector.startsWith('#')) {
 				const id = selector.slice(1);
-				const element = Array.from(elements.values()).find(el => el.id === id);
+				const element = Array.from(elements.values()).find(
+					(el) => el.id === id,
+				);
 				return element ? [element] : [];
 			}
 			return Array.from(elements.values()).filter(
-				el => el.tagName === selector.toLowerCase(),
+				(el) => el.tagName === selector.toLowerCase(),
 			);
 		},
 		cookie: '',
-		getElementById: id => {
+		getElementById: (id) => {
 			for (const el of elements.values()) {
 				if (el.id === id) {
 					return el;
@@ -202,9 +204,9 @@ export function createMockDocument() {
 			}
 			return null;
 		},
-		getElementsByClassName: className =>
+		getElementsByClassName: (className) =>
 			Array.from(elements.values()).filter(
-				el => el.classList && el.classList.contains(className),
+				(el) => el.classList && el.classList.contains(className),
 			),
 		body: {
 			appendChild: function (child) {
@@ -252,15 +254,15 @@ export function createMockWindow() {
 			origin: 'https://example.com',
 			toString: () => mockWindow.location.href,
 			reload: () => {},
-			replace: url => {
+			replace: (url) => {
 				mockWindow.location.href = url;
 			},
-			assign: url => {
+			assign: (url) => {
 				mockWindow.location.href = url;
 			},
 		},
 		getComputedStyle: (element, _pseudoElement) => ({
-			getPropertyValue: prop => element.style?.get(prop) || '',
+			getPropertyValue: (prop) => element.style?.get(prop) || '',
 			color: 'rgb(0, 0, 0)',
 			fontSize: '16px',
 			display: 'block',
@@ -268,7 +270,7 @@ export function createMockWindow() {
 		}),
 		navigator: {
 			clipboard: {
-				writeText: async text => Promise.resolve(text),
+				writeText: async (text) => Promise.resolve(text),
 				readText: async () => Promise.resolve('Clipboard content'),
 			},
 			userAgent:
@@ -278,7 +280,7 @@ export function createMockWindow() {
 		},
 		crypto: {
 			randomUUID: () => '12345678-1234-4000-8000-123456789abc',
-			getRandomValues: array => {
+			getRandomValues: (array) => {
 				for (let i = 0; i < array.length; i++) {
 					array[i] = Math.floor(Math.random() * 256);
 				}
@@ -301,9 +303,9 @@ export function createMockWindow() {
 			}
 			mockWindow._eventListeners[event] = mockWindow._eventListeners[
 				event
-			].filter(listener => listener.handler !== handler);
+			].filter((listener) => listener.handler !== handler);
 		},
-		dispatchEvent: event => {
+		dispatchEvent: (event) => {
 			if (
 				!mockWindow._eventListeners ||
 				!mockWindow._eventListeners[event.type]
@@ -357,15 +359,15 @@ export function createMockWindow() {
 			origin: 'https://example.com',
 			toString: () => mockWindow.location.href,
 			reload: () => {},
-			replace: url => {
+			replace: (url) => {
 				mockWindow.location.href = url;
 			},
-			assign: url => {
+			assign: (url) => {
 				mockWindow.location.href = url;
 			},
 		},
 		getComputedStyle: (element, _pseudoElement) => ({
-			getPropertyValue: prop => element.style?.get(prop) || '',
+			getPropertyValue: (prop) => element.style?.get(prop) || '',
 			color: 'rgb(0, 0, 0)',
 			fontSize: '16px',
 			display: 'block',
@@ -373,7 +375,7 @@ export function createMockWindow() {
 		}),
 		navigator: {
 			clipboard: {
-				writeText: async text => Promise.resolve(text),
+				writeText: async (text) => Promise.resolve(text),
 				readText: async () => Promise.resolve('Clipboard content'),
 			},
 			userAgent:
@@ -383,7 +385,7 @@ export function createMockWindow() {
 		},
 		crypto: {
 			randomUUID: () => '12345678-1234-4000-8000-123456789abc',
-			getRandomValues: array => {
+			getRandomValues: (array) => {
 				for (let i = 0; i < array.length; i++) {
 					array[i] = Math.floor(Math.random() * 256);
 				}
@@ -406,9 +408,9 @@ export function createMockWindow() {
 			}
 			mockWindow._eventListeners[event] = mockWindow._eventListeners[
 				event
-			].filter(listener => listener.handler !== handler);
+			].filter((listener) => listener.handler !== handler);
 		},
-		dispatchEvent: event => {
+		dispatchEvent: (event) => {
 			if (
 				!mockWindow._eventListeners ||
 				!mockWindow._eventListeners[event.type]
@@ -502,7 +504,7 @@ export function createMockElement(tagName, attributes = {}) {
 				value
 					.split(' ')
 					.filter(Boolean)
-					.forEach(cls => {
+					.forEach((cls) => {
 						element.classList.add(cls);
 					});
 			}
