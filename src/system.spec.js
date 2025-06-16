@@ -31,7 +31,7 @@ describe('system exports', () => {
 		];
 
 		// Verify all expected exports exist
-		expectedExports.forEach(elementName => {
+		expectedExports.forEach((elementName) => {
 			assert.strictEqual(
 				typeof system[elementName],
 				'function',

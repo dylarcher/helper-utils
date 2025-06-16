@@ -15,6 +15,7 @@ import {
 	getLocalStorageJSON,
 	getOSInfo,
 	getStyle,
+	getUniqueElements,
 	hasClass,
 	hideElement,
 	once,
@@ -48,6 +49,7 @@ describe('browser', () => {
 			'getLocalStorageJSON',
 			'getOSInfo',
 			'getStyle',
+			'getUniqueElements',
 			'hasClass',
 			'hideElement',
 			'once',
@@ -123,6 +125,10 @@ describe('browser', () => {
 
 	it('should export getStyle function', () => {
 		assert.strictEqual(typeof getStyle, 'function');
+	});
+
+	it('should export getUniqueElements function', () => {
+		assert.strictEqual(typeof getUniqueElements, 'function');
 	});
 
 	it('should export hasClass function', () => {

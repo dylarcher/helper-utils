@@ -5,10 +5,11 @@
 		"baseUrl": ".",
 		"rootDir": "src",
 		"skipDefaultLibCheck": true,
+		"skipLibCheck": true,
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
 		"declaration": true,
-		"lib": ["ES2020", "DOM", "DOM.Iterable"],
+		"lib": ["ES2020"],
 		"module": "ESNext",
 		"moduleResolution": "node",
 		"outDir": "dist",
@@ -16,16 +17,15 @@
 		"target": "ES2020",
 		"paths": {
 			"@/*": ["src/*"],
-			"@spec/*": ["tests/*"],
-			"@www/*": ["docs/*"],
-			"#node/*": ["src/system/*"],
-			"#util/*": ["src/browser/*"],
+			"@spec/*": ["dist/coverage/*"],
+			"@demo/*": ["docs/*"],
+			"#conf/*": [".github/presets/*"]
 		},
 	},
 	"exclude": ["node_modules", "docs", "dist", "test", "utils", "src/**/*.spec.js", "src/**/*.test.js"],
 	"include": ["src"],
 	"typeAcquisition": {
 		"enable": true,
-		"include": ["node", "eslint", "prettier", "c8"]
+		"include": ["eslint", "prettier"]
 	}
 }

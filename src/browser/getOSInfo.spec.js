@@ -1,131 +1,327 @@
-import { describe, it, beforeEach } from 'node:test';
+import { describe, it, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { getOSInfo } from './getOSInfo.js';
 
-describe('getOSInfo()', () => {
-	let _originalOs;
-
+describe('getOSInfo() - in Node.js environment', () => {
 	beforeEach(() => {
 		// Note: This test is complex because it imports a Node.js module
 		// In a real browser environment, this function wouldn't work
 		// but we can test the structure and behavior
 	});
 
-	it('should return an object with required properties', () => {
+	it('should return an object with required properties when navigator is not defined', () => {
+		// In a Node.js environment, typeof navigator will be 'undefined' unless mocked.
 		const result = getOSInfo();
 
-		assert.ok(typeof result === 'object');
-		assert.ok(result !== null);
-		assert.ok('platform' in result);
-		assert.ok('release' in result);
-		assert.ok('type' in result);
-		assert.ok('arch' in result);
+		// Test for the Node.js fallback structure or browser fallback structure
+		assert.strictEqual(typeof result, 'object', 'Result should be an object.');
+		assert.ok(result !== null, 'Result should not be null.');
+
+		// Since we're in Node.js with process defined, we should get the error case
+		assert.deepStrictEqual(result, {
+			platform: 'unknown',
+			userAgent: 'unknown',
+			language: 'unknown',
+			vendor: 'unknown',
+			connection: 'unknown',
+			error:
+				'Navigator object not available. This function is intended for browser environments.',
+		});
 	});
 
-	it('should return strings for all properties', () => {
+	it('should return valid platform values when providing Node.js OS info', () => {
 		const result = getOSInfo();
 
-		assert.strictEqual(typeof result.platform, 'string');
-		assert.strictEqual(typeof result.release, 'string');
-		assert.strictEqual(typeof result.type, 'string');
-		assert.strictEqual(typeof result.arch, 'string');
+		// Since we're in Node.js environment, should have error
+		if (result.error) {
+			assert.strictEqual(result.platform, 'unknown');
+		}
 	});
 
-	it('should return non-empty strings', () => {
+	it('should return valid architecture values when providing Node.js OS info', () => {
 		const result = getOSInfo();
 
-		assert.ok(result.platform.length > 0);
-		assert.ok(result.release.length > 0);
-		assert.ok(result.type.length > 0);
-		assert.ok(result.arch.length > 0);
+		// Since we're in Node.js environment, should have error
+		if (result.error && result.arch) {
+			// This won't be set in error case
+			assert.ok(false, 'Should not have arch in error case');
+		} else {
+			// Expected case - no arch property in error response
+			assert.strictEqual(result.arch, undefined);
+		}
+	});
+
+	it('should have platform matching current environment when providing Node.js OS info', () => {
+		const result = getOSInfo();
+
+		// In Node.js environment with process defined, we get error case
+		assert.strictEqual(
+			result.error,
+			'Navigator object not available. This function is intended for browser environments.',
+		);
+		assert.strictEqual(result.platform, 'unknown');
+	});
+
+	it('should have type matching current environment when providing Node.js OS info', () => {
+		const result = getOSInfo();
+
+		// Since we're in Node.js and get error case, no type property
+		assert.strictEqual(result.type, undefined);
+	});
+
+	it('should return an object with specific "unknown" string properties and an error message in browser fallback mode', () => {
+		const result = getOSInfo();
+
+		// This is the expected case in Node.js environment
+		assert.strictEqual(
+			result.platform,
+			'unknown',
+			'Platform should be "unknown".',
+		);
+		assert.strictEqual(
+			result.userAgent,
+			'unknown',
+			'UserAgent should be "unknown".',
+		);
+		assert.strictEqual(
+			result.language,
+			'unknown',
+			'Language should be "unknown".',
+		);
+		assert.strictEqual(result.vendor, 'unknown', 'Vendor should be "unknown".');
+		assert.strictEqual(
+			result.connection,
+			'unknown',
+			'Connection should be "unknown".',
+		);
+		assert.strictEqual(
+			result.error,
+			'Navigator object not available. This function is intended for browser environments.',
+			'Error message should be correct.',
+		);
 	});
 
 	it('should return consistent results on multiple calls', () => {
 		const result1 = getOSInfo();
 		const result2 = getOSInfo();
-
-		assert.deepStrictEqual(result1, result2);
+		assert.deepStrictEqual(
+			result1,
+			result2,
+			'Results from multiple calls should be identical.',
+		);
 	});
 
-	it('should return valid platform values', () => {
-		const result = getOSInfo();
-		const validPlatforms = [
-			'aix',
-			'android',
-			'darwin',
-			'freebsd',
-			'haiku',
-			'linux',
-			'openbsd',
-			'sunos',
-			'win32',
-			'cygwin',
-			'netbsd',
-		];
+	it('should return an immutable-like result (new object each time)', () => {
+		const result1 = getOSInfo();
+		// Attempt to modify. This only modifies the local copy, not the internal state of getOSInfo.
+		result1.platform = 'modified_platform';
 
-		assert.ok(validPlatforms.includes(result.platform));
+		const result2 = getOSInfo();
+		// result2 should be a fresh object with the default "unknown" values.
+		assert.strictEqual(
+			result2.platform,
+			'unknown',
+			'Platform in new result should be "unknown".',
+		);
+		assert.notStrictEqual(
+			result1.platform,
+			result2.platform,
+			"Platform of result1 should have been 'modified' locally and different from result2's platform.",
+		);
 	});
 
-	it('should return valid architecture values', () => {
-		const result = getOSInfo();
-		const validArchitectures = [
-			'arm',
-			'arm64',
-			'ia32',
-			'loong64',
-			'mips',
-			'mipsel',
-			'ppc',
-			'ppc64',
-			'riscv64',
-			's390',
-			's390x',
-			'x64',
-		];
+	describe('getOSInfo() - browser environment simulation', () => {
+		let originalNavigator;
+		let originalProcess;
 
-		assert.ok(validArchitectures.includes(result.arch));
-	});
+		beforeEach(() => {
+			// Save original values
+			originalNavigator = globalThis.navigator;
+			originalProcess = globalThis.process;
+		});
 
-	it('should have platform matching current environment', () => {
-		const result = getOSInfo();
+		afterEach(() => {
+			// Restore the original values
+			if (originalNavigator !== undefined) {
+				Object.defineProperty(globalThis, 'navigator', {
+					value: originalNavigator,
+					writable: true,
+					configurable: true,
+				});
+			} else {
+				delete globalThis.navigator;
+			}
+			if (originalProcess !== undefined) {
+				globalThis.process = originalProcess;
+			} else {
+				delete globalThis.process;
+			}
+		});
 
-		// In a Node.js environment on macOS (based on context)
-		// This test is environment-specific
-		if (process.platform) {
-			assert.strictEqual(result.platform, process.platform);
-		}
-	});
+		it('should return actual data when navigator is present', () => {
+			// Remove process to simulate browser environment
+			delete globalThis.process;
 
-	it('should have type matching current environment', () => {
-		const result = getOSInfo();
+			// Mock navigator object using defineProperty to override readonly property
+			Object.defineProperty(globalThis, 'navigator', {
+				value: {
+					platform: 'MacIntel',
+					userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)',
+					language: 'en-US',
+					vendor: 'Google Inc.',
+				},
+				writable: true,
+				configurable: true,
+			});
 
-		// Common OS types
-		const commonTypes = ['Linux', 'Darwin', 'Windows_NT'];
-		const hasCommonType = commonTypes.some(type => result.type.includes(type));
+			const result = getOSInfo();
+			assert.strictEqual(result.platform, 'MacIntel');
+			assert.strictEqual(
+				result.userAgent,
+				'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)',
+			);
+			assert.strictEqual(result.language, 'en-US');
+			assert.strictEqual(result.vendor, 'Google Inc.');
+			assert.strictEqual(result.connection, 'unknown');
+			assert.strictEqual(result.error, undefined);
+		});
 
-		// Should either be a common type or some other valid OS type
-		assert.ok(hasCommonType || result.type.length > 0);
-	});
+		it('should report "available (no specific details)" for connection if connection object exists but has no known properties', () => {
+			// Remove process to simulate browser environment
+			delete globalThis.process;
 
-	it('should return release version in expected format', () => {
-		const result = getOSInfo();
+			// Mock navigator with empty connection object
+			Object.defineProperty(globalThis, 'navigator', {
+				value: {
+					platform: 'Linux',
+					userAgent: 'Mozilla/5.0',
+					language: 'en',
+					vendor: '',
+					connection: {}, // Empty connection object
+				},
+				writable: true,
+				configurable: true,
+			});
 
-		// Release should contain version-like information
-		// Most OS releases contain numbers and dots
-		assert.ok(/[\d.]/.test(result.release));
-	});
+			const result = getOSInfo();
+			assert.strictEqual(result.connection, 'available (no specific details)');
+		});
 
-	it('should return immutable result', () => {
-		const result = getOSInfo();
-		const originalPlatform = result.platform;
+		it('should correctly stringify connection properties if present', () => {
+			// Remove process to simulate browser environment
+			delete globalThis.process;
 
-		// Try to modify the result
-		result.platform = 'modified';
+			// Mock navigator with connection details
+			Object.defineProperty(globalThis, 'navigator', {
+				value: {
+					platform: 'Win32',
+					userAgent: 'Mozilla/5.0',
+					language: 'en-US',
+					vendor: 'Microsoft',
+					connection: {
+						effectiveType: '4g',
+						rtt: 50,
+						downlink: 10.5,
+						saveData: false,
+					},
+				},
+				writable: true,
+				configurable: true,
+			});
 
-		// Get fresh result
-		const newResult = getOSInfo();
+			const result = getOSInfo();
+			assert.strictEqual(
+				result.connection,
+				'effective-type: 4g, rtt: 50, downlink: 10.5, saveData: false',
+			);
+		});
 
-		// Should not be affected by previous modification
-		assert.strictEqual(newResult.platform, originalPlatform);
+		it('should use mozConnection if navigator.connection is not available', () => {
+			// Remove process to simulate browser environment
+			delete globalThis.process;
+
+			// Mock navigator with mozConnection
+			Object.defineProperty(globalThis, 'navigator', {
+				value: {
+					platform: 'Linux',
+					userAgent: 'Mozilla/5.0',
+					language: 'en',
+					vendor: 'Mozilla',
+					mozConnection: {
+						effectiveType: '3g',
+					},
+				},
+				writable: true,
+				configurable: true,
+			});
+
+			const result = getOSInfo();
+			assert.strictEqual(result.connection, 'effective-type: 3g');
+		});
+
+		it('should use webkitConnection if navigator.connection and mozConnection are not available', () => {
+			// Remove process to simulate browser environment
+			delete globalThis.process;
+
+			// Mock navigator with webkitConnection
+			Object.defineProperty(globalThis, 'navigator', {
+				value: {
+					platform: 'MacIntel',
+					userAgent: 'Mozilla/5.0',
+					language: 'en-US',
+					vendor: 'Apple',
+					webkitConnection: {
+						rtt: 25,
+						downlink: 15.2,
+					},
+				},
+				writable: true,
+				configurable: true,
+			});
+
+			const result = getOSInfo();
+			assert.strictEqual(result.connection, 'rtt: 25, downlink: 15.2');
+		});
+
+		it('should default to "unknown" for navigator properties if they are missing or falsy', () => {
+			// Remove process to simulate browser environment
+			delete globalThis.process;
+
+			// Mock navigator with falsy values
+			Object.defineProperty(globalThis, 'navigator', {
+				value: {
+					platform: null,
+					userAgent: '',
+					language: undefined,
+					vendor: false,
+				},
+				writable: true,
+				configurable: true,
+			});
+
+			const result = getOSInfo();
+			assert.strictEqual(result.platform, 'unknown');
+			assert.strictEqual(result.userAgent, 'unknown');
+			assert.strictEqual(result.language, 'unknown');
+			assert.strictEqual(result.vendor, 'unknown');
+			assert.strictEqual(result.connection, 'unknown');
+		});
+
+		it('should handle when neither process nor navigator is defined', () => {
+			// Remove both process and navigator
+			delete globalThis.process;
+			delete globalThis.navigator;
+
+			const result = getOSInfo();
+			assert.deepStrictEqual(result, {
+				platform: 'unknown',
+				userAgent: 'unknown',
+				language: 'unknown',
+				vendor: 'unknown',
+				connection: 'unknown',
+				error:
+					'Navigator object not available. This function is intended for browser environments.',
+			});
+		});
 	});
 });

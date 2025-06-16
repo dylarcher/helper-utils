@@ -128,36 +128,55 @@ describe('setLocalStorageJSON(key, value)', () => {
 		);
 	});
 
-	it('should return false and log error when localStorage.setItem throws', () => {
+	it('should re-throw error when localStorage.setItem throws', () => {
+		const expectedError = new Error('Simulated localStorage.setItem error');
 		global.localStorage.setItem = () => {
-			throw new Error('localStorage not available');
+			throw expectedError;
 		};
 
-		const result = setLocalStorageJSON('test', { data: 'value' });
-
-		assert.strictEqual(result, false);
-		assert.strictEqual(consoleErrors.length, 1);
-		assert.ok(
-			consoleErrors[0][0].includes(
-				'Error setting JSON in localStorage for key "test"',
-			),
+		assert.throws(
+			() => setLocalStorageJSON('test', { data: 'value' }),
+			expectedError,
+			'Expected setLocalStorageJSON to re-throw the error from localStorage.setItem.',
 		);
+		assert.strictEqual(consoleErrors.length, 0);
 	});
 
-	it('should return false and log error when JSON.stringify throws', () => {
+	it('should re-throw error when JSON.stringify throws', () => {
 		// Create an object that can't be stringified (circular reference)
 		const circularObj = {};
 		circularObj.self = circularObj;
 
-		const result = setLocalStorageJSON('circular', circularObj);
-
-		assert.strictEqual(result, false);
-		assert.strictEqual(consoleErrors.length, 1);
-		assert.ok(
-			consoleErrors[0][0].includes(
-				'Error setting JSON in localStorage for key "circular"',
-			),
+		assert.throws(
+			() => setLocalStorageJSON('circular', circularObj),
+			(error) => {
+				return (
+					error instanceof TypeError &&
+					error.message.includes('circular structure')
+				);
+			},
+			'Expected setLocalStorageJSON to re-throw a TypeError for circular references.',
 		);
+		assert.strictEqual(consoleErrors.length, 0);
+	});
+
+	// Test for localStorage not being available (thrown by the function's own check)
+	it('should throw error if localStorage is not available', () => {
+		const originalLocalStorage = global.localStorage;
+		delete global.localStorage; // Simulate localStorage not being available
+
+		assert.throws(
+			() => setLocalStorageJSON('anyKey', 'anyValue'),
+			(error) => {
+				return (
+					error instanceof Error &&
+					error.message === 'localStorage is not available in this environment.'
+				);
+			},
+			'Expected setLocalStorageJSON to throw an error when localStorage is not available.',
+		);
+		global.localStorage = originalLocalStorage; // Restore
+		assert.strictEqual(consoleErrors.length, 0);
 	});
 
 	it('should handle undefined values', () => {

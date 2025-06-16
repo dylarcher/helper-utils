@@ -1,7 +1,12 @@
 import { describe, it, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { copyToClipboardAsync } from './copyToClipboardAsync.js';
-import { setupBrowserMocks, restoreGlobals } from '../../utils/test.utils.js';
+import {
+	setupJSDOM,
+	cleanupJSDOM,
+	setupBrowserMocks,
+	restoreGlobals,
+} from '../../utils/test.utils.js';
 
 describe('copyToClipboardAsync(text)', () => {
 	beforeEach(() => {
@@ -16,7 +21,7 @@ describe('copyToClipboardAsync(text)', () => {
 		// Mock navigator.clipboard
 		global.navigator = {
 			clipboard: {
-				writeText: async _text => {
+				writeText: async (_text) => {
 					// Simulate successful clipboard write
 					return Promise.resolve();
 				},
@@ -55,7 +60,7 @@ describe('copyToClipboardAsync(text)', () => {
 	it('should handle empty string', async () => {
 		global.navigator = {
 			clipboard: {
-				writeText: async text => {
+				writeText: async (text) => {
 					assert.strictEqual(text, '');
 					return Promise.resolve();
 				},
@@ -70,7 +75,7 @@ describe('copyToClipboardAsync(text)', () => {
 
 		global.navigator = {
 			clipboard: {
-				writeText: async text => {
+				writeText: async (text) => {
 					assert.strictEqual(text, specialText);
 					return Promise.resolve();
 				},
@@ -78,5 +83,87 @@ describe('copyToClipboardAsync(text)', () => {
 		};
 
 		await assert.doesNotReject(() => copyToClipboardAsync(specialText));
+	});
+
+	describe('JSDOM Environment Tests', () => {
+		beforeEach(() => {
+			setupJSDOM();
+		});
+
+		afterEach(() => {
+			cleanupJSDOM();
+		});
+
+		it('should work with clipboard API in jsdom environment', async () => {
+			// Mock the clipboard API in jsdom
+			let clipboardText = '';
+			global.navigator.clipboard = {
+				writeText: async (text) => {
+					clipboardText = text;
+					return Promise.resolve();
+				},
+			};
+
+			await copyToClipboardAsync('test text');
+			assert.strictEqual(clipboardText, 'test text');
+		});
+
+		it('should handle clipboard API failures in jsdom', async () => {
+			// Mock clipboard API that throws
+			global.navigator.clipboard = {
+				writeText: async () => {
+					throw new Error('Clipboard access denied');
+				},
+			};
+
+			await assert.rejects(() => copyToClipboardAsync('test text'), {
+				message: 'Clipboard access denied',
+			});
+		});
+
+		it('should handle missing clipboard API in jsdom', async () => {
+			// Remove clipboard API
+			delete global.navigator.clipboard;
+
+			await assert.rejects(() => copyToClipboardAsync('test text'), {
+				message:
+					'Clipboard API not available. Use a fallback or ensure secure context (HTTPS).',
+			});
+		});
+
+		it('should handle empty navigator in jsdom', async () => {
+			// Remove entire navigator
+			delete global.navigator;
+
+			await assert.rejects(() => copyToClipboardAsync('test text'), {
+				message:
+					'Clipboard API not available. Use a fallback or ensure secure context (HTTPS).',
+			});
+		});
+
+		it('should handle various text types in jsdom', async () => {
+			let clipboardText = '';
+			global.navigator.clipboard = {
+				writeText: async (text) => {
+					clipboardText = text;
+					return Promise.resolve();
+				},
+			};
+
+			const testCases = [
+				'simple text',
+				'text with\nnewlines',
+				'text with\ttabs',
+				'text with "quotes"',
+				'text with émojis 🎉',
+				'',
+				'   whitespace   ',
+			];
+
+			for (const testText of testCases) {
+				await copyToClipboardAsync(testText);
+				assert.strictEqual(clipboardText, testText);
+			}
+		});
 	});
 });

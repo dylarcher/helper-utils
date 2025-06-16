@@ -1,9 +1,101 @@
 /**
- * Test helpers for browser environment mocking
+ * Test helpers for browser environment mocking with jsdom
  */
+import { JSDOM } from 'jsdom';
 
 // Store original global values
 export const originalGlobals = {};
+let currentJSDOM = null;
+
+/**
+ * Setup jsdom environment for browser testing
+ */
+export function setupJSDOM(
+	html = '<!DOCTYPE html><html><body></body></html>',
+	options = {},
+) {
+	// Create a new JSDOM instance
+	currentJSDOM = new JSDOM(html, {
+		url: 'http://localhost',
+		pretendToBeVisual: true,
+		resources: 'usable',
+		...options,
+	});
+
+	const { window } = currentJSDOM;
+	const { document } = window;
+
+	// Store original globals before overwriting
+	if (!originalGlobals.window) {
+		originalGlobals.window = global.window;
+		originalGlobals.document = global.document;
+		originalGlobals.navigator = global.navigator;
+		originalGlobals.location = global.location;
+		originalGlobals.localStorage = global.localStorage;
+		originalGlobals.sessionStorage = global.sessionStorage;
+	}
+
+	// Set global variables from jsdom - handle read-only properties carefully
+	global.window = window;
+	global.document = document;
+
+	// Use Object.defineProperty for read-only properties
+	try {
+		global.navigator = window.navigator;
+	} catch (_e) {
+		Object.defineProperty(global, 'navigator', {
+			value: window.navigator,
+			configurable: true,
+			writable: true,
+		});
+	}
+
+	try {
+		global.location = window.location;
+	} catch (_e) {
+		Object.defineProperty(global, 'location', {
+			value: window.location,
+			configurable: true,
+			writable: true,
+		});
+	}
+
+	global.localStorage = window.localStorage;
+	global.sessionStorage = window.sessionStorage;
+
+	// Expose commonly needed globals
+	global.Element = window.Element;
+	global.HTMLElement = window.HTMLElement;
+	global.HTMLDivElement = window.HTMLDivElement;
+	global.Node = window.Node;
+	global.Text = window.Text;
+	global.NodeList = window.NodeList;
+	global.HTMLCollection = window.HTMLCollection;
+
+	return { window, document };
+}
+
+/**
+ * Cleanup jsdom environment
+ */
+export function cleanupJSDOM() {
+	if (currentJSDOM) {
+		currentJSDOM.window.close();
+		currentJSDOM = null;
+	}
+
+	// Restore original globals
+	Object.entries(originalGlobals).forEach(([key, value]) => {
+		if (value === undefined) {
+			delete global[key];
+		} else {
+			global[key] = value;
+		}
+	});
+
+	// Clear stored originals
+	Object.keys(originalGlobals).forEach((key) => delete originalGlobals[key]);
+}
 
 /**
  * Mock global object with proper cleanup
@@ -38,7 +130,7 @@ export function restoreGlobals() {
 		}
 	}
 	// Clear the stored values
-	Object.keys(originalGlobals).forEach(key => delete originalGlobals[key]);
+	Object.keys(originalGlobals).forEach((key) => delete originalGlobals[key]);
 }
 
 /**
@@ -47,14 +139,14 @@ export function restoreGlobals() {
 export function createMockLocalStorage() {
 	const storage = new Map();
 	return {
-		getItem: key => storage.get(key) || null,
+		getItem: (key) => storage.get(key) || null,
 		setItem: (key, value) => storage.set(key, String(value)),
-		removeItem: key => storage.delete(key),
+		removeItem: (key) => storage.delete(key),
 		clear: () => storage.clear(),
 		get length() {
 			return storage.size;
 		},
-		key: index => Array.from(storage.keys())[index] || null,
+		key: (index) => Array.from(storage.keys())[index] || null,
 	};
 }
 
@@ -73,7 +165,7 @@ export function createMockDocument() {
 	}
 
 	const mockDocument = {
-		createElement: tagName => {
+		createElement: (tagName) => {
 			const element = {
 				tagName: tagName.toLowerCase(),
 				attributes: {},
@@ -83,10 +175,10 @@ export function createMockDocument() {
 				classList: {
 					_classes: new Set(),
 					add(...classes) {
-						classes.forEach(cls => this._classes.add(cls));
+						classes.forEach((cls) => this._classes.add(cls));
 					},
 					remove(...classes) {
-						classes.forEach(cls => this._classes.delete(cls));
+						classes.forEach((cls) => this._classes.delete(cls));
 					},
 					contains(cls) {
 						return this._classes.has(cls);
@@ -162,7 +254,7 @@ export function createMockDocument() {
 						return;
 					}
 					this._eventListeners[event] = this._eventListeners[event].filter(
-						listener => listener.handler !== handler,
+						(listener) => listener.handler !== handler,
 					);
 				},
 			};
@@ -174,27 +266,29 @@ export function createMockDocument() {
 
 			return element;
 		},
-		createTextNode: text => new MockTextNode(text),
-		querySelector: selector => elements.get(selector) || null,
-		querySelectorAll: selector => {
+		createTextNode: (text) => new MockTextNode(text),
+		querySelector: (selector) => elements.get(selector) || null,
+		querySelectorAll: (selector) => {
 			// Basic selector implementation for testing
 			if (selector.startsWith('.')) {
 				const className = selector.slice(1);
 				return Array.from(elements.values()).filter(
-					el => el.classList && el.classList.contains(className),
+					(el) => el.classList && el.classList.contains(className),
 				);
 			}
 			if (selector.startsWith('#')) {
 				const id = selector.slice(1);
-				const element = Array.from(elements.values()).find(el => el.id === id);
+				const element = Array.from(elements.values()).find(
+					(el) => el.id === id,
+				);
 				return element ? [element] : [];
 			}
 			return Array.from(elements.values()).filter(
-				el => el.tagName === selector.toLowerCase(),
+				(el) => el.tagName === selector.toLowerCase(),
 			);
 		},
 		cookie: '',
-		getElementById: id => {
+		getElementById: (id) => {
 			for (const el of elements.values()) {
 				if (el.id === id) {
 					return el;
@@ -202,9 +296,9 @@ export function createMockDocument() {
 			}
 			return null;
 		},
-		getElementsByClassName: className =>
+		getElementsByClassName: (className) =>
 			Array.from(elements.values()).filter(
-				el => el.classList && el.classList.contains(className),
+				(el) => el.classList && el.classList.contains(className),
 			),
 		body: {
 			appendChild: function (child) {
@@ -252,15 +346,15 @@ export function createMockWindow() {
 			origin: 'https://example.com',
 			toString: () => mockWindow.location.href,
 			reload: () => {},
-			replace: url => {
+			replace: (url) => {
 				mockWindow.location.href = url;
 			},
-			assign: url => {
+			assign: (url) => {
 				mockWindow.location.href = url;
 			},
 		},
 		getComputedStyle: (element, _pseudoElement) => ({
-			getPropertyValue: prop => element.style?.get(prop) || '',
+			getPropertyValue: (prop) => element.style?.get(prop) || '',
 			color: 'rgb(0, 0, 0)',
 			fontSize: '16px',
 			display: 'block',
@@ -268,7 +362,7 @@ export function createMockWindow() {
 		}),
 		navigator: {
 			clipboard: {
-				writeText: async text => Promise.resolve(text),
+				writeText: async (text) => Promise.resolve(text),
 				readText: async () => Promise.resolve('Clipboard content'),
 			},
 			userAgent:
@@ -278,7 +372,7 @@ export function createMockWindow() {
 		},
 		crypto: {
 			randomUUID: () => '12345678-1234-4000-8000-123456789abc',
-			getRandomValues: array => {
+			getRandomValues: (array) => {
 				for (let i = 0; i < array.length; i++) {
 					array[i] = Math.floor(Math.random() * 256);
 				}
@@ -301,9 +395,9 @@ export function createMockWindow() {
 			}
 			mockWindow._eventListeners[event] = mockWindow._eventListeners[
 				event
-			].filter(listener => listener.handler !== handler);
+			].filter((listener) => listener.handler !== handler);
 		},
-		dispatchEvent: event => {
+		dispatchEvent: (event) => {
 			if (
 				!mockWindow._eventListeners ||
 				!mockWindow._eventListeners[event.type]
@@ -357,15 +451,15 @@ export function createMockWindow() {
 			origin: 'https://example.com',
 			toString: () => mockWindow.location.href,
 			reload: () => {},
-			replace: url => {
+			replace: (url) => {
 				mockWindow.location.href = url;
 			},
-			assign: url => {
+			assign: (url) => {
 				mockWindow.location.href = url;
 			},
 		},
 		getComputedStyle: (element, _pseudoElement) => ({
-			getPropertyValue: prop => element.style?.get(prop) || '',
+			getPropertyValue: (prop) => element.style?.get(prop) || '',
 			color: 'rgb(0, 0, 0)',
 			fontSize: '16px',
 			display: 'block',
@@ -373,7 +467,7 @@ export function createMockWindow() {
 		}),
 		navigator: {
 			clipboard: {
-				writeText: async text => Promise.resolve(text),
+				writeText: async (text) => Promise.resolve(text),
 				readText: async () => Promise.resolve('Clipboard content'),
 			},
 			userAgent:
@@ -383,7 +477,7 @@ export function createMockWindow() {
 		},
 		crypto: {
 			randomUUID: () => '12345678-1234-4000-8000-123456789abc',
-			getRandomValues: array => {
+			getRandomValues: (array) => {
 				for (let i = 0; i < array.length; i++) {
 					array[i] = Math.floor(Math.random() * 256);
 				}
@@ -406,9 +500,9 @@ export function createMockWindow() {
 			}
 			mockWindow._eventListeners[event] = mockWindow._eventListeners[
 				event
-			].filter(listener => listener.handler !== handler);
+			].filter((listener) => listener.handler !== handler);
 		},
-		dispatchEvent: event => {
+		dispatchEvent: (event) => {
 			if (
 				!mockWindow._eventListeners ||
 				!mockWindow._eventListeners[event.type]
@@ -502,7 +596,7 @@ export function createMockElement(tagName, attributes = {}) {
 				value
 					.split(' ')
 					.filter(Boolean)
-					.forEach(cls => {
+					.forEach((cls) => {
 						element.classList.add(cls);
 					});
 			}

@@ -1,0 +1,21 @@
+{
+	"extends": "../../tsconfig.json",
+	"include": ["../../src/browser/**/*.js"],
+	"files": ["../../src/browser.js"],
+	"exclude": [
+		"../../src/*",
+		"../../src/system",
+		"../../src/browser/**/*.test.js",
+		"../../src/browser/**/*.spec.js"
+	],
+	"compilerOptions": {
+		"lib": ["DOM", "DOM.Iterable"],
+		"paths": {
+			"#util/*": ["src/browser/*"]
+		}
+	},
+	"typeAcquisition": {
+		"enable": true,
+		"include": ["browser", "dom", "webworker"]
+	}
+}

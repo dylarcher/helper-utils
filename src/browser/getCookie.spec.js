@@ -122,7 +122,32 @@ describe('getCookie(alias)', () => {
 		};
 
 		// Note: This tests the current behavior, though it may not handle semicolons in values perfectly
+		// The refactored version will correctly return 'value' as it stops at the first ';'.
 		const result = getCookie('complexCookie');
+		assert.strictEqual(result, 'value');
+	});
+
+	it('should return null if alias is not found among multiple cookies', () => {
+		global.document = {
+			cookie: 'first=one;second=two;third=three',
+		};
+		const result = getCookie('fourth'); // This cookie does not exist
+		assert.strictEqual(result, null);
+	});
+
+	it('should handle invalid cookie format (no equals sign)', () => {
+		global.document = {
+			cookie: 'invalidcookie; validCookie=value',
+		};
+		const result = getCookie('validCookie');
+		assert.strictEqual(result, 'value');
+	});
+
+	it('should handle invalid cookie format (equals as first character)', () => {
+		global.document = {
+			cookie: '=invalidvalue; validCookie=value',
+		};
+		const result = getCookie('validCookie');
 		assert.strictEqual(result, 'value');
 	});
 

@@ -1,6 +1,7 @@
-import { describe, it, beforeEach } from 'node:test';
+import { describe, it, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { addClass } from './addClass.js';
+import { setupJSDOM, cleanupJSDOM } from '../../utils/test.utils.js';
 
 // Mock Element class for testing environment
 class MockElement {
@@ -10,12 +11,12 @@ class MockElement {
 		const setAdd = this.classList.add.bind(this.classList);
 		// Define classList.add, classList.contains, and className for compatibility
 		this.classList.add = (...names) =>
-			names.forEach(elementName => {
+			names.forEach((elementName) => {
 				if (typeof elementName === 'string' && elementName.trim() !== '') {
 					setAdd(elementName); // Use Set's original add method
 				}
 			});
-		this.classList.contains = name => this.classList.has(name);
+		this.classList.contains = (name) => this.classList.has(name);
 	}
 
 	// Getter to simulate the className property
@@ -118,5 +119,83 @@ describe('addClass(element, ...classNames)', () => {
 		assert.ok(mockElement.classList.has('class2'));
 		assert.ok(mockElement.classList.has('class3'));
 		assert.strictEqual(Array.from(mockElement.classList).length, 3);
+	});
+
+	describe('JSDOM Environment Tests', () => {
+		beforeEach(() => {
+			setupJSDOM();
+		});
+
+		afterEach(() => {
+			cleanupJSDOM();
+		});
+
+		it('should add classes to real DOM elements', () => {
+			const element = document.createElement('div');
+
+			addClass(element, 'test-class');
+
+			assert.ok(element.classList.contains('test-class'));
+			assert.strictEqual(element.className, 'test-class');
+		});
+
+		it('should add multiple classes to real DOM elements', () => {
+			const element = document.createElement('div');
+
+			addClass(element, 'class1', 'class2', 'class3');
+
+			assert.ok(element.classList.contains('class1'));
+			assert.ok(element.classList.contains('class2'));
+			assert.ok(element.classList.contains('class3'));
+			assert.strictEqual(element.className, 'class1 class2 class3');
+		});
+
+		it('should handle existing classes in real DOM', () => {
+			const element = document.createElement('div');
+			element.className = 'existing-class';
+
+			addClass(element, 'new-class');
+
+			assert.ok(element.classList.contains('existing-class'));
+			assert.ok(element.classList.contains('new-class'));
+			assert.strictEqual(element.className, 'existing-class new-class');
+		});
+
+		it('should not duplicate classes in real DOM', () => {
+			const element = document.createElement('div');
+			element.className = 'existing-class';
+
+			addClass(element, 'existing-class', 'new-class');
+
+			// Should not duplicate existing-class
+			const classes = element.className.split(' ');
+			const existingCount = classes.filter(
+				(c) => c === 'existing-class',
+			).length;
+			assert.strictEqual(existingCount, 1);
+			assert.ok(element.classList.contains('new-class'));
+		});
+
+		it('should work with various HTML elements in real DOM', () => {
+			const elements = ['div', 'span', 'p', 'section', 'article'];
+
+			elements.forEach((tagName) => {
+				const element = document.createElement(tagName);
+				addClass(element, `${tagName}-class`);
+
+				assert.ok(element.classList.contains(`${tagName}-class`));
+				assert.strictEqual(element.className, `${tagName}-class`);
+			});
+		});
+
+		it('should handle empty and whitespace class names in real DOM', () => {
+			const element = document.createElement('div');
+
+			addClass(element, '', '  ', 'valid-class', '   ');
+
+			// Only valid-class should be added
+			assert.strictEqual(element.className, 'valid-class');
+			assert.ok(element.classList.contains('valid-class'));
+		});
 	});
 });

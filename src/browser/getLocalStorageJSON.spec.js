@@ -69,34 +69,49 @@ describe('getLocalStorageJSON(key)', () => {
 		assert.strictEqual(result, null);
 	});
 
-	it('should return null and log error for invalid JSON', () => {
+	it('should throw SyntaxError for invalid JSON', () => {
 		global.localStorage.setItem('invalidJSON', '{ invalid json }');
 
-		const result = getLocalStorageJSON('invalidJSON');
-
-		assert.strictEqual(result, null);
-		assert.strictEqual(consoleErrors.length, 1);
-		assert.ok(
-			consoleErrors[0][0].includes(
-				'Error getting JSON from localStorage for key "invalidJSON"',
-			),
+		assert.throws(
+			() => getLocalStorageJSON('invalidJSON'),
+			SyntaxError,
+			'Expected getLocalStorageJSON to throw a SyntaxError for invalid JSON.',
 		);
+		// Ensure no error was logged to console by our spy (if it's still active for other tests)
+		assert.strictEqual(consoleErrors.length, 0);
 	});
 
-	it('should handle localStorage getItem throwing error', () => {
+	it('should re-throw error when localStorage.getItem throws', () => {
+		const expectedError = new Error('localStorage.getItem failed');
 		global.localStorage.getItem = () => {
-			throw new Error('localStorage not available');
+			throw expectedError;
 		};
 
-		const result = getLocalStorageJSON('anyKey');
-
-		assert.strictEqual(result, null);
-		assert.strictEqual(consoleErrors.length, 1);
-		assert.ok(
-			consoleErrors[0][0].includes(
-				'Error getting JSON from localStorage for key "anyKey"',
-			),
+		assert.throws(
+			() => getLocalStorageJSON('anyKey'),
+			expectedError, // Asserts that the exact error object is re-thrown
+			'Expected getLocalStorageJSON to re-throw the error from localStorage.getItem.',
 		);
+		assert.strictEqual(consoleErrors.length, 0);
+	});
+
+	// Test for localStorage not being available (thrown by the function's own check)
+	it('should throw error if localStorage is not available', () => {
+		const originalLocalStorage = global.localStorage;
+		delete global.localStorage; // Simulate localStorage not being available
+
+		assert.throws(
+			() => getLocalStorageJSON('anyKey'),
+			(error) => {
+				return (
+					error instanceof Error &&
+					error.message === 'localStorage is not available in this environment.'
+				);
+			},
+			'Expected getLocalStorageJSON to throw an error when localStorage is not available.',
+		);
+		global.localStorage = originalLocalStorage; // Restore
+		assert.strictEqual(consoleErrors.length, 0);
 	});
 
 	it('should handle complex nested objects', () => {

@@ -25,3 +25,4 @@ export { setStyle } from './browser/setStyle.js';
 export { throttle } from './browser/throttle.js';
 export { toggleClass } from './browser/toggleClass.js';
 export { uuid } from './browser/uuid.js';
+export { getUniqueElements } from './browser/getUniqueElements.js';

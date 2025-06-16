@@ -183,14 +183,14 @@ describe('getNetworkInterfaces()', () => {
 
 		// Most systems have a loopback interface (lo, lo0, or similar)
 		const hasLoopback = interfaceNames.some(
-			elementName =>
+			(elementName) =>
 				elementName.toLowerCase().includes('lo') ||
 				elementName.toLowerCase().includes('loopback'),
 		);
 
 		// Check if any interface has internal: true as an alternative
-		const hasInternalInterface = Object.values(interfaces).some(interfaceList =>
-			interfaceList.some(iface => iface.internal === true),
+		const hasInternalInterface = Object.values(interfaces).some(
+			(interfaceList) => interfaceList.some((iface) => iface.internal === true),
 		);
 
 		assert.ok(

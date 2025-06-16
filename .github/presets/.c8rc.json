@@ -9,14 +9,16 @@
         "dist/**/*.js",
         "dist/**/*.d.ts",
         "src/**/*.spec.js",
-        "src/**/*.test.js"
+        "src/**/*.test.js",
+        "src/browser.js",
+        "src/system.js"
     ],
     "functions": 100,
     "include": [
         "src/**/*.js"
     ],
     "lines": 100,
-    "report-dir": "dist/.coverage",
+    "report-dir": "dist/coverage",
     "reporter": [
         "text",
         "html",

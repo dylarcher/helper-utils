@@ -12,7 +12,7 @@ import globals from 'globals';
 export default [
 	// Ignore certain files
 	{
-		ignores: ['**/*.yml', '**/*.yaml', 'dist/**', 'node_modules/**'],
+		ignores: ['**/*.yml', '**/*.yaml', 'dist/**', 'node_modules/**', 'docs/**'],
 	},
 	// Language options
 	{
@@ -52,7 +52,7 @@ export default [
 			],
 			semi: ['error', 'always'],
 			'comma-dangle': ['error', 'always-multiline'],
-
+			'no-useless-catch': 'warn',
 			// Best practices
 			eqeqeq: ['error', 'always', { null: 'ignore' }],
 			'no-var': 'error',
