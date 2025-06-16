@@ -53,12 +53,13 @@
  * console.info(numericPort + 1); // 8081
  */
 export function env(key, defaultValue) {
-    const value = process.env[key];
-    // Check if the environment variable is defined.
-    // An environment variable set to an empty string (e.g., MY_VAR=) is considered defined.
-    if (value === undefined) {
-        // @ts-ignore
-        return defaultValue;
-    }
-    return value; // Environment variables are always strings.
+	const value = process.env[key];
+	// Check if the environment variable is defined.
+	// An environment variable set to an empty string (e.g., MY_VAR=) is considered defined.
+	if (value === undefined) {
+		// @ts-ignore
+		return defaultValue;
+	}
+	return value; // Environment variables are always strings.
 }
+//# sourceMappingURL=env.js.map

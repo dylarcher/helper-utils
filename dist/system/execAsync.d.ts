@@ -59,7 +59,10 @@
  * }
  * // exampleFailingCommand();
  */
-export function execAsync(command: string, options?: import("node:child_process").ExecOptions): Promise<{
-    stdout: string;
-    stderr: string;
+export function execAsync(
+	command: string,
+	options?: import('node:child_process').ExecOptions,
+): Promise<{
+	stdout: string;
+	stderr: string;
 }>;

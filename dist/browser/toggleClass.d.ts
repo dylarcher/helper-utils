@@ -36,4 +36,8 @@
  * toggleClass(el, '');
  * // el.classList remains "highlight"
  */
-export function toggleClass(element: Element, className: string, force?: boolean): void;
+export function toggleClass(
+	element: Element,
+	className: string,
+	force?: boolean,
+): void;

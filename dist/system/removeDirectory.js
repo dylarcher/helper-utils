@@ -81,33 +81,36 @@ import fs from 'node:fs/promises';
  *
  * // manageDirectories();
  */
-export async function removeDirectory(dirPath, options = { recursive: true, force: false }) {
-    // Preliminary check: ensure the path is a directory, unless force is true.
-    try {
-        const stats = await fs.stat(dirPath);
-        if (!stats.isDirectory()) {
-            // If it's not a directory, and force is not set, throw an error.
-            if (!options.force) {
-                // Check the force option passed to this function
-                throw new Error(`Path is not a directory: ${dirPath}`);
-            }
-            // If force is true, and it's not a directory (e.g. a file),
-            // fs.rm will handle it (it can remove files too).
-        }
-    }
-    catch (error) {
-        // If fs.stat fails (e.g., path doesn't exist):
-        // If force is true, suppress this error and let fs.rm handle it
-        // (fs.rm with force:true will not error on non-existence).
-        // If force is false, re-throw the error from fs.stat.
-        if (!options.force) {
-            // Check the force option passed to this function
-            throw error;
-        }
-    }
-    // Prepare final options for fs.rm.
-    // fs.rm for directories generally requires recursive: true.
-    // Spread the passed options to allow overriding, but ensure recursive is true by default.
-    const finalOptions = { recursive: true, ...options };
-    return fs.rm(dirPath, finalOptions);
+export async function removeDirectory(
+	dirPath,
+	options = { recursive: true, force: false },
+) {
+	// Preliminary check: ensure the path is a directory, unless force is true.
+	try {
+		const stats = await fs.stat(dirPath);
+		if (!stats.isDirectory()) {
+			// If it's not a directory, and force is not set, throw an error.
+			if (!options.force) {
+				// Check the force option passed to this function
+				throw new Error(`Path is not a directory: ${dirPath}`);
+			}
+			// If force is true, and it's not a directory (e.g. a file),
+			// fs.rm will handle it (it can remove files too).
+		}
+	} catch (error) {
+		// If fs.stat fails (e.g., path doesn't exist):
+		// If force is true, suppress this error and let fs.rm handle it
+		// (fs.rm with force:true will not error on non-existence).
+		// If force is false, re-throw the error from fs.stat.
+		if (!options.force) {
+			// Check the force option passed to this function
+			throw error;
+		}
+	}
+	// Prepare final options for fs.rm.
+	// fs.rm for directories generally requires recursive: true.
+	// Spread the passed options to allow overriding, but ensure recursive is true by default.
+	const finalOptions = { recursive: true, ...options };
+	return fs.rm(dirPath, finalOptions);
 }
+//# sourceMappingURL=removeDirectory.js.map

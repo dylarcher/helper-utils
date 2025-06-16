@@ -33,10 +33,10 @@
  * // Connection Type: effective-type: 4g, rtt: 50, downlink: 10, saveData: false (details vary)
  */
 export function getOSInfo(): {
-    platform: string;
-    userAgent: string;
-    language: string;
-    vendor: string;
-    connection?: string;
-    error?: string;
+	platform: string;
+	userAgent: string;
+	language: string;
+	vendor: string;
+	connection?: string;
+	error?: string;
 };

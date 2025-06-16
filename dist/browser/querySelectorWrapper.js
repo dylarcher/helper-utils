@@ -50,23 +50,24 @@
  * // const noDoc = querySelectorWrapper('p'); // null
  */
 export function querySelectorWrapper(selector, container) {
-    // Determine the target container based on whether 'container' argument was passed.
-    const targetContainer = arguments.length >= 2 // Checks if 'container' was explicitly passed
-        ? container // Use the passed 'container', even if it's null/undefined
-        : typeof document !== 'undefined'
-            ? document // If no 'container' passed, default to global document
-            : null; // If no document (e.g., non-browser), and no container passed, use null.
-    // Validate the determined container.
-    if (!targetContainer || typeof targetContainer.querySelector !== 'function') {
-        return null; // Return null if container is invalid or not queryable.
-    }
-    try {
-        // Execute querySelector.
-        return targetContainer.querySelector(selector);
-    }
-    catch (_error) {
-        // Catch errors (e.g., invalid selector syntax) and return null.
-        // console.error(`Error in querySelectorWrapper with selector "${selector}":`, error); // Optional: for debugging
-        return null;
-    }
+	// Determine the target container based on whether 'container' argument was passed.
+	const targetContainer =
+		arguments.length >= 2 // Checks if 'container' was explicitly passed
+			? container // Use the passed 'container', even if it's null/undefined
+			: typeof document !== 'undefined'
+				? document // If no 'container' passed, default to global document
+				: null; // If no document (e.g., non-browser), and no container passed, use null.
+	// Validate the determined container.
+	if (!targetContainer || typeof targetContainer.querySelector !== 'function') {
+		return null; // Return null if container is invalid or not queryable.
+	}
+	try {
+		// Execute querySelector.
+		return targetContainer.querySelector(selector);
+	} catch (_error) {
+		// Catch errors (e.g., invalid selector syntax) and return null.
+		// console.error(`Error in querySelectorWrapper with selector "${selector}":`, error); // Optional: for debugging
+		return null;
+	}
 }
+//# sourceMappingURL=querySelectorWrapper.js.map

@@ -28,11 +28,14 @@
  * // console.info(anotherId);
  */
 export function uuid() {
-    if (typeof crypto !== 'undefined' &&
-        typeof crypto.randomUUID === 'function') {
-        return crypto.randomUUID();
-    }
-    // The existing comment below is a good reminder for potential future enhancements.
-    // Fallback or error for older browsers could be added here if needed.
-    throw new Error('crypto.randomUUID is not available in this browser.');
+	if (
+		typeof crypto !== 'undefined' &&
+		typeof crypto.randomUUID === 'function'
+	) {
+		return crypto.randomUUID();
+	}
+	// The existing comment below is a good reminder for potential future enhancements.
+	// Fallback or error for older browsers could be added here if needed.
+	throw new Error('crypto.randomUUID is not available in this browser.');
 }
+//# sourceMappingURL=uuid.js.map

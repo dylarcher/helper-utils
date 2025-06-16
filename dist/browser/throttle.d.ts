@@ -51,4 +51,7 @@
  * // immediateFunc(); // "Called immediately!"
  * // immediateFunc(); // "Called immediately!" (again, as limit is 0)
  */
-export function throttle(func: (...args: any[]) => any, limit: number): (...args: any[]) => any | undefined;
+export function throttle(
+	func: (...args: any[]) => any,
+	limit: number,
+): (...args: any[]) => any | undefined;

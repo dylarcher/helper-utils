@@ -46,11 +46,12 @@ import * as _crypto from 'node:crypto';
  * }
  */
 export function generateHash(data, algorithm = 'sha256', encoding = 'hex') {
-    // The `encoding` type in `digest()` can be `crypto.BinaryToTextEncoding`
-    // which includes 'hex', 'base64', 'latin1'. The JSDoc reflects this.
-    // The `any` cast in the original code is acceptable if we trust the JSDoc's stricter type.
-    return _crypto
-        .createHash(algorithm)
-        .update(data) // Assumes 'utf8' for string input by default
-        .digest(/** @type {_crypto.BinaryToTextEncoding} */ (encoding));
+	// The `encoding` type in `digest()` can be `crypto.BinaryToTextEncoding`
+	// which includes 'hex', 'base64', 'latin1'. The JSDoc reflects this.
+	// The `any` cast in the original code is acceptable if we trust the JSDoc's stricter type.
+	return _crypto
+		.createHash(algorithm)
+		.update(data) // Assumes 'utf8' for string input by default
+		.digest(/** @type {_crypto.BinaryToTextEncoding} */ (encoding));
 }
+//# sourceMappingURL=generateHash.js.map

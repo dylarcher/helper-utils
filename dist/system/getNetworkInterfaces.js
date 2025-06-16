@@ -79,9 +79,12 @@ import os from 'node:os';
  * //       CIDR: fe80::abc:def:1234:5678/64
  */
 export function getNetworkInterfaces() {
-    // os.networkInterfaces() returns an object mapping network interface names
-    // to arrays of NetworkInterfaceInfo objects.
-    // It can, in very rare cases, throw if the system call fails.
-    // It might return undefined in some edge cases according to some typings, though typically an object.
-    return /** @type {Record<string, import('node:os').NetworkInterfaceInfo[]> | undefined} */ (os.networkInterfaces());
+	// os.networkInterfaces() returns an object mapping network interface names
+	// to arrays of NetworkInterfaceInfo objects.
+	// It can, in very rare cases, throw if the system call fails.
+	// It might return undefined in some edge cases according to some typings, though typically an object.
+	return /** @type {Record<string, import('node:os').NetworkInterfaceInfo[]> | undefined} */ (
+		os.networkInterfaces()
+	);
 }
+//# sourceMappingURL=getNetworkInterfaces.js.map

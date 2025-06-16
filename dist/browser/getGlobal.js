@@ -42,7 +42,8 @@
  * globalObj.console = { log: (...args) => originalConsole.log('[LOG]', ...args) };
  */
 export function getGlobal(_options = {}) {
-    // Use global for Node.js, fallback to globalThis for modern environments
-    // We need to safely check for global to avoid ReferenceError in environments where it doesn't exist
-    return (typeof global !== 'undefined' ? global : null) ?? globalThis;
+	// Use global for Node.js, fallback to globalThis for modern environments
+	// We need to safely check for global to avoid ReferenceError in environments where it doesn't exist
+	return (typeof global !== 'undefined' ? global : null) ?? globalThis;
 }
+//# sourceMappingURL=getGlobal.js.map

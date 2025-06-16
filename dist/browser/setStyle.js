@@ -34,28 +34,29 @@
  * setStyle(nullElement, 'color', 'red'); // Does nothing
  */
 export function setStyle(element, property, value) {
-    if (!element || !element.style) {
-        return; // Do nothing if element is invalid or has no style property
-    }
-    if (typeof property === 'object' && property !== null) {
-        // Iterate over an object of style properties
-        for (const key of Object.keys(property)) {
-            // Ensure key is a non-empty string before attempting to set style.
-            // Object.keys ensures `key` is a string.
-            if (key) {
-                // @ts-ignore - Dynamic property access on style object.
-                // CSSStyleDeclaration properties are typically camelCase (e.g., backgroundColor).
-                // While browsers might handle kebab-case for some properties, camelCase is standard.
-                element.style[key] = property[key];
-            }
-        }
-    }
-    else if (typeof property === 'string' &&
-        property && // Ensure property name is a non-empty string
-        typeof value !== 'undefined' // Ensure value is provided
-    ) {
-        // Set a single style property
-        // @ts-ignore - Dynamic property access on style object.
-        element.style[property] = value;
-    }
+	if (!element || !element.style) {
+		return; // Do nothing if element is invalid or has no style property
+	}
+	if (typeof property === 'object' && property !== null) {
+		// Iterate over an object of style properties
+		for (const key of Object.keys(property)) {
+			// Ensure key is a non-empty string before attempting to set style.
+			// Object.keys ensures `key` is a string.
+			if (key) {
+				// @ts-ignore - Dynamic property access on style object.
+				// CSSStyleDeclaration properties are typically camelCase (e.g., backgroundColor).
+				// While browsers might handle kebab-case for some properties, camelCase is standard.
+				element.style[key] = property[key];
+			}
+		}
+	} else if (
+		typeof property === 'string' &&
+		property && // Ensure property name is a non-empty string
+		typeof value !== 'undefined' // Ensure value is provided
+	) {
+		// Set a single style property
+		// @ts-ignore - Dynamic property access on style object.
+		element.style[property] = value;
+	}
 }
+//# sourceMappingURL=setStyle.js.map

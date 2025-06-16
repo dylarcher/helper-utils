@@ -19,31 +19,34 @@
  * const nonExistent = getCookie('nonExistentCookie'); // null
  */
 export function getCookie(alias) {
-    if (typeof document === 'undefined' ||
-        !document.cookie ||
-        document.cookie === '') {
-        return null;
-    }
-    const cookies = document.cookie.split(';');
-    for (const rawCookie of cookies) {
-        const trimmedCookie = rawCookie.trimStart();
-        // Handle spaces around equals sign
-        if (trimmedCookie.includes('=')) {
-            const separatorIndex = trimmedCookie.indexOf('=');
-            // If '=' is not found, or if it's the first char (no name), this cookie part is skipped.
-            // A valid cookie name must exist.
-            if (separatorIndex <= 0) {
-                continue;
-            }
-            const cookieName = trimmedCookie.substring(0, separatorIndex).trim();
-            if (cookieName === alias) {
-                // Value is everything after the first '=', trimmed.
-                // Handles cases where the value might also contain '=' if not properly URI encoded,
-                // though standard practice is to encode cookie values.
-                const cookieValue = trimmedCookie.substring(separatorIndex + 1).trim();
-                return cookieValue;
-            }
-        }
-    }
-    return null;
+	if (
+		typeof document === 'undefined' ||
+		!document.cookie ||
+		document.cookie === ''
+	) {
+		return null;
+	}
+	const cookies = document.cookie.split(';');
+	for (const rawCookie of cookies) {
+		const trimmedCookie = rawCookie.trimStart();
+		// Handle spaces around equals sign
+		if (trimmedCookie.includes('=')) {
+			const separatorIndex = trimmedCookie.indexOf('=');
+			// If '=' is not found, or if it's the first char (no name), this cookie part is skipped.
+			// A valid cookie name must exist.
+			if (separatorIndex <= 0) {
+				continue;
+			}
+			const cookieName = trimmedCookie.substring(0, separatorIndex).trim();
+			if (cookieName === alias) {
+				// Value is everything after the first '=', trimmed.
+				// Handles cases where the value might also contain '=' if not properly URI encoded,
+				// though standard practice is to encode cookie values.
+				const cookieValue = trimmedCookie.substring(separatorIndex + 1).trim();
+				return cookieValue;
+			}
+		}
+	}
+	return null;
 }
+//# sourceMappingURL=getCookie.js.map

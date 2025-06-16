@@ -67,8 +67,9 @@ import fs from 'node:fs/promises';
  * // manageMyFile();
  */
 export async function writeFileAsync(filePath, data, encoding = 'utf8') {
-    // fs.writeFile will overwrite the file if it already exists.
-    // If `data` is a Buffer, the encoding option is ignored.
-    // If `data` is a string, it will be encoded using the specified encoding (default 'utf8').
-    return fs.writeFile(filePath, data, { encoding });
+	// fs.writeFile will overwrite the file if it already exists.
+	// If `data` is a Buffer, the encoding option is ignored.
+	// If `data` is a string, it will be encoded using the specified encoding (default 'utf8').
+	return fs.writeFile(filePath, data, { encoding });
 }
+//# sourceMappingURL=writeFileAsync.js.map

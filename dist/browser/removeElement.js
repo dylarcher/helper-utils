@@ -28,20 +28,20 @@
  * }
  */
 export function removeElement(element) {
-    if (!element?.parentNode) {
-        // Do nothing if element is null, undefined, or has no parentNode
-        return;
-    }
-    try {
-        // element.parentNode is confirmed to exist from the guard clause above.
-        // removeChild is a standard method on Node.
-        if (typeof element.parentNode.removeChild === 'function') {
-            element.parentNode.removeChild(element);
-        }
-    }
-    catch (_error) {
-        // Silently handle potential errors during removal.
-        // This could happen if the element was already removed or the DOM state changed unexpectedly.
-        // console.error('Failed to remove element:', error); // Optional: for debugging
-    }
+	if (!element?.parentNode) {
+		// Do nothing if element is null, undefined, or has no parentNode
+		return;
+	}
+	try {
+		// element.parentNode is confirmed to exist from the guard clause above.
+		// removeChild is a standard method on Node.
+		if (typeof element.parentNode.removeChild === 'function') {
+			element.parentNode.removeChild(element);
+		}
+	} catch (_error) {
+		// Silently handle potential errors during removal.
+		// This could happen if the element was already removed or the DOM state changed unexpectedly.
+		// console.error('Failed to remove element:', error); // Optional: for debugging
+	}
 }
+//# sourceMappingURL=removeElement.js.map

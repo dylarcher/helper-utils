@@ -45,14 +45,14 @@ import fs from 'node:fs/promises';
  * // checkPaths();
  */
 export async function isDirectory(dirPath) {
-    try {
-        const stats = await fs.stat(dirPath); // fs.stat follows symbolic links
-        return stats.isDirectory();
-    }
-    catch (_error) {
-        // This catch block handles errors like ENOENT (path does not exist),
-        // EACCES (permission denied), etc. In all such error cases,
-        // the path is effectively not a directory that can be reported as such.
-        return false;
-    }
+	try {
+		const stats = await fs.stat(dirPath); // fs.stat follows symbolic links
+		return stats.isDirectory();
+	} catch (_error) {
+		// This catch block handles errors like ENOENT (path does not exist),
+		// EACCES (permission denied), etc. In all such error cases,
+		// the path is effectively not a directory that can be reported as such.
+		return false;
+	}
 }
+//# sourceMappingURL=isDirectory.js.map

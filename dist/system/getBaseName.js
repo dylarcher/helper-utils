@@ -44,13 +44,14 @@ import path from 'node:path';
  * }
  */
 export function getBasename(p, ext) {
-    if (!p || typeof p !== 'string') {
-        // Guard against non-string or empty string input for 'p'
-        return '';
-    }
-    // For cross-platform path handling, Node.js path.basename is robust.
-    // It handles various edge cases like trailing slashes correctly.
-    // For example, path.basename('/foo/bar/') returns 'bar'.
-    // path.basename('/') returns '/'.
-    return path.basename(p, ext);
+	if (!p || typeof p !== 'string') {
+		// Guard against non-string or empty string input for 'p'
+		return '';
+	}
+	// For cross-platform path handling, Node.js path.basename is robust.
+	// It handles various edge cases like trailing slashes correctly.
+	// For example, path.basename('/foo/bar/') returns 'bar'.
+	// path.basename('/') returns '/'.
+	return path.basename(p, ext);
 }
+//# sourceMappingURL=getBaseName.js.map

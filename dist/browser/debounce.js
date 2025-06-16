@@ -39,24 +39,24 @@
  * // debouncedRiskyFunction(-5); // Logs "Error in debounced function: Error: Value cannot be negative." to console after 300ms
  */
 export function debounce(func, delay) {
-    /** @type {ReturnType<typeof setTimeout> | undefined} */
-    let timeoutId;
-    // The returned function is what gets called directly.
-    // It manages the setTimeout behavior.
-    return /** @this {any} */ function (...args) {
-        // `this` context of this returned function is preserved for `func.apply`
-        const context = this;
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => {
-            try {
-                // Execute the original function with the preserved context and arguments.
-                func.apply(context, args);
-            }
-            catch (error) {
-                // Log errors from the original function.
-                // Avoid re-throwing as this would be an uncaught exception in setTimeout.
-                console.error('Error in debounced function:', error);
-            }
-        }, delay);
-    };
+	/** @type {ReturnType<typeof setTimeout> | undefined} */
+	let timeoutId;
+	// The returned function is what gets called directly.
+	// It manages the setTimeout behavior.
+	return /** @this {any} */ function (...args) {
+		// `this` context of this returned function is preserved for `func.apply`
+		const context = this;
+		clearTimeout(timeoutId);
+		timeoutId = setTimeout(() => {
+			try {
+				// Execute the original function with the preserved context and arguments.
+				func.apply(context, args);
+			} catch (error) {
+				// Log errors from the original function.
+				// Avoid re-throwing as this would be an uncaught exception in setTimeout.
+				console.error('Error in debounced function:', error);
+			}
+		}, delay);
+	};
 }
+//# sourceMappingURL=debounce.js.map

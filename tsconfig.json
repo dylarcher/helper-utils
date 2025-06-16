@@ -4,6 +4,8 @@
 		"checkJs": true,
 		"baseUrl": ".",
 		"rootDir": "src",
+		"sourceMap": true,
+		"resolveJsonModule": true,
 		"skipDefaultLibCheck": true,
 		"skipLibCheck": true,
 		"esModuleInterop": true,
@@ -31,7 +33,7 @@
 		"src/**/*.spec.js",
 		"src/**/*.test.js"
 	],
-	"include": ["src"],
+	"include": ["src/**/*"],
 	"typeAcquisition": {
 		"enable": true,
 		"include": ["eslint", "prettier"]

@@ -41,16 +41,16 @@
  * }
  */
 export function setAttribute(element, attributeName, value) {
-    // Check if element is provided and attributeName is a non-empty string.
-    // Assumes 'element' is a DOM Element and thus should have 'setAttribute' method.
-    if (!element || !attributeName) {
-        return; // Do nothing if checks fail
-    }
-    try {
-        element.setAttribute(attributeName, value);
-    }
-    catch (_error) {
-        // Silently handle errors, e.g., if attributeName is invalid for XML/HTML.
-        // console.error(`Error setting attribute "${attributeName}" on element:`, error); // Optional: for debugging
-    }
+	// Check if element is provided and attributeName is a non-empty string.
+	// Assumes 'element' is a DOM Element and thus should have 'setAttribute' method.
+	if (!element || !attributeName) {
+		return; // Do nothing if checks fail
+	}
+	try {
+		element.setAttribute(attributeName, value);
+	} catch (_error) {
+		// Silently handle errors, e.g., if attributeName is invalid for XML/HTML.
+		// console.error(`Error setting attribute "${attributeName}" on element:`, error); // Optional: for debugging
+	}
 }
+//# sourceMappingURL=setAttribute.js.map

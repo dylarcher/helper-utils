@@ -59,8 +59,9 @@ import fs from 'node:fs/promises';
  * // readMyFile();
  */
 export async function readFileAsync(filePath, encoding = 'utf8') {
-    // fs.readFile with an encoding option returns a string.
-    // If encoding option was omitted or null, it would return a Buffer.
-    // This implementation always provides an encoding, defaulting to 'utf8'.
-    return /** @type {Promise<string>} */ (fs.readFile(filePath, { encoding }));
+	// fs.readFile with an encoding option returns a string.
+	// If encoding option was omitted or null, it would return a Buffer.
+	// This implementation always provides an encoding, defaulting to 'utf8'.
+	return /** @type {Promise<string>} */ (fs.readFile(filePath, { encoding }));
 }
+//# sourceMappingURL=readFileAsync.js.map

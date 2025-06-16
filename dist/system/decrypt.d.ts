@@ -55,4 +55,7 @@
  *   console.error(error.message); // "Invalid encrypted text format. Expected ivHex:encryptedHex"
  * }
  */
-export function decrypt(encryptedTextWithIv: string, key: Buffer | string): string;
+export function decrypt(
+	encryptedTextWithIv: string,
+	key: Buffer | string,
+): string;

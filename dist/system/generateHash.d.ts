@@ -44,4 +44,8 @@
  *   console.error('Hashing error:', error.message); // e.g., Hashing error: Digest method not supported
  * }
  */
-export function generateHash(data: string, algorithm?: string, encoding?: "hex" | "base64" | "latin1"): string;
+export function generateHash(
+	data: string,
+	algorithm?: string,
+	encoding?: 'hex' | 'base64' | 'latin1',
+): string;

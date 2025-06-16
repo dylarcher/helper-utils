@@ -69,10 +69,11 @@ import fs from 'node:fs/promises';
  * // showDirectoryContents();
  */
 export async function* listDirectoryContents(dirPath) {
-    // fs.readdir() resolves with an array of names of the files in the directory
-    // (excluding '.' and '..').
-    const items = await fs.readdir(dirPath);
-    for (const item of items) {
-        yield item;
-    }
+	// fs.readdir() resolves with an array of names of the files in the directory
+	// (excluding '.' and '..').
+	const items = await fs.readdir(dirPath);
+	for (const item of items) {
+		yield item;
+	}
 }
+//# sourceMappingURL=listDirectoryContents.js.map

@@ -38,4 +38,7 @@
  * // debouncedRiskyFunction(10); // Logs "Value is fine: 10" after 300ms
  * // debouncedRiskyFunction(-5); // Logs "Error in debounced function: Error: Value cannot be negative." to console after 300ms
  */
-export function debounce(func: (...args: any[]) => any, delay: number): (...args: any[]) => void;
+export function debounce(
+	func: (...args: any[]) => any,
+	delay: number,
+): (...args: any[]) => void;

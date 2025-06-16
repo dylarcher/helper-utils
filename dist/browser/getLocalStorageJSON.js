@@ -41,17 +41,18 @@
  * }
  */
 export function getLocalStorageJSON(key) {
-    // Ensure localStorage is available before trying to use it.
-    if (typeof localStorage === 'undefined' || localStorage === null) {
-        throw new Error('localStorage is not available in this environment.');
-    }
-    const item = localStorage.getItem(key);
-    // If the item does not exist in localStorage, getItem returns null.
-    // This is a valid case, distinct from stored JSON 'null' or parsing errors.
-    if (item === null) {
-        return null;
-    }
-    // Attempt to parse. If item is 'null' (string), JSON.parse will return null.
-    // If item is malformed JSON, JSON.parse will throw a SyntaxError.
-    return JSON.parse(item);
+	// Ensure localStorage is available before trying to use it.
+	if (typeof localStorage === 'undefined' || localStorage === null) {
+		throw new Error('localStorage is not available in this environment.');
+	}
+	const item = localStorage.getItem(key);
+	// If the item does not exist in localStorage, getItem returns null.
+	// This is a valid case, distinct from stored JSON 'null' or parsing errors.
+	if (item === null) {
+		return null;
+	}
+	// Attempt to parse. If item is 'null' (string), JSON.parse will return null.
+	// If item is malformed JSON, JSON.parse will throw a SyntaxError.
+	return JSON.parse(item);
 }
+//# sourceMappingURL=getLocalStorageJSON.js.map

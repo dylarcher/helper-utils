@@ -43,28 +43,38 @@
  * // If selector is invalid, e.g., onDelegate(list, 'click', ':[invalid]', () => {}),
  * // errors will be silently ignored and the callback won't fire for that selector.
  */
-export function onDelegate(parentElement, eventType, selector, callback, options) {
-    if (!parentElement) {
-        return; // Do nothing if parentElement is not provided
-    }
-    parentElement.addEventListener(eventType, (/** @type {Event} */ evt) => {
-        // Cast event.target to Element for `matches` method.
-        // In some complex scenarios (e.g. text nodes), target might not be an Element.
-        const target = /** @type {Element} */ (evt.target);
-        // Ensure target is an Element and has `matches` method.
-        if (target && typeof target.matches === 'function') {
-            try {
-                if (target.matches(selector)) {
-                    // `call` sets `this` context of the callback to the target element
-                    callback.call(target, evt);
-                }
-            }
-            catch (_error) {
-                // Silently handle errors from `target.matches(selector)`.
-                // This typically occurs if `selector` is invalid.
-                // This prevents breaking the event delegation for other selectors or listeners.
-                // console.warn(`Error in onDelegate selector matching: "${selector}"`, error); // Optional: for debugging
-            }
-        }
-    }, options);
+export function onDelegate(
+	parentElement,
+	eventType,
+	selector,
+	callback,
+	options,
+) {
+	if (!parentElement) {
+		return; // Do nothing if parentElement is not provided
+	}
+	parentElement.addEventListener(
+		eventType,
+		(/** @type {Event} */ evt) => {
+			// Cast event.target to Element for `matches` method.
+			// In some complex scenarios (e.g. text nodes), target might not be an Element.
+			const target = /** @type {Element} */ (evt.target);
+			// Ensure target is an Element and has `matches` method.
+			if (target && typeof target.matches === 'function') {
+				try {
+					if (target.matches(selector)) {
+						// `call` sets `this` context of the callback to the target element
+						callback.call(target, evt);
+					}
+				} catch (_error) {
+					// Silently handle errors from `target.matches(selector)`.
+					// This typically occurs if `selector` is invalid.
+					// This prevents breaking the event delegation for other selectors or listeners.
+					// console.warn(`Error in onDelegate selector matching: "${selector}"`, error); // Optional: for debugging
+				}
+			}
+		},
+		options,
+	);
 }
+//# sourceMappingURL=onDelegate.js.map

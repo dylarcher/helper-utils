@@ -48,6 +48,9 @@
  *
  * // manageMyDirectory();
  */
-export function createDirectory(dirPath: string, options?: import("node:fs").MakeDirectoryOptions & {
-    recursive?: boolean;
-}): Promise<string | undefined>;
+export function createDirectory(
+	dirPath: string,
+	options?: import('node:fs').MakeDirectoryOptions & {
+		recursive?: boolean;
+	},
+): Promise<string | undefined>;

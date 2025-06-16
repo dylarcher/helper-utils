@@ -50,17 +50,17 @@
  * console.info(invalidSel); // null (error caught internally)
  */
 export function findClosest(element, selector) {
-    if (!element) {
-        return null;
-    }
-    try {
-        // If element is null or undefined, element.closest would throw an error.
-        // The guard above handles this.
-        return element.closest(selector);
-    }
-    catch (_error) {
-        // This typically catches SyntaxError if the selector is invalid.
-        // console.error(`Error in findClosest with selector "${selector}":`, error); // Optional for debugging
-        return null;
-    }
+	if (!element) {
+		return null;
+	}
+	try {
+		// If element is null or undefined, element.closest would throw an error.
+		// The guard above handles this.
+		return element.closest(selector);
+	} catch (_error) {
+		// This typically catches SyntaxError if the selector is invalid.
+		// console.error(`Error in findClosest with selector "${selector}":`, error); // Optional for debugging
+		return null;
+	}
 }
+//# sourceMappingURL=findClosest.js.map

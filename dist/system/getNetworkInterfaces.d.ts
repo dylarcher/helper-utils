@@ -77,4 +77,6 @@
  * //       Internal: false
  * //       CIDR: fe80::abc:def:1234:5678/64
  */
-export function getNetworkInterfaces(): Record<string, import("node:os").NetworkInterfaceInfo[]> | undefined;
+export function getNetworkInterfaces():
+	| Record<string, import('node:os').NetworkInterfaceInfo[]>
+	| undefined;

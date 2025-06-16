@@ -52,13 +52,16 @@
  *   }
  * }
  */
-export function fetchJSON(url: string, options?: RequestInit & {
-    body?: any;
-}): Promise<any | null>;
+export function fetchJSON(
+	url: string,
+	options?: RequestInit & {
+		body?: any;
+	},
+): Promise<any | null>;
 export type PromiseTryCallback = () => any;
 export type PromiseWithTryMethod = {
-    /**
-     * - Executes a function and returns a Promise
-     */
-    try: (arg0: () => any) => Promise<any>;
+	/**
+	 * - Executes a function and returns a Promise
+	 */
+	try: (arg0: () => any) => Promise<any>;
 };

@@ -22,7 +22,8 @@ import os from 'node:os';
  * }
  */
 export function getHostname() {
-    // os.hostname() returns the hostname of the operating system as a string.
-    // It can throw if the underlying system call fails, though this is uncommon.
-    return os.hostname();
+	// os.hostname() returns the hostname of the operating system as a string.
+	// It can throw if the underlying system call fails, though this is uncommon.
+	return os.hostname();
 }
+//# sourceMappingURL=getHostname.js.map

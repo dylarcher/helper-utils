@@ -54,4 +54,8 @@
  * //   console.error(e); // DOMException: The tag name provided ('invalid-tag-@!#') is not a valid name.
  * // }
  */
-export function createElement(tagName: string, attributes?: Record<string, string>, children?: string | Node | Array<string | Node>): Element;
+export function createElement(
+	tagName: string,
+	attributes?: Record<string, string>,
+	children?: string | Node | Array<string | Node>,
+): Element;

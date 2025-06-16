@@ -38,10 +38,11 @@ import path from 'node:path';
  * console.info(getDirname('file/')); // 'file'
  */
 export function getDirname(p) {
-    if (!p || typeof p !== 'string') {
-        // If p is null, undefined, empty string, or not a string, return '.'
-        return '.';
-    }
-    // Node.js path.dirname is robust for cross-platform directory name resolution.
-    return path.dirname(p);
+	if (!p || typeof p !== 'string') {
+		// If p is null, undefined, empty string, or not a string, return '.'
+		return '.';
+	}
+	// Node.js path.dirname is robust for cross-platform directory name resolution.
+	return path.dirname(p);
 }
+//# sourceMappingURL=getDirname.js.map

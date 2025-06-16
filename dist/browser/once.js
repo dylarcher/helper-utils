@@ -52,21 +52,20 @@
  * // }
  */
 export function once(element, eventType, listener, options) {
-    if (!element || typeof element.addEventListener !== 'function') {
-        // Do nothing if element is invalid or doesn't support addEventListener
-        return;
-    }
-    let eventOptions;
-    if (typeof options === 'boolean') {
-        eventOptions = { capture: options, once: true };
-    }
-    else if (typeof options === 'object' && options !== null) {
-        eventOptions = { ...options, once: true };
-    }
-    else {
-        eventOptions = { once: true }; // Default if options is undefined or invalid type
-    }
-    // This relies on the browser's native handling of `once: true`.
-    // The comment about older browsers in the original code is not reflected in this implementation.
-    element.addEventListener(eventType, listener, eventOptions);
+	if (!element || typeof element.addEventListener !== 'function') {
+		// Do nothing if element is invalid or doesn't support addEventListener
+		return;
+	}
+	let eventOptions;
+	if (typeof options === 'boolean') {
+		eventOptions = { capture: options, once: true };
+	} else if (typeof options === 'object' && options !== null) {
+		eventOptions = { ...options, once: true };
+	} else {
+		eventOptions = { once: true }; // Default if options is undefined or invalid type
+	}
+	// This relies on the browser's native handling of `once: true`.
+	// The comment about older browsers in the original code is not reflected in this implementation.
+	element.addEventListener(eventType, listener, eventOptions);
 }
+//# sourceMappingURL=once.js.map

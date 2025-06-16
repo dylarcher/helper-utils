@@ -16,7 +16,10 @@
  * // el.classList will now be "new-class another-class active highlight"
  */
 export function addClass(element, ...classNames) {
-    if (element?.classList) {
-        element.classList.add(...classNames.filter(className => Boolean(className && className.trim())));
-    }
+	if (element?.classList) {
+		element.classList.add(
+			...classNames.filter(className => Boolean(className && className.trim())),
+		);
+	}
 }
+//# sourceMappingURL=addClass.js.map

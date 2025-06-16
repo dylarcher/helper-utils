@@ -43,14 +43,15 @@ import path from 'node:path';
  * console.info(getExtension('some/directory'));     // ''
  */
 export function getExtension(p) {
-    if (!p || typeof p !== 'string') {
-        // Guard against non-string or empty string input for 'p'
-        return '';
-    }
-    // Node.js path.extname is robust for extracting file extensions.
-    // It returns the extension from the last occurrence of the . (period)
-    // to the end of string in the last portion of the path.
-    // If there is no . in the last portion of the path, or if the first character
-    // of the basename is . (dot), then it returns an empty string.
-    return path.extname(p);
+	if (!p || typeof p !== 'string') {
+		// Guard against non-string or empty string input for 'p'
+		return '';
+	}
+	// Node.js path.extname is robust for extracting file extensions.
+	// It returns the extension from the last occurrence of the . (period)
+	// to the end of string in the last portion of the path.
+	// If there is no . in the last portion of the path, or if the first character
+	// of the basename is . (dot), then it returns an empty string.
+	return path.extname(p);
 }
+//# sourceMappingURL=getExtension.js.map

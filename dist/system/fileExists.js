@@ -48,14 +48,14 @@ import fs from 'node:fs/promises';
  * // checkMyFiles();
  */
 export async function fileExists(filePath) {
-    try {
-        // fs.access with no mode defaults to F_OK (check for existence)
-        await fs.access(filePath);
-        return true; // Path exists and is accessible
-    }
-    catch (_error) {
-        // fs.access throws an error if any accessibility checks fail (e.g., ENOENT if not found)
-        // For fileExists, we primarily expect errors when the file doesn't exist.
-        return false; // Path does not exist or is not accessible
-    }
+	try {
+		// fs.access with no mode defaults to F_OK (check for existence)
+		await fs.access(filePath);
+		return true; // Path exists and is accessible
+	} catch (_error) {
+		// fs.access throws an error if any accessibility checks fail (e.g., ENOENT if not found)
+		// For fileExists, we primarily expect errors when the file doesn't exist.
+		return false; // Path does not exist or is not accessible
+	}
 }
+//# sourceMappingURL=fileExists.js.map

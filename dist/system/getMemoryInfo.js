@@ -35,10 +35,11 @@ import os from 'node:os';
  * // (Actual values will vary based on the system)
  */
 export function getMemoryInfo() {
-    // os.totalmem() and os.freemem() return the total and free system memory in bytes.
-    // These functions can throw if the underlying system calls fail, though this is uncommon.
-    return {
-        totalMemory: os.totalmem(),
-        freeMemory: os.freemem(),
-    };
+	// os.totalmem() and os.freemem() return the total and free system memory in bytes.
+	// These functions can throw if the underlying system calls fail, though this is uncommon.
+	return {
+		totalMemory: os.totalmem(),
+		freeMemory: os.freemem(),
+	};
 }
+//# sourceMappingURL=getMemoryInfo.js.map

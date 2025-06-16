@@ -80,7 +80,10 @@
  *
  * // manageDirectories();
  */
-export function removeDirectory(dirPath: string, options?: import("node:fs").RmOptions & {
-    recursive?: boolean;
-    force?: boolean;
-}): Promise<void>;
+export function removeDirectory(
+	dirPath: string,
+	options?: import('node:fs').RmOptions & {
+		recursive?: boolean;
+		force?: boolean;
+	},
+): Promise<void>;

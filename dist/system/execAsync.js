@@ -63,12 +63,13 @@ const execPromise = promisify(exec);
  * // exampleFailingCommand();
  */
 export async function execAsync(command, options) {
-    // execPromise (promisified exec) resolves with { stdout, stderr }
-    // or rejects with an error object that often includes stdout and stderr.
-    const result = await execPromise(command, options);
-    // Ensure stdout and stderr are strings, as they can be Buffers.
-    return {
-        stdout: result.stdout.toString(),
-        stderr: result.stderr.toString(),
-    };
+	// execPromise (promisified exec) resolves with { stdout, stderr }
+	// or rejects with an error object that often includes stdout and stderr.
+	const result = await execPromise(command, options);
+	// Ensure stdout and stderr are strings, as they can be Buffers.
+	return {
+		stdout: result.stdout.toString(),
+		stderr: result.stderr.toString(),
+	};
 }
+//# sourceMappingURL=execAsync.js.map

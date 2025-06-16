@@ -33,4 +33,8 @@
  * const nullElement = null;
  * setStyle(nullElement, 'color', 'red'); // Does nothing
  */
-export function setStyle(element: HTMLElement, property: string | Record<string, string>, value?: string): void;
+export function setStyle(
+	element: HTMLElement,
+	property: string | Record<string, string>,
+	value?: string,
+): void;

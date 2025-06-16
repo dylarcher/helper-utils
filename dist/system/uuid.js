@@ -39,15 +39,16 @@ import * as _crypto from 'node:crypto';
  * }
  */
 export function uuid(forceLetterStart = true) {
-    let result = _crypto.randomUUID(); // Generates a standard v4 UUID
-    // If forceLetterStart is true and the UUID begins with a digit (0-9)
-    if (forceLetterStart && /^[0-9]/.test(result)) {
-        // Replace the first character with a random letter from 'a' to 'f'.
-        // This makes the ID more compatible with CSS selectors or HTML IDs
-        // that might have restrictions on starting with a number, while keeping it hex-like.
-        const letters = 'abcdef'; // Available letters for replacement
-        const randomIndex = Math.floor(Math.random() * letters.length);
-        result = letters[randomIndex] + result.substring(1);
-    }
-    return result;
+	let result = _crypto.randomUUID(); // Generates a standard v4 UUID
+	// If forceLetterStart is true and the UUID begins with a digit (0-9)
+	if (forceLetterStart && /^[0-9]/.test(result)) {
+		// Replace the first character with a random letter from 'a' to 'f'.
+		// This makes the ID more compatible with CSS selectors or HTML IDs
+		// that might have restrictions on starting with a number, while keeping it hex-like.
+		const letters = 'abcdef'; // Available letters for replacement
+		const randomIndex = Math.floor(Math.random() * letters.length);
+		result = letters[randomIndex] + result.substring(1);
+	}
+	return result;
 }
+//# sourceMappingURL=uuid.js.map

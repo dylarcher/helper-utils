@@ -37,12 +37,12 @@
  * // el.classList remains "highlight"
  */
 export function toggleClass(element, className, force) {
-    if (element?.classList && className) {
-        try {
-            element.classList.toggle(className, force);
-        }
-        catch (_error) {
-            // Silently handle errors, e.g. if className is invalid.
-        }
-    }
+	if (element?.classList && className) {
+		try {
+			element.classList.toggle(className, force);
+		} catch (_error) {
+			// Silently handle errors, e.g. if className is invalid.
+		}
+	}
 }
+//# sourceMappingURL=toggleClass.js.map

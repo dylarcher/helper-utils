@@ -32,16 +32,20 @@
  * // handleCopyText(''); // Copies an empty string
  */
 export async function copyToClipboardAsync(text) {
-    if (typeof navigator === 'undefined' || !navigator.clipboard) {
-        return Promise.reject(new Error('Clipboard API not available. Use a fallback or ensure secure context (HTTPS).'));
-    }
-    try {
-        // The text parameter must be a string.
-        // navigator.clipboard.writeText will handle empty strings correctly.
-        await navigator.clipboard.writeText(text);
-    }
-    catch (err) {
-        // The error (err) is often a DOMException.
-        return Promise.reject(err);
-    }
+	if (typeof navigator === 'undefined' || !navigator.clipboard) {
+		return Promise.reject(
+			new Error(
+				'Clipboard API not available. Use a fallback or ensure secure context (HTTPS).',
+			),
+		);
+	}
+	try {
+		// The text parameter must be a string.
+		// navigator.clipboard.writeText will handle empty strings correctly.
+		await navigator.clipboard.writeText(text);
+	} catch (err) {
+		// The error (err) is often a DOMException.
+		return Promise.reject(err);
+	}
 }
+//# sourceMappingURL=copyToClipboardAsync.js.map

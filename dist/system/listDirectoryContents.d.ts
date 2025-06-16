@@ -67,4 +67,6 @@
  *
  * // showDirectoryContents();
  */
-export function listDirectoryContents(dirPath: string): AsyncGenerator<string, void, undefined>;
+export function listDirectoryContents(
+	dirPath: string,
+): AsyncGenerator<string, void, undefined>;

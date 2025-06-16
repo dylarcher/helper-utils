@@ -54,17 +54,18 @@ import os from 'node:os';
  * // }
  */
 export function getCPUInfo(cpuData) {
-    // If cpuData is explicitly null, return empty array
-    if (cpuData === null) {
-        return [];
-    }
-    const cpus = cpuData || os.cpus(); // Use provided data or fetch from os.cpus()
-    if (!cpus || cpus.length === 0) {
-        return [];
-    }
-    return cpus.map(cpu => ({
-        model: cpu.model || 'unknown', // Default for model
-        speed: cpu.speed > 0 ? cpu.speed : 0, // Default for speed, ensure positive
-        times: cpu.times, // Direct copy of the times object
-    }));
+	// If cpuData is explicitly null, return empty array
+	if (cpuData === null) {
+		return [];
+	}
+	const cpus = cpuData || os.cpus(); // Use provided data or fetch from os.cpus()
+	if (!cpus || cpus.length === 0) {
+		return [];
+	}
+	return cpus.map(cpu => ({
+		model: cpu.model || 'unknown', // Default for model
+		speed: cpu.speed > 0 ? cpu.speed : 0, // Default for speed, ensure positive
+		times: cpu.times, // Direct copy of the times object
+	}));
 }
+//# sourceMappingURL=getCPUInfo.js.map

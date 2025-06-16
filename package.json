@@ -75,7 +75,7 @@
 		"url": "git+https://github.com/dylarcher/js.helper-utils.git"
 	},
 	"scripts": {
-		"build": "rimraf dist/* && tsc -p .github/presets/tsconfig.browser.json && tsc -p .github/presets/tsconfig.system.json",
+		"build": "rimraf dist/* && tsc -p && tsc -p .github/presets/tsconfig.browser.json && tsc -p .github/presets/tsconfig.system.json",
 		"changelog:released": "npx auto-changelog --package --output CHANGELOG.md --template keepachangelog --commit-limit false",
 		"changelog:unreleased": "npx auto-changelog --commit-limit false --unreleased-only --template keepachangelog",
 		"format": "prettier --config .github/presets/.prettierrc.yml --ignore-unknown --no-error-on-unmatched-pattern",

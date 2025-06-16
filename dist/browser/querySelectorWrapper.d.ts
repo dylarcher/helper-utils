@@ -49,4 +49,8 @@
  * // (This would require mocking document to be undefined)
  * // const noDoc = querySelectorWrapper('p'); // null
  */
-export function querySelectorWrapper(selector: string, container?: Document | Element, ...args: any[]): Element | null;
+export function querySelectorWrapper(
+	selector: string,
+	container?: Document | Element,
+	...args: any[]
+): Element | null;

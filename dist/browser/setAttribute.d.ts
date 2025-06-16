@@ -40,4 +40,8 @@
  *  setAttribute(myImage, '', 'value');
  * }
  */
-export function setAttribute(element: Element, attributeName: string, value: string): void;
+export function setAttribute(
+	element: Element,
+	attributeName: string,
+	value: string,
+): void;

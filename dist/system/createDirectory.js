@@ -50,7 +50,8 @@ import fs from 'node:fs/promises';
  * // manageMyDirectory();
  */
 export async function createDirectory(dirPath, options = { recursive: true }) {
-    // fs.mkdir with recursive: true by default will not throw if the directory already exists.
-    // It returns the first directory path created, or undefined if all paths already existed.
-    return fs.mkdir(dirPath, options);
+	// fs.mkdir with recursive: true by default will not throw if the directory already exists.
+	// It returns the first directory path created, or undefined if all paths already existed.
+	return fs.mkdir(dirPath, options);
 }
+//# sourceMappingURL=createDirectory.js.map

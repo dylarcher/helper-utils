@@ -52,22 +52,23 @@
  * // immediateFunc(); // "Called immediately!" (again, as limit is 0)
  */
 export function throttle(func, limit) {
-    let lastCall = 0; // Timestamp of the last execution of func
-    let lastResult; // Store the result of the last successful func execution
-    // The returned throttled function
-    return function (...args) {
-        const now = Date.now();
-        // If limit is 0, or if enough time has passed since the last call
-        if (limit === 0 || now - lastCall >= limit) {
-            lastCall = now; // Update the timestamp of the last call
-            // Execute the original function with preserved context and arguments
-            // @ts-ignore
-            lastResult = func.apply(this, args);
-            return lastResult;
-        }
-        // If the call is throttled, return the result of the last successful invocation.
-        // Or return undefined if you prefer to signal that the current call was dropped.
-        // The original code returned undefined, so sticking to that for this update.
-        return undefined;
-    };
+	let lastCall = 0; // Timestamp of the last execution of func
+	let lastResult; // Store the result of the last successful func execution
+	// The returned throttled function
+	return function (...args) {
+		const now = Date.now();
+		// If limit is 0, or if enough time has passed since the last call
+		if (limit === 0 || now - lastCall >= limit) {
+			lastCall = now; // Update the timestamp of the last call
+			// Execute the original function with preserved context and arguments
+			// @ts-ignore
+			lastResult = func.apply(this, args);
+			return lastResult;
+		}
+		// If the call is throttled, return the result of the last successful invocation.
+		// Or return undefined if you prefer to signal that the current call was dropped.
+		// The original code returned undefined, so sticking to that for this update.
+		return undefined;
+	};
 }
+//# sourceMappingURL=throttle.js.map

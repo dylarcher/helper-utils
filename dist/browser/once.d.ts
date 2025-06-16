@@ -51,4 +51,9 @@
  * //   once(myButton, 'click', handleClick); // Both listeners will fire once independently
  * // }
  */
-export function once(element: EventTarget, eventType: string, listener: EventListener, options?: boolean | AddEventListenerOptions): void;
+export function once(
+	element: EventTarget,
+	eventType: string,
+	listener: EventListener,
+	options?: boolean | AddEventListenerOptions,
+): void;

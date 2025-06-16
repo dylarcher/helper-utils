@@ -38,20 +38,23 @@
  * console.info(withNonExistentContainer.length); // 0
  */
 export function querySelectorAllWrapper(selector, container) {
-    // Determine the target container. Default to document if container is not provided and document exists.
-    const targetContainer = container || (typeof document !== 'undefined' ? document : null);
-    // Check if the container is valid and has querySelectorAll method.
-    if (!targetContainer ||
-        typeof targetContainer.querySelectorAll !== 'function') {
-        return []; // Return empty array if container is invalid or not queryable.
-    }
-    try {
-        // Execute querySelectorAll and convert NodeList to Array.
-        return Array.from(targetContainer.querySelectorAll(selector));
-    }
-    catch (_error) {
-        // Catch errors (e.g., invalid selector) and return an empty array.
-        // console.error(`Error in querySelectorAllWrapper with selector "${selector}":`, error); // Optional: for debugging
-        return [];
-    }
+	// Determine the target container. Default to document if container is not provided and document exists.
+	const targetContainer =
+		container || (typeof document !== 'undefined' ? document : null);
+	// Check if the container is valid and has querySelectorAll method.
+	if (
+		!targetContainer ||
+		typeof targetContainer.querySelectorAll !== 'function'
+	) {
+		return []; // Return empty array if container is invalid or not queryable.
+	}
+	try {
+		// Execute querySelectorAll and convert NodeList to Array.
+		return Array.from(targetContainer.querySelectorAll(selector));
+	} catch (_error) {
+		// Catch errors (e.g., invalid selector) and return an empty array.
+		// console.error(`Error in querySelectorAllWrapper with selector "${selector}":`, error); // Optional: for debugging
+		return [];
+	}
 }
+//# sourceMappingURL=querySelectorAllWrapper.js.map

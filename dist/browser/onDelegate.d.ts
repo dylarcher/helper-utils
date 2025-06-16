@@ -43,4 +43,10 @@
  * // If selector is invalid, e.g., onDelegate(list, 'click', ':[invalid]', () => {}),
  * // errors will be silently ignored and the callback won't fire for that selector.
  */
-export function onDelegate(parentElement: Element, eventType: string, selector: string, callback: (this: Element, event: Event) => void, options?: boolean | AddEventListenerOptions): void;
+export function onDelegate(
+	parentElement: Element,
+	eventType: string,
+	selector: string,
+	callback: (this: Element, event: Event) => void,
+	options?: boolean | AddEventListenerOptions,
+): void;

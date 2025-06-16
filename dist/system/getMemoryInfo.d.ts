@@ -34,6 +34,6 @@
  * // (Actual values will vary based on the system)
  */
 export function getMemoryInfo(): {
-    totalMemory: number;
-    freeMemory: number;
+	totalMemory: number;
+	freeMemory: number;
 };

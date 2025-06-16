@@ -49,6 +49,7 @@ import path from 'node:path';
  * }
  */
 export function resolvePath(...paths) {
-    // path.resolve() will throw a TypeError if any argument is not a string.
-    return path.resolve(...paths);
+	// path.resolve() will throw a TypeError if any argument is not a string.
+	return path.resolve(...paths);
 }
+//# sourceMappingURL=resolvePath.js.map

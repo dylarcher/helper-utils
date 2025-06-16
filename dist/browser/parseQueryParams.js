@@ -49,21 +49,23 @@
  * // console.info(nodeParams); // { id: '123', source: 'api' }
  */
 export function parseQueryParams(queryString) {
-    let effectiveQueryString = queryString;
-    if (typeof queryString === 'undefined') {
-        if (typeof window !== 'undefined' &&
-            typeof window.location !== 'undefined') {
-            effectiveQueryString = window.location.search;
-        }
-        else {
-            // In non-browser environment or if window.location is somehow unavailable,
-            // and no queryString is provided, default to an empty string.
-            // Alternatively, could throw an error if queryString is mandatory in such cases.
-            effectiveQueryString = '';
-        }
-    }
-    const params = new URLSearchParams(effectiveQueryString);
-    // URLSearchParams is directly iterable and works with Object.fromEntries.
-    // If there are duplicate keys, the last one wins, which matches the previous loop's behavior.
-    return Object.fromEntries(params);
+	let effectiveQueryString = queryString;
+	if (typeof queryString === 'undefined') {
+		if (
+			typeof window !== 'undefined' &&
+			typeof window.location !== 'undefined'
+		) {
+			effectiveQueryString = window.location.search;
+		} else {
+			// In non-browser environment or if window.location is somehow unavailable,
+			// and no queryString is provided, default to an empty string.
+			// Alternatively, could throw an error if queryString is mandatory in such cases.
+			effectiveQueryString = '';
+		}
+	}
+	const params = new URLSearchParams(effectiveQueryString);
+	// URLSearchParams is directly iterable and works with Object.fromEntries.
+	// If there are duplicate keys, the last one wins, which matches the previous loop's behavior.
+	return Object.fromEntries(params);
 }
+//# sourceMappingURL=parseQueryParams.js.map

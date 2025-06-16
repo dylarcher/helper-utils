@@ -52,40 +52,42 @@
  * //   }
  * // }
  */
-export function getCPUInfo(cpuData?: import("node:os").CpuInfo[]): SimplifiedCpuInfo[];
+export function getCPUInfo(
+	cpuData?: import('node:os').CpuInfo[],
+): SimplifiedCpuInfo[];
 export type CpuTimes = {
-    /**
-     * - The number of milliseconds the CPU has spent in user mode.
-     */
-    user: number;
-    /**
-     * - The number of milliseconds the CPU has spent in nice mode.
-     */
-    nice: number;
-    /**
-     * - The number of milliseconds the CPU has spent in sys mode.
-     */
-    sys: number;
-    /**
-     * - The number of milliseconds the CPU has spent in idle mode.
-     */
-    idle: number;
-    /**
-     * - The number of milliseconds the CPU has spent in irq mode.
-     */
-    irq: number;
+	/**
+	 * - The number of milliseconds the CPU has spent in user mode.
+	 */
+	user: number;
+	/**
+	 * - The number of milliseconds the CPU has spent in nice mode.
+	 */
+	nice: number;
+	/**
+	 * - The number of milliseconds the CPU has spent in sys mode.
+	 */
+	sys: number;
+	/**
+	 * - The number of milliseconds the CPU has spent in idle mode.
+	 */
+	idle: number;
+	/**
+	 * - The number of milliseconds the CPU has spent in irq mode.
+	 */
+	irq: number;
 };
 export type SimplifiedCpuInfo = {
-    /**
-     * - The model name of the CPU. Defaults to 'unknown' if not available.
-     */
-    model: string;
-    /**
-     * - The clock speed of the CPU in MHz. Defaults to 0 if the speed is invalid or not available.
-     */
-    speed: number;
-    /**
-     * - An object detailing the CPU time spent in different modes (user, nice, sys, idle, irq).
-     */
-    times: CpuTimes;
+	/**
+	 * - The model name of the CPU. Defaults to 'unknown' if not available.
+	 */
+	model: string;
+	/**
+	 * - The clock speed of the CPU in MHz. Defaults to 0 if the speed is invalid or not available.
+	 */
+	speed: number;
+	/**
+	 * - An object detailing the CPU time spent in different modes (user, nice, sys, idle, irq).
+	 */
+	times: CpuTimes;
 };

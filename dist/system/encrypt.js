@@ -63,23 +63,26 @@ const ALGORITHM = 'aes-256-cbc'; // AES-256 uses a 32-byte key and a 16-byte IV.
  * }
  */
 export function encrypt(text, key, iv) {
-    // Validate input types
-    if (!Buffer.isBuffer(key)) {
-        throw new TypeError('Key must be a buffer');
-    }
-    if (!Buffer.isBuffer(iv)) {
-        throw new TypeError('IV must be a buffer');
-    }
-    // Validate key and IV lengths to provide clearer errors before crypto module does.
-    if (key.length !== 32) {
-        throw new Error('Invalid key length. Key must be 32 bytes for AES-256-CBC.');
-    }
-    if (iv.length !== 16) {
-        throw new Error('Invalid IV length. IV must be 16 bytes for AES-CBC.');
-    }
-    const cipher = _crypto.createCipheriv(ALGORITHM, key, iv);
-    let encrypted = cipher.update(text, 'utf8', 'hex');
-    encrypted += cipher.final('hex');
-    // Prepend IV (hex-encoded) for use in decryption
-    return `${iv.toString('hex')}:${encrypted}`;
+	// Validate input types
+	if (!Buffer.isBuffer(key)) {
+		throw new TypeError('Key must be a buffer');
+	}
+	if (!Buffer.isBuffer(iv)) {
+		throw new TypeError('IV must be a buffer');
+	}
+	// Validate key and IV lengths to provide clearer errors before crypto module does.
+	if (key.length !== 32) {
+		throw new Error(
+			'Invalid key length. Key must be 32 bytes for AES-256-CBC.',
+		);
+	}
+	if (iv.length !== 16) {
+		throw new Error('Invalid IV length. IV must be 16 bytes for AES-CBC.');
+	}
+	const cipher = _crypto.createCipheriv(ALGORITHM, key, iv);
+	let encrypted = cipher.update(text, 'utf8', 'hex');
+	encrypted += cipher.final('hex');
+	// Prepend IV (hex-encoded) for use in decryption
+	return `${iv.toString('hex')}:${encrypted}`;
 }
+//# sourceMappingURL=encrypt.js.map

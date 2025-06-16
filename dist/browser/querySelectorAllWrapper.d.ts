@@ -37,4 +37,7 @@
  * const withNonExistentContainer = querySelectorAllWrapper('a', nonExistentContainer);
  * console.info(withNonExistentContainer.length); // 0
  */
-export function querySelectorAllWrapper(selector: string, container?: Element | Document): Element[];
+export function querySelectorAllWrapper(
+	selector: string,
+	container?: Element | Document,
+): Element[];

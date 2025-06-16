@@ -16,7 +16,8 @@
  * // el.classList will now be ""
  */
 export function removeClass(element, ...classNames) {
-    if (element?.classList) {
-        element.classList.remove(...classNames.filter(Boolean));
-    }
+	if (element?.classList) {
+		element.classList.remove(...classNames.filter(Boolean));
+	}
 }
+//# sourceMappingURL=removeClass.js.map

@@ -44,6 +44,7 @@ import path from 'node:path';
  * }
  */
 export function joinPaths(...paths) {
-    // path.join() will throw a TypeError if any argument is not a string.
-    return path.join(...paths);
+	// path.join() will throw a TypeError if any argument is not a string.
+	return path.join(...paths);
 }
+//# sourceMappingURL=joinPaths.js.map
