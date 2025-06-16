@@ -1,0 +1,54 @@
+{
+  "$schema": "https://prettier.io/schema.json",
+  "arrowParens": "avoid",
+  "bracketSameLine": true,
+  "bracketSpacing": true,
+  "embeddedLanguageFormatting": "auto",
+  "endOfLine": "lf",
+  "htmlWhitespaceSensitivity": "css",
+  "jsxSingleQuote": false,
+  "overrides": [
+    {
+      "files": "LICENSE",
+      "options": {
+        "parser": "markdown"
+      }
+    },
+    {
+      "files": "*.{yaml,yml}",
+      "options": {
+        "singleQuote": true,
+        "tabWidth": 2,
+        "useTabs": false
+      }
+    },
+    {
+      "files": ".prettierrc",
+      "options": {
+        "parser": "json"
+      }
+    },,
+    {
+      "files": ".c8rc",
+      "options": {
+        "parser": "json"
+      }
+    }
+    {
+      "files": "*.{json,jsonc,json5,jsonl}",
+      "options": {
+        "singleQuote": false
+      }
+    }
+  ],
+  "printWidth": 80,
+  "proseWrap": "always",
+  "quoteProps": "as-needed",
+  "semi": true,
+  "singleAttributePerLine": true,
+  "singleQuote": true,
+  "tabWidth": 2,
+  "trailingComma": "all",
+  "useTabs": true,
+  "vueIndentScriptAndStyle": false
+}

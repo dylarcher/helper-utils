@@ -80,6 +80,9 @@ export function createElement(
 	function appendChild(child, parentElement) {
 		if (typeof child === 'string') {
 			parentElement.appendChild(document.createTextNode(child));
+		} else if (typeof child === 'number') {
+			// Convert number to string and create text node
+			parentElement.appendChild(document.createTextNode(String(child)));
 		} else if (child) {
 			// Handle any object that might be a DOM node
 			// In tests, we don't have real Node instances but objects with similar interface

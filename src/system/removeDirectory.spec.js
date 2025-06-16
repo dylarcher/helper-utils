@@ -145,6 +145,14 @@ describe('removeDirectory(dirPath, options)', () => {
 			process.cwd(),
 			'test dir with spaces & symbols!',
 		);
+		
+		// Clean up any existing directory first
+		try {
+			await fs.rmdir(specialDir);
+		} catch {
+			// Directory doesn't exist, which is fine
+		}
+		
 		await fs.mkdir(specialDir);
 
 		try {
@@ -248,6 +256,93 @@ describe('removeDirectory(dirPath, options)', () => {
 			try {
 				await fs.rmdir(targetDir);
 				await fs.unlink(linkDir);
+			} catch {
+				// Ignore cleanup errors
+			}
+		}
+	});
+
+	it('should handle file path with force option enabled', async () => {
+		// Create a file instead of directory
+		const filePath = path.join(process.cwd(), 'test-file-to-remove.txt');
+		await fs.writeFile(filePath, 'test content');
+
+		// With force option, should handle files too (fs.rm can remove files)
+		await assert.doesNotReject(async () => {
+			await removeDirectory(filePath, { force: true });
+		}, 'Should handle file with force option');
+
+		// Verify file is removed
+		await assert.rejects(async () => {
+			await fs.stat(filePath);
+		}, 'File should be removed');
+	});
+
+	it('should handle file path without force option (should reject)', async () => {
+		// Create a file instead of directory
+		const filePath = path.join(process.cwd(), 'test-file-reject.txt');
+		await fs.writeFile(filePath, 'test content');
+
+		try {
+			// Without force option, should reject when path is not a directory
+			await assert.rejects(async () => {
+				await removeDirectory(filePath, { force: false });
+			}, {
+				message: `Path is not a directory: ${filePath}`
+			});
+		} finally {
+			// Clean up the test file
+			try {
+				await fs.unlink(filePath);
+			} catch {
+				// Ignore cleanup errors
+			}
+		}
+	});
+
+	it('should handle fs.stat error (not ENOENT) without force option', async () => {
+		// Test case where fs.stat fails for reasons other than file not existing
+		// Create a directory and then try to use an invalid path structure
+		const testPath = path.join(process.cwd(), 'test-invalid-perms');
+		
+		// Create a valid directory first
+		await fs.mkdir(testPath);
+		
+		try {
+			// Use a nested path that will cause fs.stat to fail
+			const invalidNestedPath = path.join(testPath, 'non-existent-parent', 'child');
+			
+			// This should reject because fs.stat will fail on the invalid path
+			await assert.rejects(async () => {
+				await removeDirectory(invalidNestedPath, { force: false });
+			}, 'Should reject when fs.stat fails and force is false');
+		} finally {
+			// Clean up the test directory
+			try {
+				await fs.rm(testPath, { recursive: true, force: true });
+			} catch {
+				// Ignore cleanup errors
+			}
+		}
+	});
+
+	it('should suppress fs.stat errors with force option', async () => {
+		// Test that when force is true, fs.stat errors are suppressed
+		const invalidPath = path.join(process.cwd(), 'force-stat-error');
+		await fs.mkdir(invalidPath);
+		
+		try {
+			await fs.chmod(invalidPath, 0o000); // No permissions to cause stat error
+			
+			// With force: true, should suppress the fs.stat error and proceed to fs.rm
+			await assert.doesNotReject(async () => {
+				await removeDirectory(invalidPath, { force: true });
+			}, 'Should suppress fs.stat error with force option');
+		} finally {
+			// Restore permissions and clean up
+			try {
+				await fs.chmod(invalidPath, 0o755);
+				await fs.rm(invalidPath, { recursive: true, force: true });
 			} catch {
 				// Ignore cleanup errors
 			}

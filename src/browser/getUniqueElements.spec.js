@@ -2,7 +2,7 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { getUniqueElements } from './getUniqueElements.js';
 
-const PERF_TEST_ENABLED = false; // Set to true to enable performance tests
+const PERF_TEST_ENABLED = true; // Set to true to enable performance tests
 
 describe('getUniqueElements', () => {
 	it('should return an array with unique numbers', () => {

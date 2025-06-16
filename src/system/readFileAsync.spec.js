@@ -140,7 +140,11 @@ describe('readFileAsync(filePath, encoding)', () => {
 				await readFileAsync(testDir);
 			}, 'Should reject when trying to read a directory');
 		} finally {
-			await fs.rmdir(testDir);
+			try {
+				await fs.rmdir(testDir);
+			} catch (error) {
+				// Directory might already be removed
+			}
 		}
 	});
 

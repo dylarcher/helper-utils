@@ -137,5 +137,76 @@ describe('createElement(tagName, attributes, children)', () => {
 				assert.strictEqual(element.id, `test-${tagName}`);
 			});
 		});
+
+		it('should handle falsy children in array (null, undefined, false)', () => {
+			const children = ['Text 1', null, undefined, false, 'Text 2'];
+			const element = createElement('div', {}, children);
+
+			// Should only have 2 text nodes (falsy values are skipped in appendChild)
+			assert.strictEqual(element.childNodes.length, 2);
+			assert.strictEqual(element.childNodes[0].textContent, 'Text 1');
+			assert.strictEqual(element.childNodes[1].textContent, 'Text 2');
+		});
+
+		it('should handle attributes with null prototype object', () => {
+			const attributes = Object.create(null);
+			attributes.id = 'test-id';
+			attributes.class = 'test-class';
+
+			const element = createElement('div', attributes);
+			assert.strictEqual(element.id, 'test-id');
+			assert.strictEqual(element.className, 'test-class');
+		});
+
+		it('should handle mixed truthy and falsy children in arrays', () => {
+			const span = document.createElement('span');
+			span.textContent = 'Valid span';
+
+			const children = [
+				'Valid text',
+				null,
+				span,
+				undefined,
+				false,
+				0, // This is falsy but should be handled as a string/node
+				''  // Empty string is falsy but should be handled
+			];
+
+			const element = createElement('div', {}, children);
+			
+			// Should have text nodes for 'Valid text', span element, and potentially '0' and ''
+			assert.ok(element.childNodes.length >= 2); // At least text and span
+			assert.strictEqual(element.childNodes[0].textContent, 'Valid text');
+			assert.strictEqual(element.childNodes[1].tagName.toLowerCase(), 'span');
+		});
+
+		it('should handle attributes with inherited properties correctly', () => {
+			// Create an object with inherited properties
+			const baseAttributes = { 'data-base': 'base-value' };
+			const attributes = Object.create(baseAttributes);
+			attributes.id = 'test-id';
+			attributes.class = 'test-class';
+
+			const element = createElement('div', attributes);
+			
+			// Should only set own properties, not inherited ones
+			assert.strictEqual(element.id, 'test-id');
+			assert.strictEqual(element.className, 'test-class');
+			// Inherited property should not be set
+			assert.strictEqual(element.getAttribute('data-base'), null);
+		});
+
+		it('should handle various falsy children including 0 and empty string', () => {
+			// Test that 0 and empty string are treated as valid children
+			const children = [0, '', 'text', false, null, undefined];
+			const element = createElement('div', {}, children);
+
+			// Should have 3 children: text nodes for 0, '', and 'text'
+			// false, null, undefined should be skipped
+			assert.strictEqual(element.childNodes.length, 3);
+			assert.strictEqual(element.childNodes[0].textContent, '0');
+			assert.strictEqual(element.childNodes[1].textContent, '');
+			assert.strictEqual(element.childNodes[2].textContent, 'text');
+		});
 	});
 });

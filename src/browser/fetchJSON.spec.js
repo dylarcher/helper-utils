@@ -8,7 +8,7 @@ import {
 import assert from 'node:assert';
 import { fetchJSON } from './fetchJSON.js';
 
-const PERF_TEST_ENABLED = false; // Set to true to enable performance tests
+const PERF_TEST_ENABLED = true; // Set to true to enable performance tests
 
 describe('fetchJSON(url, options)', () => {
 	let originalFetch;
@@ -208,8 +208,10 @@ describe('Performance Tests for fetchJSON', () => {
 					json: async () => JSON.parse(largeJSONText), // This simulates the parsing step.
 				};
 				// Ensure headers.get works as expected
-				mockResponse.headers.get = key =>
-					mockResponse.headers.get(key.toLowerCase());
+				const originalHeadersGet = mockResponse.headers.get.bind(mockResponse.headers);
+				mockResponse.headers.get = key => {
+					return originalHeadersGet(key.toLowerCase());
+				};
 
 				// Set up the global fetch mock for this specific test
 				const originalFetchForPerfTest = global.fetch;

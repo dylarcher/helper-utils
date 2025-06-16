@@ -73,12 +73,8 @@ export function decrypt(encryptedTextWithIv, key) {
 		let decrypted = decipher.update(encryptedText, 'hex', 'utf8');
 		decrypted += decipher.final('utf8');
 		return decrypted;
-	} catch (/** @type {any} */ error) {
+	} catch (error) {
 		// Rethrow any crypto errors, which would include wrong key errors
-		let message = 'Unknown error';
-		if (error && error.message) {
-			message = error.message;
-		}
-		throw new Error(`Decryption failed: ${message}`);
+		throw new Error(`Decryption failed: ${error?.message || 'Unknown error'}`);
 	}
 }
