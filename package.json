@@ -80,7 +80,7 @@
         "prepare": "npm dedupe && npm prune",
         "update": "npm update && npm run build && npm clean-install",
         "prepublishOnly": "npm run build",
-        "prettier": "prettier . --config .github/presets/.prettierrc.yml --log-level warn --ignore-unknown --no-error-on-unmatched-pattern --list-different https://prettier.io/docs/cli#--config-precedence prefer-file --no-editorconfig false",
+        "prettier": "prettier . --config .github/presets/.prettierrc.yml --log-level warn --ignore-unknown --no-error-on-unmatched-pattern --list-different --config-precedence prefer-file --no-editorconfig false",
         "publish:npm": "npm publish --access public --registry https://registry.npmjs.org/",
         "test": "tsc -p .github/presets/tsconfig.system.test.json && tsc -p .github/presets/tsconfig.browser.test.json && node --no-warnings --test src/**/*.spec.js src/**/*.test.js",
         "test:coverage": "c8 --config .github/presets/.c8rc.json -- node --no-warnings --test src/**/*.spec.js src/**/*.test.js",
