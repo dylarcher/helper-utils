@@ -17,8 +17,6 @@ export default [
 			'**/*.yaml',
 			'dist/**',
 			'node_modules/**',
-			'src/**/*.test.js',
-			'src/**/*.spec.js',
 			'docs/**',
 		],
 	},
