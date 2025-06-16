@@ -1,13 +1,13 @@
 ---
-name: ESLint
+name: Validate
 
 on:
   pull_request:
-    types: [edited, opened, reopened, synchronize]
+    types: [edited,opened,reopened,synchronize]
 
 jobs:
-  eslint:
-    name: Lint
+  validate:
+    name: Lint & Format
     runs-on: ubuntu-latest
     permissions:
       contents: write # Changed from read to write
@@ -36,5 +36,5 @@ jobs:
       - name: Install
         run: npm install
 
-      - name: Lint
+      - name: Checks
         run: npm run lint:check

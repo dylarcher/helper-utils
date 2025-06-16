@@ -1,58 +1,59 @@
 {
 	"[javascript]": {
 		"editor.codeActionsOnSave": {
-			"source.fixAll": "explicit"
+			"source.fixAll.eslint": "explicit"
 		},
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"[json]": {
 		"editor.codeActionsOnSave": {
-			"source.fixAll": "explicit"
+			"source.fixAll.eslint": "explicit"
 		},
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"[markdown]": {
 		"editor.codeActionsOnSave": {
-			"source.fixAll": "explicit"
+			"source.fixAll.eslint": "explicit"
 		},
-		"editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"[typescript]": {
 		"editor.codeActionsOnSave": {
-			"source.fixAll": "explicit"
+			"source.fixAll.eslint": "explicit"
 		},
-		"editor.defaultFormatter": "dbaeumer.vscode-eslint"
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"[html]": {
 		"editor.codeActionsOnSave": {
-			"source.fixAll": "explicit"
+			"source.fixAll.eslint": "explicit"
 		},
-		"editor.defaultFormatter": "dbaeumer.vscode-eslint"
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"[yaml]": {
 		"editor.codeActionsOnSave": {
-			"source.fixAll": "explicit"
+			"source.fixAll.eslint": "explicit"
 		},
-		"editor.defaultFormatter": "googlecloudtools.cloudcode"
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"editor.codeActionsOnSave": {
-		"source.fixAll.eslint": "explicit"
+		"source.fixAll.eslint": "explicit",
+		"source.fixAll.prettier": "never"
 	},
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"editor.formatOnPaste": false,
 	"editor.formatOnSave": true,
 	"editor.formatOnType": false,
-	"eslint.format.enable": true,
+	"eslint.format.enable": false,
 	"eslint.lintTask.enable": true,
 	"eslint.useFlatConfig": true,
 	"eslint.packageManager": "npm",
 	"eslint.codeActionsOnSave.mode": "problems",
 	"eslint.enable": true,
 	"eslint.options": {
-		"configFile": "${workspaceRoot}/.github/presets/eslint.config.js",
-		"extensions": [".js"]
+		"overrideConfigFile": "${workspaceFolder}/.github/presets/eslint.config.js"
 	},
-	"eslint.validate": ["javascript", "typescript"],
+	"eslint.validate": ["javascript", "typescript", "markdown", "yaml"],
+	"eslint.workingDirectories": ["${workspaceFolder}"],
 	"explorer.fileNesting.enabled": true,
 	"explorer.fileNesting.expand": false,
 	"explorer.fileNesting.patterns": {
@@ -68,14 +69,14 @@
 		".nvmrc": "properties",
 		"LICENSE": "plaintext"
 	},
-	"html.format.enable": true,
+	"html.format.enable": false,
 	"html.validate.scripts": true,
 	"html.validate.styles": true,
 	"javascript.format.enable": false,
 	"javascript.validate.enable": false,
 	"json.format.enable": false,
 	"json.validate.enable": false,
-	"prettier.configPath": "${workspaceRoot}/.github/presets/.prettierrc.yml",
+	"prettier.configPath": "${workspaceFolder}/.github/presets/.prettierrc.yml",
 	"prettier.enable": true,
 	"prettier.useEditorConfig": true,
 	"prettier.withNodeModules": false,

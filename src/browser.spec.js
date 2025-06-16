@@ -17,6 +17,7 @@ describe('browser exports', () => {
 			'getLocalStorageJSON',
 			'getOSInfo',
 			'getStyle',
+			'getUniqueElements',
 			'hasClass',
 			'hideElement',
 			'once',

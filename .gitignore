@@ -1,3 +1,6 @@
+# c8
+coverage/
+
 # macOS
 .DS_Store
 ._*

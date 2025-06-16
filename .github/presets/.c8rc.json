@@ -1,27 +1,40 @@
 {
-    "all": true,
+    "all": false,
     "branches": 100,
     "check-coverage": true,
+    "extensions": [
+        ".js"
+    ],
+    "src": true,
     "exclude": [
-        "node_modules/**/*.js",
-        "node_modules/**/*.d.ts",
-        "utils/**/*.js",
-        "dist/**/*.js",
-        "dist/**/*.d.ts",
+        "node_modules/**/*",
+        "coverage/**/*"
+        "utils/**/*",
+        "dist/**/*",
         "src/**/*.spec.js",
         "src/**/*.test.js",
-        "src/browser.js",
-        "src/index.js",
-        "src/system.js"
     ],
+    "clean": true,
+    "merge-async": true,
+    "experimental-monocart": true,
+    "omit-relative": false,
     "functions": 100,
     "include": [
         "src/**/*.js"
     ],
     "lines": 100,
-    "report-dir": "dist/coverage",
+    "report-dir": "coverage",
     "reporter": [
-        "html"
+        "json-summary", 
+        "text-summary", 
+        "html", 
+        "lcov", 
+        "json", 
+        "text", 
+        "clover",
+        "cobertura",
+        "teamcity", 
+        "terraform"
     ],
     "statements": 100
 }

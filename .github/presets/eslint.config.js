@@ -10,16 +10,6 @@ import globals from 'globals';
  * and enforce consistent code quality and style
  */
 export default [
-	// Ignore certain files
-	{
-		ignores: [
-			'**/*.yml',
-			'**/*.yaml',
-			'./dist/**',
-			'./node_modules/**',
-			'./docs/**',
-		],
-	},
 	// Language options
 	{
 		languageOptions: {
