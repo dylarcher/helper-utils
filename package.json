@@ -76,7 +76,7 @@
 		"url": "git+https://github.com/dylarcher/js.helper-utils.git"
 	},
 	"scripts": {
-		"build": "tsc",
+		"build": "npm run clean:dist && tsc",
 		"changelog:released": "npx auto-changelog --package --output CHANGELOG.md --template keepachangelog --commit-limit false",
 		"clean:npm": "rimraf node_modules/ package-lock.json",
 		"clean:c8": "rimraf coverage/tmp/",
