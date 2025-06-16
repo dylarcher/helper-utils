@@ -5,10 +5,10 @@
     },
     "description": "Reusable javascript helper utility methods.",
     "devDependencies": {
-        "@stedi/prettier-plugin-jsonata": "2.1.3",
-        "@types/node": "24.0.1",
+        "@stedi/prettier-plugin-jsonata": "2.1.4",
+        "@types/node": "24.0.3",
         "c8": "10.1.3",
-        "eslint": "9.28.0",
+        "eslint": "9.29.0",
         "eslint-config-prettier": "10.1.5",
         "eslint-plugin-markdown": "5.1.0",
         "eslint-plugin-prettier": "5.4.1",
