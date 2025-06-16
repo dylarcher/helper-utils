@@ -1,12 +1,17 @@
 # Contributing
 
-We are open to, and grateful for, any contributions made by the community. By contributing to this project, you agree to abide by the [Code of Conduct](./CODE_OF_CONDUCT.md).
+We are open to, and grateful for, any contributions made by the community. By
+contributing to this project, you agree to abide by the
+[Code of Conduct](./CODE_OF_CONDUCT.md).
 
 ## Reporting Bugs and Discussing Features
 
-If you find a bug, please open an issue on our [issue tracker](https://github.com/dylarcher/js.helper-utils/issues).
+If you find a bug, please open an issue on our
+[issue tracker](https://github.com/dylarcher/js.helper-utils/issues).
 
-If you have an idea for a new feature, please open an issue to discuss it. We are happy to consider new features, but please note that we may not have the resources to implement them all.
+If you have an idea for a new feature, please open an issue to discuss it. We
+are happy to consider new features, but please note that we may not have the
+resources to implement them all.
 
 ## Submitting a Pull Request
 
@@ -30,4 +35,5 @@ npm install
 
 ## Code of Conduct
 
-This project has a [Code of Conduct](./CODE_OF_CONDUCT.md) that all contributors are expected to follow.
+This project has a [Code of Conduct](./CODE_OF_CONDUCT.md) that all contributors
+are expected to follow.

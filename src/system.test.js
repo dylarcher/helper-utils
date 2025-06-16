@@ -56,7 +56,7 @@ describe('system', () => {
 			'writeFileAsync',
 		];
 
-		expectedExports.forEach((exportName) => {
+		expectedExports.forEach(exportName => {
 			assert.strictEqual(typeof allExports[exportName], 'function');
 		});
 

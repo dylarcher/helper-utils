@@ -29,14 +29,14 @@ class MockEventTarget {
 		});
 
 		// Remove once listeners after execution
-		listenersToRemove.forEach((listener) => {
+		listenersToRemove.forEach(listener => {
 			this.removeEventListener(evt.type, listener);
 		});
 	}
 
 	removeEventListener(eventType, listener) {
 		const listeners = this.listeners.get(eventType) || [];
-		const index = listeners.findIndex((l) => l.listener === listener);
+		const index = listeners.findIndex(l => l.listener === listener);
 		if (index !== -1) {
 			listeners.splice(index, 1);
 		}
@@ -55,7 +55,7 @@ describe('once(element, eventType, listener, options)', () => {
 	});
 
 	it('should add event listener with once option', () => {
-		const listener = (evt) => {
+		const listener = evt => {
 			callCount++;
 			lastEvent = evt;
 		};
@@ -158,7 +158,7 @@ describe('once(element, eventType, listener, options)', () => {
 	});
 
 	it('should pass event object to listener', () => {
-		const listener = (evt) => {
+		const listener = evt => {
 			callCount++;
 			lastEvent = evt;
 		};
@@ -181,14 +181,14 @@ describe('once(element, eventType, listener, options)', () => {
 		});
 
 		// Trigger all events
-		events.forEach((eventType) => {
+		events.forEach(eventType => {
 			mockElement.dispatchEvent({ type: eventType });
 		});
 
 		assert.strictEqual(callCount, events.length);
 
 		// Trigger again - should not increment
-		events.forEach((eventType) => {
+		events.forEach(eventType => {
 			mockElement.dispatchEvent({ type: eventType });
 		});
 

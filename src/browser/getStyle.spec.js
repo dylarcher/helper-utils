@@ -73,7 +73,7 @@ describe('getStyle(element, pseudoElt)', () => {
 			'::first-letter',
 		];
 
-		pseudoElements.forEach((pseudo) => {
+		pseudoElements.forEach(pseudo => {
 			let capturedPseudoElt;
 
 			global.window.getComputedStyle = (element, pseudoElt) => {
@@ -249,7 +249,7 @@ describe('getStyle(element, pseudoElt)', () => {
 		it('should work with different element types', () => {
 			const elements = ['div', 'span', 'p', 'section'];
 
-			elements.forEach((tagName) => {
+			elements.forEach(tagName => {
 				const element = document.createElement(tagName);
 				document.body.appendChild(element);
 

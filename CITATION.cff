@@ -5,5 +5,14 @@ authors:
     given-names: Dylan
     orcid: https://orcid.org/0000-0002-1578-6401
 title: js.helper-utils
-version: 0.1.0
-date-released: 2023-11-10
+version: 2.0.0
+date-released: 2025-01-21
+url: https://github.com/dylarcher/js.helper-utils
+repository-code: https://github.com/dylarcher/js.helper-utils
+license: MIT
+keywords:
+  - javascript
+  - utilities
+  - helpers
+  - browser
+  - nodejs

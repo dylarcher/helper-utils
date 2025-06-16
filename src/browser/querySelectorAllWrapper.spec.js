@@ -32,7 +32,7 @@ describe('querySelectorAllWrapper(selector, container)', () => {
 		];
 
 		const mockContainer = {
-			querySelectorAll: (selector) => {
+			querySelectorAll: selector => {
 				assert.strictEqual(selector, '.test');
 				return mockElements; // Return array-like object
 			},
@@ -59,7 +59,7 @@ describe('querySelectorAllWrapper(selector, container)', () => {
 		const mockElements = [{ id: 'complex' }];
 
 		const mockContainer = {
-			querySelectorAll: (selector) => {
+			querySelectorAll: selector => {
 				assert.strictEqual(selector, "div.test[data-value='complex']");
 				return mockElements;
 			},
@@ -88,9 +88,9 @@ describe('querySelectorAllWrapper(selector, container)', () => {
 	it('should work with various selector types', () => {
 		const selectors = ['#id', '.class', 'div', '[data-test]', ':first-child'];
 
-		selectors.forEach((selector) => {
+		selectors.forEach(selector => {
 			const mockContainer = {
-				querySelectorAll: (sel) => {
+				querySelectorAll: sel => {
 					assert.strictEqual(sel, selector);
 					return [];
 				},
@@ -111,7 +111,7 @@ describe('querySelectorAllWrapper(selector, container)', () => {
 		// Mock global document
 		const originalDocument = global.document;
 		global.document = {
-			querySelectorAll: (selector) => {
+			querySelectorAll: selector => {
 				assert.strictEqual(selector, '.test');
 				return [{ id: 'from-document' }];
 			},

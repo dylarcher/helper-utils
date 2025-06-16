@@ -144,7 +144,7 @@ describe('getBasename(p, ext)', () => {
 			'../parent/dir/file',
 		];
 
-		paths.forEach((testPath) => {
+		paths.forEach(testPath => {
 			const expected = path.basename(testPath);
 			const result = getBasename(testPath);
 			assert.strictEqual(

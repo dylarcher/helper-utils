@@ -141,7 +141,7 @@ describe('getExtension(p)', () => {
 			'file with spaces.txt',
 		];
 
-		testPaths.forEach((testPath) => {
+		testPaths.forEach(testPath => {
 			const ourResult = getExtension(testPath);
 			const nodeResult = path.extname(testPath);
 			assert.strictEqual(

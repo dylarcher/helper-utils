@@ -230,7 +230,7 @@ describe('onDelegate(parentElement, eventType, selector, callback, options)', ()
 
 	it('should work with complex selectors', () => {
 		const complexElement = new MockElement('input', 'form-input');
-		complexElement.matches = (selector) => {
+		complexElement.matches = selector => {
 			// Mock complex selector matching
 			if (selector === "input.form-input[type='text']") {
 				return true;
@@ -257,7 +257,7 @@ describe('onDelegate(parentElement, eventType, selector, callback, options)', ()
 		const button = new MockElement('button', 'test-btn');
 		let receivedEvent;
 
-		const callback = (evt) => {
+		const callback = evt => {
 			receivedEvent = evt;
 			callCount++;
 		};

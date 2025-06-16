@@ -131,7 +131,7 @@ describe('createElement(tagName, attributes, children)', () => {
 		it('should work with various HTML elements in jsdom', () => {
 			const elements = ['div', 'span', 'p', 'h1', 'section', 'article'];
 
-			elements.forEach((tagName) => {
+			elements.forEach(tagName => {
 				const element = createElement(tagName, { id: `test-${tagName}` });
 				assert.strictEqual(element.tagName.toLowerCase(), tagName);
 				assert.strictEqual(element.id, `test-${tagName}`);

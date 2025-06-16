@@ -30,7 +30,7 @@ describe('fetchJSON(url, options)', () => {
 			json: async () => ({ message: 'success' }),
 			text: async () => 'success text',
 		};
-		mockResponse.headers.get = (key) =>
+		mockResponse.headers.get = key =>
 			new Map([['content-type', 'application/json']]).get(key);
 
 		global.fetch = async (url, _options) => {
@@ -49,7 +49,7 @@ describe('fetchJSON(url, options)', () => {
 			headers: new Map([['content-type', 'application/json']]),
 			json: async () => ({ message: 'success' }),
 		};
-		mockResponse.headers.get = (key) =>
+		mockResponse.headers.get = key =>
 			new Map([['content-type', 'application/json']]).get(key);
 
 		global.fetch = async (url, options) => {
@@ -69,7 +69,7 @@ describe('fetchJSON(url, options)', () => {
 			headers: new Map([['content-type', 'application/json']]),
 			json: async () => ({ message: 'success' }),
 		};
-		mockResponse.headers.get = (key) =>
+		mockResponse.headers.get = key =>
 			new Map([['content-type', 'application/json']]).get(key);
 
 		global.fetch = async (url, options) => {
@@ -134,7 +134,7 @@ describe('fetchJSON(url, options)', () => {
 			status: 200,
 			statusText: 'OK',
 			headers: {
-				get: (key) => headersMap.get(key.toLowerCase()),
+				get: key => headersMap.get(key.toLowerCase()),
 			},
 			// Simulate json() throwing an error for invalid JSON
 			json: async () => {
@@ -208,7 +208,7 @@ describe('Performance Tests for fetchJSON', () => {
 					json: async () => JSON.parse(largeJSONText), // This simulates the parsing step.
 				};
 				// Ensure headers.get works as expected
-				mockResponse.headers.get = (key) =>
+				mockResponse.headers.get = key =>
 					mockResponse.headers.get(key.toLowerCase());
 
 				// Set up the global fetch mock for this specific test
@@ -291,7 +291,7 @@ describe('Promise.try polyfill coverage', () => {
 				ok: true,
 				status: 200,
 				headers: {
-					get: (key) => headersMap.get(key.toLowerCase()),
+					get: key => headersMap.get(key.toLowerCase()),
 				},
 				json: async () => ({ polyfill: 'test' }),
 			};

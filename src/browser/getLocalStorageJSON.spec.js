@@ -102,7 +102,7 @@ describe('getLocalStorageJSON(key)', () => {
 
 		assert.throws(
 			() => getLocalStorageJSON('anyKey'),
-			(error) => {
+			error => {
 				return (
 					error instanceof Error &&
 					error.message === 'localStorage is not available in this environment.'

@@ -3,7 +3,7 @@ name: Prettier
 
 on:
   pull_request:
-    types: [edited,opened,reopened,synchronize]
+    types: [edited, opened, reopened, synchronize]
 
 jobs:
   prettier:
@@ -37,4 +37,4 @@ jobs:
         run: npm install
 
       - name: Format
-        run: npm run format
+        run: npm run format:check

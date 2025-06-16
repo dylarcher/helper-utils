@@ -68,7 +68,7 @@ describe('browser', () => {
 			'uuid',
 		];
 
-		expectedExports.forEach((exportName) => {
+		expectedExports.forEach(exportName => {
 			assert.strictEqual(typeof allExports[exportName], 'function');
 		});
 
