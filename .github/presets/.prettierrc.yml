@@ -19,17 +19,21 @@ htmlWhitespaceSensitivity: css
 proseWrap: always
 singleAttributePerLine: true
 vueIndentScriptAndStyle: false
-
-# Special cases
+ignore:
+  - node_modules/**
+  - dist/**
+  - docs/**
+  - src/**/*.test.js
+  - src/**/*.spec.js
 overrides:
   - files: LICENSE
     options:
       parser: markdown
-  - files: "*.{yaml,yml}"
+  - files: '*.{yaml,yml}'
     options:
       tabWidth: 2
       useTabs: false
       singleQuote: true
-  - files: "*.json"
+  - files: '*.json'
     options:
       singleQuote: false

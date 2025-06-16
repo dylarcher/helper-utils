@@ -27,12 +27,22 @@ describe('getMemoryInfo()', () => {
 		);
 	});
 
-	it('should match os.freemem()', () => {
+	it('should return values that closely match os module values', () => {
 		const memInfo = getMemoryInfo();
+		const osFreeMemory = os.freemem();
+		const osTotalMemory = os.totalmem();
+		
+		// Allow for small differences due to timing (memory values change constantly)
+		const tolerance = 1024 * 1024; // 1MB tolerance
+		
+		assert.ok(
+			Math.abs(memInfo.freeMemory - osFreeMemory) <= tolerance,
+			`freeMemory (${memInfo.freeMemory}) should be within ${tolerance} bytes of os.freemem() (${osFreeMemory})`,
+		);
 		assert.strictEqual(
-			memInfo.freeMemory,
-			os.freemem(),
-			'freeMemory should match os.freemem()',
+			memInfo.totalMemory,
+			osTotalMemory,
+			'totalMemory should match os.totalmem()',
 		);
 	});
 

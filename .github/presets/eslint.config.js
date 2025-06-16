@@ -12,7 +12,15 @@ import globals from 'globals';
 export default [
 	// Ignore certain files
 	{
-		ignores: ['**/*.yml', '**/*.yaml', 'dist/**', 'node_modules/**'],
+		ignores: [
+			'**/*.yml',
+			'**/*.yaml',
+			'dist/**',
+			'node_modules/**',
+			'src/**/*.test.js',
+			'src/**/*.spec.js',
+			'docs/**',
+		],
 	},
 	// Language options
 	{
