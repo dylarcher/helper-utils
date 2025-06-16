@@ -1,63 +1,95 @@
 {
     "[css]": {
         "editor.codeActionsOnSave": {
-            "source.fixAll.eslint": "explicit"
+            "source.fixAll.css": "explicit"
         },
-        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true
     },
     "[html]": {
         "editor.codeActionsOnSave": {
-            "source.fixAll.eslint": "explicit",
             "source.fixAll.html": "explicit"
         },
-        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true
+    },
+    "[ini]": {
+        "editor.codeActionsOnSave": {
+            "source.fixAll.ini": "explicit"
+        },
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+        "editor.formatOnSave": true
     },
     "[javascript]": {
         "editor.codeActionsOnSave": {
-            "source.fixAll.eslint": "explicit",
             "source.fixAll.ts": "explicit"
         },
-        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+        "editor.formatOnSave": true
     },
     "[json]": {
         "editor.codeActionsOnSave": {
-            "source.fixAll.eslint": "explicit",
             "source.fixAll.json": "explicit",
             "source.fixAll.sortJSON": "explicit"
         },
-        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+        "editor.formatOnSave": true
     },
     "[markdown]": {
         "editor.codeActionsOnSave": {
-            "source.fixAll.eslint": "explicit",
             "source.fixAll.markdown": "explicit",
             "source.fixAll.markdownlint": "explicit",
             "source.fixAll.md": "explicit"
         },
-        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+        "editor.formatOnSave": true
+    },
+    "[plaintext]": {
+        "editor.codeActionsOnSave": {
+            "source.fixAll.plaintext": "explicit"
+        },
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+        "editor.formatOnSave": true
+    },
+    "[properties]": {
+        "editor.codeActionsOnSave": {
+            "source.fixAll.properties": "explicit"
+        },
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+        "editor.formatOnSave": true
     },
     "[svg]": {
         "editor.codeActionsOnSave": {
-            "source.fixAll.eslint": "explicit",
             "source.fixAll.svg": "explicit",
             "source.fixAll.svgo": "explicit"
         },
-        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+        "editor.formatOnSave": true
+    },
+    "[typescript]": {
+        "editor.codeActionsOnSave": {
+            "source.fixAll.ts": "explicit"
+        },
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+        "editor.formatOnSave": true
     },
     "[yaml]": {
         "editor.codeActionsOnSave": {
-            "source.fixAll.eslint": "explicit",
             "source.fixAll.sort": "explicit",
             "source.fixAll.yaml": "explicit"
         },
-        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+        "editor.formatOnSave": true
     },
     "editor.codeActionsOnSave": {
-        "source.fixAll": "explicit"
+        "source.fixAll": "always",
+        "source.fixAll.eslint": "explicit",
+        "source.fixAll.prettier": "explicit",
+        "source.fixAll.stylelint": "explicit"
     },
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnPaste": false,
-    "editor.formatOnSave": true,
+    "editor.formatOnSave": false,
     "editor.formatOnType": false,
     "eslint.codeActionsOnSave.mode": "problems",
     "eslint.enable": true,

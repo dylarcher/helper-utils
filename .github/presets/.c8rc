@@ -35,31 +35,16 @@
     "omit-relative": true,
     "output-file": null,
     "per-file": true,
-    "report-dir": "coverage/",
-    "reporter": [
-        "*"
-    ],
-    "reporter-options": {
-        "html": {
-            "show-branch": true,
-            "show-uncaught": true
-        },
-        "json": {
-            "output": "coverage/coverage.json"
-        },
-        "text": {
-            "show-branch": true,
-            "show-uncaught": true
-        }
-    },
+    "report-dir": "docs/tests/",
+    "reporter": [],
     "require": [],
-    "resolve": "coverage/resolve.json",
+    "resolve": "",
     "skip-full": false,
     "sourceMap": true,
     "src": true,
     "statements": 100,
     "statements-unchanged": false,
-    "temp-directory": "coverage/.tmp/",
-    "work-dir": "coverage/.wrk/",
+    "temp-directory": "docs/tests/.temp/",
+    "work-dir": "docs/tests/.work/",
     "wrapper-length": 0
 }

@@ -1,32 +1,30 @@
-# c8
-coverage/
+# Editor directories and files
+.idea/
+.vscode/
 
-# macOS
+# OS generated files
 .DS_Store
-._*
 .Spotlight-V100
 .Trashes
-
-# WindowsOS
+._*
+Desktop.ini
 Thumbs.db
 ehthumbs.db
-Desktop.ini
 
-# LinuxOS
-*~
-
-# IDE/Code Editor
-.vscode/
-.idea/
-
-# Build/Log folders & files
+# Logs
 logs
-*.log
 npm-debug.log*
+pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
+*.log
 
-# Node.js
-.node-version
+# Dependency directories
 node_modules/
+
+# Coverage directories
+docs/coverage/.temp/
+docs/coverage/tmp/
+
+# Temporary files
+*~
