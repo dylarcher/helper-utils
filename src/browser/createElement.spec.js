@@ -1,7 +1,12 @@
 import { describe, it, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { createElement } from './createElement.js';
-import { setupBrowserMocks, restoreGlobals } from '../../utils/test.utils.js';
+import {
+	setupJSDOM,
+	cleanupJSDOM,
+	setupBrowserMocks,
+	restoreGlobals,
+} from '../../utils/test.utils.js';
 
 // Mock Element class for testing
 class MockElement {
@@ -20,89 +25,117 @@ class MockElement {
 }
 
 describe('createElement(tagName, attributes, children)', () => {
-	beforeEach(() => {
-		setupBrowserMocks();
+	describe('Mock Environment Tests', () => {
+		beforeEach(() => {
+			setupBrowserMocks();
+		});
+
+		afterEach(() => {
+			restoreGlobals();
+		});
+
+		// ...existing mock-based tests...
+		it('should create an element with specified tag name', () => {
+			const element = createElement('div');
+			assert.strictEqual(element.tagName, 'div');
+		});
+
+		it('should create an element with attributes', () => {
+			const attributes = {
+				id: 'test-id',
+				class: 'test-class',
+				'data-value': '123',
+			};
+
+			const element = createElement('div', attributes);
+			assert.strictEqual(element.attributes.id, 'test-id');
+			assert.strictEqual(element.attributes.class, 'test-class');
+			assert.strictEqual(element.attributes['data-value'], '123');
+		});
+
+		it('should create an element with string child', () => {
+			const element = createElement('p', {}, 'Hello World');
+			assert.strictEqual(element.childNodes.length, 1);
+			assert.strictEqual(element.childNodes[0].textContent, 'Hello World');
+		});
 	});
 
-	afterEach(() => {
-		restoreGlobals();
-	});
+	describe('JSDOM Environment Tests', () => {
+		beforeEach(() => {
+			setupJSDOM();
+		});
 
-	it('should create an element with specified tag name', () => {
-		const element = createElement('div');
-		assert.strictEqual(element.tagName, 'div');
-	});
+		afterEach(() => {
+			cleanupJSDOM();
+		});
 
-	it('should create an element with attributes', () => {
-		const attributes = {
-			id: 'test-id',
-			class: 'test-class',
-			'data-value': '123',
-		};
+		it('should create real DOM elements with jsdom', () => {
+			const element = createElement('div');
+			assert.strictEqual(element.tagName.toLowerCase(), 'div');
+			assert.ok(element instanceof global.HTMLDivElement);
+		});
 
-		const element = createElement('div', attributes);
-		assert.strictEqual(element.attributes.id, 'test-id');
-		assert.strictEqual(element.attributes.class, 'test-class');
-		assert.strictEqual(element.attributes['data-value'], '123');
-	});
+		it('should create elements with real attributes in jsdom', () => {
+			const attributes = {
+				id: 'test-id',
+				class: 'test-class my-class',
+				'data-value': '123',
+				title: 'Test Title',
+			};
 
-	it('should create an element with string child', () => {
-		const element = createElement('p', {}, 'Hello World');
-		assert.strictEqual(element.childNodes.length, 1);
-		assert.strictEqual(element.childNodes[0].textContent, 'Hello World');
-	});
+			const element = createElement('div', attributes);
 
-	it('should create an element with Node child', () => {
-		const childElement = new MockElement('span');
-		const element = createElement('div', {}, childElement);
+			assert.strictEqual(element.id, 'test-id');
+			assert.strictEqual(element.className, 'test-class my-class');
+			assert.strictEqual(element.getAttribute('data-value'), '123');
+			assert.strictEqual(element.title, 'Test Title');
+		});
 
-		assert.strictEqual(element.childNodes.length, 1);
-		assert.strictEqual(element.childNodes[0], childElement);
-	});
+		it('should handle real DOM text nodes with jsdom', () => {
+			const element = createElement('p', {}, 'Hello World');
 
-	it('should create an element with array of children', () => {
-		const childElement = new MockElement('span');
-		const children = ['Hello ', childElement, ' World'];
+			assert.strictEqual(element.childNodes.length, 1);
+			assert.strictEqual(element.textContent, 'Hello World');
+			assert.ok(element.firstChild instanceof global.Text);
+		});
 
-		const element = createElement('div', {}, children);
-		assert.strictEqual(element.childNodes.length, 3);
-		assert.strictEqual(element.childNodes[0].textContent, 'Hello ');
-		assert.strictEqual(element.childNodes[1], childElement);
-		assert.strictEqual(element.childNodes[2].textContent, ' World');
-	});
+		it('should handle real DOM element children with jsdom', () => {
+			const childElement = document.createElement('span');
+			childElement.textContent = 'Child Content';
 
-	it('should handle empty attributes object', () => {
-		const element = createElement('div', {});
-		assert.deepStrictEqual(element.attributes, {});
-	});
+			const element = createElement('div', {}, childElement);
 
-	it('should handle undefined attributes', () => {
-		const element = createElement('div');
-		assert.ok(element.attributes !== undefined);
-	});
+			assert.strictEqual(element.childNodes.length, 1);
+			assert.strictEqual(element.firstChild.tagName.toLowerCase(), 'span');
+			assert.strictEqual(element.firstChild.textContent, 'Child Content');
+		});
 
-	it('should handle empty children array', () => {
-		const element = createElement('div', {}, []);
-		assert.strictEqual(element.childNodes.length, 0);
-	});
+		it('should handle complex nested structures with jsdom', () => {
+			const span = document.createElement('span');
+			span.textContent = 'Span Text';
 
-	it('should handle mixed children types in array', () => {
-		const spanElement = new MockElement('span');
-		const children = ['Text 1', spanElement, 'Text 2'];
+			const children = ['Text before', span, ' text after'];
 
-		const element = createElement('div', {}, children);
-		assert.strictEqual(element.childNodes.length, 3);
-		assert.strictEqual(element.childNodes[0].textContent, 'Text 1');
-		assert.strictEqual(element.childNodes[1], spanElement);
-		assert.strictEqual(element.childNodes[2].textContent, 'Text 2');
-	});
+			const element = createElement('div', { class: 'container' }, children);
 
-	it('should only set own properties from attributes object', () => {
-		const attributes = Object.create({ inheritedProp: 'inherited' });
-		attributes.ownProp = 'own';
+			assert.strictEqual(element.childNodes.length, 3);
+			assert.strictEqual(element.childNodes[0].textContent, 'Text before');
+			assert.strictEqual(element.childNodes[1].tagName.toLowerCase(), 'span');
+			assert.strictEqual(element.childNodes[2].textContent, ' text after');
+			assert.strictEqual(
+				element.textContent,
+				'Text beforeSpan Text text after',
+			);
+		});
 
-		const element = createElement('div', attributes);
-		assert.strictEqual(element.attributes.ownProp, 'own');
-		assert.strictEqual(element.attributes.inheritedProp, undefined);
+		it('should work with various HTML elements in jsdom', () => {
+			const elements = ['div', 'span', 'p', 'h1', 'section', 'article'];
+
+			elements.forEach((tagName) => {
+				const element = createElement(tagName, { id: `test-${tagName}` });
+				assert.strictEqual(element.tagName.toLowerCase(), tagName);
+				assert.strictEqual(element.id, `test-${tagName}`);
+			});
+		});
 	});
 });

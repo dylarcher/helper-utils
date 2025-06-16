@@ -8,7 +8,7 @@
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
 		"declaration": true,
-		"lib": ["ES2020", "DOM", "DOM.Iterable"],
+		"lib": ["ES2020"],
 		"module": "ESNext",
 		"moduleResolution": "node",
 		"outDir": "dist",
@@ -17,15 +17,13 @@
 		"paths": {
 			"@/*": ["src/*"],
 			"@spec/*": ["tests/*"],
-			"@www/*": ["docs/*"],
-			"#node/*": ["src/system/*"],
-			"#util/*": ["src/browser/*"],
+			"@www/*": ["docs/*"]
 		},
 	},
 	"exclude": ["node_modules", "docs", "dist", "test", "utils", "src/**/*.spec.js", "src/**/*.test.js"],
 	"include": ["src"],
 	"typeAcquisition": {
 		"enable": true,
-		"include": ["node", "eslint", "prettier", "c8"]
+		"include": ["eslint", "prettier"]
 	}
 }

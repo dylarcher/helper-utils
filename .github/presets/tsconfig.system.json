@@ -1,0 +1,13 @@
+{
+	"extends": "/tsconfig.json",
+	"include": ["src/system/**/*"],
+	"compilerOptions": {
+		"paths": {
+			"#node/*": ["src/system/*"]
+		}
+	},
+	"typeAcquisition": {
+		"enable": true,
+		"include": ["node"]
+	}
+}

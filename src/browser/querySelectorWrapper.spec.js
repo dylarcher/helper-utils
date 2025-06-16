@@ -1,7 +1,12 @@
 import { describe, it, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { querySelectorWrapper } from './querySelectorWrapper.js';
-import { setupBrowserMocks, restoreGlobals } from '../../utils/test.utils.js';
+import {
+	setupJSDOM,
+	cleanupJSDOM,
+	setupBrowserMocks,
+	restoreGlobals,
+} from '../../utils/test.utils.js';
 
 // Mock Element and Document for testing
 class MockElement {
@@ -274,5 +279,78 @@ describe('querySelectorWrapper(selector, container)', () => {
 			// Restore the global document
 			global.document = originalDocument;
 		}
+	});
+
+	describe('JSDOM Environment Tests', () => {
+		beforeEach(() => {
+			setupJSDOM(`
+				<!DOCTYPE html>
+				<html>
+				<body>
+					<div id="container">
+						<p class="text-content">Paragraph 1</p>
+						<p class="text-content highlighted">Paragraph 2</p>
+						<span class="text-content">Span element</span>
+						<div class="nested">
+							<span id="nested-span">Nested span</span>
+						</div>
+					</div>
+				</body>
+				</html>
+			`);
+		});
+
+		afterEach(() => {
+			cleanupJSDOM();
+		});
+
+		it('should find elements by ID in real DOM', () => {
+			const element = querySelectorWrapper('#container');
+			assert.notStrictEqual(element, null);
+			assert.strictEqual(element.id, 'container');
+			assert.ok(element instanceof global.HTMLDivElement);
+		});
+
+		it('should find elements by class in real DOM', () => {
+			const element = querySelectorWrapper('.text-content');
+			assert.notStrictEqual(element, null);
+			assert.strictEqual(element.tagName.toLowerCase(), 'p');
+			assert.ok(element.classList.contains('text-content'));
+		});
+
+		it('should find elements by tag name in real DOM', () => {
+			const element = querySelectorWrapper('span');
+			assert.notStrictEqual(element, null);
+			assert.strictEqual(element.tagName.toLowerCase(), 'span');
+		});
+
+		it('should handle complex selectors in real DOM', () => {
+			const element = querySelectorWrapper('.nested #nested-span');
+			assert.notStrictEqual(element, null);
+			assert.strictEqual(element.id, 'nested-span');
+			assert.strictEqual(element.textContent, 'Nested span');
+		});
+
+		it('should return null for non-existent elements in real DOM', () => {
+			const element = querySelectorWrapper('#non-existent');
+			assert.strictEqual(element, null);
+		});
+
+		it('should work with attribute selectors in real DOM', () => {
+			// Add an element with specific attributes
+			const testDiv = document.createElement('div');
+			testDiv.setAttribute('data-test', 'value');
+			document.body.appendChild(testDiv);
+
+			const element = querySelectorWrapper('[data-test="value"]');
+			assert.notStrictEqual(element, null);
+			assert.strictEqual(element.getAttribute('data-test'), 'value');
+		});
+
+		it('should handle pseudo-selectors in real DOM', () => {
+			const firstChild = querySelectorWrapper('.text-content:first-child');
+			assert.notStrictEqual(firstChild, null);
+			assert.strictEqual(firstChild.textContent, 'Paragraph 1');
+		});
 	});
 });

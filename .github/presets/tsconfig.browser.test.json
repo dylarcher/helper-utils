@@ -1,0 +1,8 @@
+{
+	"extends": "./tsconfig.browser.json",
+	"include": ["src/browser/**/*.spec.js", "src/browser/**/*.test.js"],
+	"typeAcquisition": {
+		"enable": true,
+		"include": ["c8", "node", "jsdom"]
+	}
+}

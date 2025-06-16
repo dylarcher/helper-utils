@@ -167,7 +167,7 @@ describe('encrypt(text, key, iv)', () => {
 			'Should throw error for key length not equal to 32 bytes.',
 		);
 
-		const longKey = crypto.randomBytes(33); // Invalid length
+		const longKey = cryptoModule.randomBytes(33); // Invalid length
 		assert.throws(
 			() => encrypt(originalText, longKey, testIv),
 			(error) => {
@@ -197,7 +197,7 @@ describe('encrypt(text, key, iv)', () => {
 			},
 			'Should throw error for IV length not equal to 16 bytes.',
 		);
-		const longIv = crypto.randomBytes(17); // Invalid length
+		const longIv = cryptoModule.randomBytes(17); // Invalid length
 		assert.throws(
 			() => encrypt(originalText, testKey, longIv),
 			(error) => {

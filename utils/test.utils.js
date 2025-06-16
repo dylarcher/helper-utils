@@ -1,9 +1,101 @@
 /**
- * Test helpers for browser environment mocking
+ * Test helpers for browser environment mocking with jsdom
  */
+import { JSDOM } from 'jsdom';
 
 // Store original global values
 export const originalGlobals = {};
+let currentJSDOM = null;
+
+/**
+ * Setup jsdom environment for browser testing
+ */
+export function setupJSDOM(
+	html = '<!DOCTYPE html><html><body></body></html>',
+	options = {},
+) {
+	// Create a new JSDOM instance
+	currentJSDOM = new JSDOM(html, {
+		url: 'http://localhost',
+		pretendToBeVisual: true,
+		resources: 'usable',
+		...options,
+	});
+
+	const { window } = currentJSDOM;
+	const { document } = window;
+
+	// Store original globals before overwriting
+	if (!originalGlobals.window) {
+		originalGlobals.window = global.window;
+		originalGlobals.document = global.document;
+		originalGlobals.navigator = global.navigator;
+		originalGlobals.location = global.location;
+		originalGlobals.localStorage = global.localStorage;
+		originalGlobals.sessionStorage = global.sessionStorage;
+	}
+
+	// Set global variables from jsdom - handle read-only properties carefully
+	global.window = window;
+	global.document = document;
+
+	// Use Object.defineProperty for read-only properties
+	try {
+		global.navigator = window.navigator;
+	} catch (e) {
+		Object.defineProperty(global, 'navigator', {
+			value: window.navigator,
+			configurable: true,
+			writable: true,
+		});
+	}
+
+	try {
+		global.location = window.location;
+	} catch (e) {
+		Object.defineProperty(global, 'location', {
+			value: window.location,
+			configurable: true,
+			writable: true,
+		});
+	}
+
+	global.localStorage = window.localStorage;
+	global.sessionStorage = window.sessionStorage;
+
+	// Expose commonly needed globals
+	global.Element = window.Element;
+	global.HTMLElement = window.HTMLElement;
+	global.HTMLDivElement = window.HTMLDivElement;
+	global.Node = window.Node;
+	global.Text = window.Text;
+	global.NodeList = window.NodeList;
+	global.HTMLCollection = window.HTMLCollection;
+
+	return { window, document };
+}
+
+/**
+ * Cleanup jsdom environment
+ */
+export function cleanupJSDOM() {
+	if (currentJSDOM) {
+		currentJSDOM.window.close();
+		currentJSDOM = null;
+	}
+
+	// Restore original globals
+	Object.entries(originalGlobals).forEach(([key, value]) => {
+		if (value === undefined) {
+			delete global[key];
+		} else {
+			global[key] = value;
+		}
+	});
+
+	// Clear stored originals
+	Object.keys(originalGlobals).forEach((key) => delete originalGlobals[key]);
+}
 
 /**
  * Mock global object with proper cleanup
