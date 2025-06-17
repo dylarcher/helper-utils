@@ -91,7 +91,8 @@ app.use(async (req, res, next) => {
     if (error.code === 'ENOENT') {
       return next();
     }
-    console.error(`Error processing ${fullPath}:`, error);
+    const sanitizedFullPath = fullPath.replace(/\n|\r/g, "");
+    console.error(`Error processing ${sanitizedFullPath}:`, error);
     res.status(500).send('Error rendering Markdoc file.');
   }
 });
