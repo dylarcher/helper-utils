@@ -203,8 +203,14 @@ jobs:
           fi
 
           VERSION_BUMP="patch"
-          if [[ "$BRANCH_NAME" == fix/* ]]; then VERSION_BUMP="patch";
-          elif [[ "$BRANCH_NAME" == refac/* ]]; then VERSION_BUMP="major"; fi
+          IFS=',' read -r -a patterns <<< "$BRANCH_PATTERNS"
+          for pattern in "${patterns[@]}"; do
+            IFS='=' read -r prefix bump <<< "$pattern"
+            if [[ "$BRANCH_NAME" == $prefix ]]; then
+              VERSION_BUMP="$bump"
+              break
+            fi
+          done
           echo "Determined version bump: $VERSION_BUMP for branch $BRANCH_NAME"
           echo "Updating package version (triggers postversion script for push & publish)…"
           npm version "$VERSION_BUMP" -m "chore(release): version %s for PR #$GPR_INT"
