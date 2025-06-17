@@ -8,6 +8,7 @@ on:
       - opened
       - reopened
       - synchronize
+  workflow_dispatch: # Allow manual triggering for testing
 
 env:
   CI: true
@@ -31,7 +32,7 @@ jobs:
       - name: Checkout PR Code
         uses: actions/checkout@v4
         with:
-          ref: $HEAD_SHA
+          ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0 # Fetch full history for potential use by build/versioning tools
 
       - name: Setup Node.js
@@ -50,10 +51,10 @@ jobs:
       - name: Build Project (includes lint fixes, coverage, dist)
         run: npm run build
 
-      - name: Archive built repository state
+      - name: Archive Built Code
         uses: actions/upload-artifact@v4
         with:
-          name: built-repo-$GIT_RID
+          name: built-repo-${{ env.GIT_RID }}
           path: |
             .
             !node_modules/ # Exclude node_modules to keep artifact size down
@@ -62,13 +63,6 @@ jobs:
       - name: Archive PR details
         run: |
           mkdir -p pr_details
-          echo "$NODE_OPTIONS" > pr_details/NODE_OPTIONS
-          echo "$CI" > pr_details/
-          echo "$NODE_ENV" > pr_details/NODE_ENV
-          echo "$GIT_REPO" > pr_details/GIT_REPO
-          echo "$GIT_TOKEN" > pr_details/GIT_TOKEN
-          echo "$NPM_TOKEN" > pr_details/NPM_TOKEN
-          echo "$GIT_RID" > pr_details/GIT_RID
           echo "$GPR_INT" > pr_details/GPR_INT
           echo "$HEAD_REF" > pr_details/HEAD_REF
           echo "$HEAD_SHA" > pr_details/HEAD_SHA
@@ -76,6 +70,6 @@ jobs:
       - name: Upload PR details
         uses: actions/upload-artifact@v4
         with:
-          name: pr-details-$GIT_RID
+          name: pr-details-${{ env.GIT_RID }}
           path: pr_details/
           if-no-files-found: error

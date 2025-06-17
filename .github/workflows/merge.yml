@@ -8,6 +8,15 @@ on:
     types:
       - completed
 
+env:
+  CI: true
+  NODE_ENV: production
+  NODE_OPTIONS: --max-old-space-size=4096
+  GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }} # For git operations
+  NPM_TOKEN: ${{ secrets.NPM_TOKEN }} # For npm publish
+  # GIT_RID for this workflow's run_id is available via github.run_id directly
+  GIT_REPO: ${{ github.repository }} # Full repo name, e.g. user/repo
+
 jobs:
   integrate:
     name: Integrate, Commit, Version, and Package
@@ -19,13 +28,13 @@ jobs:
       packages: write # Required for npm publish (if it were to GitHub Packages)
 
     steps:
-      - name: Download PR details artifact
+      - name: Download PR Metadata Artifact
         uses: actions/download-artifact@v4
         with:
-          name: pr-details-$GIT_RID
+          name: pr-details-${{ github.event.workflow_run.id }}
           path: pr_details_artifact
 
-      - name: Load PR details into environment
+      - name: Load PR Metadata into Environment
         id: pr_vars
         run: |
           GPR_INT=$(cat pr_details_artifact/GPR_INT)
@@ -39,17 +48,12 @@ jobs:
           echo "head_ref=$HEAD_REF" >> $GITHUB_OUTPUT
           echo "head_sha=$HEAD_SHA" >> $GITHUB_OUTPUT
 
-      - name: Checkout specific PR commit state
+      - name: Checkout PR Branch
         uses: actions/checkout@v4
         with:
-          ref: $HEAD_SHA # Checkout the exact SHA that was built
+          ref: ${{ env.HEAD_REF }} # Checkout the PR branch itself
+          token: ${{ env.GIT_TOKEN }} # Ensure token is used for subsequent operations if needed
           fetch-depth: 0 # Fetch full history
-
-      - name: Download built repository artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: built-repo-$GIT_RID
-          path: ./ # Download into the current checkout, overwriting files with the built state
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -58,23 +62,32 @@ jobs:
           registry-url: https://registry.npmjs.org # For npm version and publish
           cache: npm
 
-      - name: Install Dependencies
-        run: npm ci # Install devDependencies needed for npm version scripts, etc.
-
-      - name: Configure Git and Prepare Branch
+      - name: Configure Git User and Synchronize Branch
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git remote set-url origin "https://x-access-token:$GIT_TOKEN@github.com/$GIT_REPOository }}"
+          git remote set-url origin "https://x-access-token:${{ env.GIT_TOKEN }}@github.com/${{ env.GIT_REPO }}"
 
-          # Fetch the latest state of the PR branch and checkout
-          git fetch origin "$HEAD_REF"
-          git checkout "$HEAD_REF"
-          # Reset the branch to the specific SHA that was built and tested.
-          # The working directory already contains files from 'built-repo' artifact (the built state of HEAD_SHA).
-          git reset --hard "$HEAD_SHA"
+          echo "Ensuring branch ${{ env.HEAD_REF }} is at commit ${{ env.HEAD_SHA }}"
+          # The checkout step already put us on HEAD_REF.
+          # Fetch to ensure our local HEAD_REF is aware of the commit if it was force-pushed or something unusual.
+          # This might be redundant if actions/checkout already fetched HEAD_REF properly.
+          git fetch origin "${{ env.HEAD_REF }}"
+          git reset --hard "${{ env.HEAD_SHA }}"
+          # Now, the current branch (${{ env.HEAD_REF }}) points to ${{ env.HEAD_SHA }},
+          # and the working directory matches the committed state of ${{ env.HEAD_SHA }}.
 
-      - name: Check-in built changes
+      - name: Download and Apply Built Code Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: built-repo-${{ github.event.workflow_run.id }}
+          path: ./ # Download into the current checkout, overwriting files with the built state
+          # Now the working directory has the *built* files from HEAD_SHA.
+
+      - name: Install Dependencies
+        run: npm ci # Install devDependencies needed for npm version scripts, etc.
+
+      - name: Commit and Push Build Changes
         id: build_and_commit
         run: |
           echo "Applying built changes (lint fixes, test coverage, dist generation)..."
@@ -136,14 +149,14 @@ jobs:
           fi
 
           if [ "$ANY_COMMITS_MADE" = true ]; then
-            echo "Pushing build changes to $HEAD_REF..."
-            git push origin "$HEAD_REF"
+            echo "Pushing build changes to ${{ env.HEAD_REF }}..."
+            git push origin "${{ env.HEAD_REF }}"
           else
             echo "No changes were committed by this step."
           fi
           echo "any_commits_made=$ANY_COMMITS_MADE" >> $GITHUB_OUTPUT
 
-      - name: Package, Version, and Publish
+      - name: Version, Package, and Publish
         id: version_publish_compress
         run: |
           if [ ! -d "dist" ] || [ ! -f "package.json" ]; then
@@ -151,12 +164,12 @@ jobs:
             echo "skipped_all=true" >> $GITHUB_OUTPUT; exit 0
           fi; echo "skipped_all=false" >> $GITHUB_OUTPUT
 
-          BRANCH_NAME="$HEAD_REF"; VERSION_BUMP="minor"
+          BRANCH_NAME="${{ env.HEAD_REF }}"; VERSION_BUMP="minor"
           if [[ "$BRANCH_NAME" == fix/* ]]; then VERSION_BUMP="patch"; elif [[ "$BRANCH_NAME" == refac/* ]]; then VERSION_BUMP="major"; fi
           echo "Determined version bump: $VERSION_BUMP for branch $BRANCH_NAME"
 
           echo "Updating package version (triggers postversion script for push & publish)..."
-          npm version $VERSION_BUMP -m "chore(release): version %s for PR #$GPR_INT"
+          npm version $VERSION_BUMP -m "chore(release): version %s for PR #${{ env.GPR_INT }}"
           # 'postversion' script in package.json ("git push && git push --tags && npm run publish:npm") handles push and publish.
 
           echo "Compressing dist directory..."
@@ -167,7 +180,7 @@ jobs:
         if: steps.version_publish_compress.outputs.skipped_all != 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: distribution-archives-$GIT_RID
+          name: distribution-archives-${{ github.run_id }} # Use current workflow's run_id for its own artifacts
           path: |
             dist.tar.gz
             dist.zip
