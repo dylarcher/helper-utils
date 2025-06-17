@@ -1,57 +1,87 @@
+// Import the 'path' module from Node.js.
+// This module provides utilities for working with file and directory paths.
 import path from 'node:path';
 /**
  * Gets the extension of a file path, including the leading dot (e.g., '.js', '.txt').
- * This function is a wrapper around Node.js's `path.extname()`.
- * It is specific to Node.js environments.
+ * This function is a wrapper around Node.js's `path.extname()` method and is
+ * intended for use in Node.js environments.
  *
- * If the provided path `p` is not a string or is an empty string, this function
- * returns an empty string. If the path does not have an extension, an empty
- * string is returned.
+ * `path.extname(p)` extracts the extension from the last occurrence of a period (`.`)
+ * to the end of the string in the last component of the path.
  *
- * @param {string} p - The file path to evaluate.
- * @returns {string} The extension of the path (e.g., '.html', '.md'). Returns an
- *   empty string if `p` is not a valid non-empty string, or if the path has no extension,
- *   or if the path is a directory path ending with a separator (in some cases, consult Node.js path.extname docs for specifics on directory paths).
+ * Key behaviors of `path.extname()`:
+ * - If there is no period in the last component of the path, an empty string (`''`) is returned.
+ * - If the last component of the path starts with a period (e.g., a "dotfile" like `.bashrc`),
+ *   and there are no other periods, an empty string (`''`) is returned.
+ * - If the path ends with a period (e.g., `archive.tar.`), the period itself (`.`) is returned.
+ * - For paths representing directories (e.g., `/path/to/dir/` or `/path/to/dir`), it typically
+ *   returns an empty string (`''`) as directories usually don't have extensions in this context.
+ *
+ * This wrapper adds a guard clause: if the provided path `p` is not a string or is an
+ * empty string, this function returns an empty string, aligning with `path.extname('')`.
+ *
+ * @param {string | Buffer} p - The file path to evaluate. While `path.extname` can accept a Buffer,
+ *                      this wrapper's guard clause currently expects `p` to be a string.
+ *                      If `p` is not a string or is an empty string, the function returns `''`.
+ * @returns {string} The extension of the path (e.g., '.html', '.gz', '.').
+ *                   Returns an empty string (`''`) if:
+ *                   - `p` is not a valid non-empty string (due to the wrapper's guard).
+ *                   - The path has no period in its last component.
+ *                   - The last component starts with a period and contains no other periods (e.g., '.config').
+ *                   - The path represents a directory.
  *
  * @example
- * // Basic usage
- * console.info(getExtension('index.html'));         // '.html'
- * console.info(getExtension('image.jpeg'));         // '.jpeg'
- * console.info(getExtension('/path/to/file.txt'));  // '.txt'
+ * // Example 1: Basic file extensions
+ * console.log(getExtension('document.pdf'));         // Output: '.pdf'
+ * console.log(getExtension('image.JPEG'));           // Output: '.JPEG' (case is preserved)
+ * console.log(getExtension('/usr/local/bin/script.sh')); // Output: '.sh'
  *
- * // Files with multiple dots
- * console.info(getExtension('archive.tar.gz'));     // '.gz'
- * console.info(getExtension('app.component.ts'));   // '.ts'
+ * // Example 2: Files with multiple dots in their name
+ * console.log(getExtension('backup.archive.tar.gz'));  // Output: '.gz'
+ * console.log(getExtension('my.new.component.vue')); // Output: '.vue'
  *
- * // Files starting with a dot (hidden files)
- * console.info(getExtension('.bashrc'));            // '' (no extension, .bashrc is the filename)
- * console.info(getExtension('.env.example'));       // '.example'
+ * // Example 3: Files starting with a dot ("hidden" or "dotfiles")
+ * console.log(getExtension('.bash_profile'));        // Output: '' (basename is '.bash_profile', no further extension)
+ * console.log(getExtension('.env.local'));           // Output: '.local' (basename is '.env.local', extension is '.local')
+ * console.log(getExtension('..hidden.config'));      // Output: '.config'
  *
- * // Paths with no extension
- * console.info(getExtension('README'));             // ''
- * console.info(getExtension('/path/to/directory')); // ''
+ * // Example 4: Paths with no extension
+ * console.log(getExtension('Makefile'));               // Output: ''
+ * console.log(getExtension('/etc/hostname'));          // Output: ''
  *
- * // Paths ending with a dot
- * console.info(getExtension('file.'));              // '.'
+ * // Example 5: Paths ending with a dot
+ * console.log(getExtension('file.ending.with.dot.')); // Output: '.'
+ * console.log(getExtension('nodotextension.'));       // Output: '.'
  *
- * // Invalid input
- * console.info(getExtension(''));                  // '' (due to guard clause)
- * console.info(getExtension(null));               // '' (due to guard clause)
+ * // Example 6: Directory paths
+ * console.log(getExtension('/path/to/some_directory/')); // Output: ''
+ * console.log(getExtension('/path/to/another_dir'));   // Output: ''
+ * console.log(getExtension('assets'));                 // Output: ''
  *
- * // Directory paths (behavior of path.extname)
- * console.info(getExtension('some/directory/'));    // ''
- * console.info(getExtension('some/directory'));     // ''
+ * // Example 7: Invalid or empty inputs (handled by the wrapper)
+ * console.log(getExtension(''));                      // Output: ''
+ * console.log(getExtension(null));                   // Output: ''
+ * console.log(getExtension(undefined));              // Output: ''
+ * console.log(getExtension(123));                    // Output: '' (as 123 is not a string)
  */
 export function getExtension(p) {
+    // Step 1: Validate the input path `p`.
+    // Ensure `p` is provided and is a string. If not, or if it's an empty string,
+    // return an empty string. This aligns with `path.extname('')` which also returns `''`.
     if (!p || typeof p !== 'string') {
-        // Guard against non-string or empty string input for 'p'
         return '';
     }
-    // Node.js path.extname is robust for extracting file extensions.
-    // It returns the extension from the last occurrence of the . (period)
-    // to the end of string in the last portion of the path.
-    // If there is no . in the last portion of the path, or if the first character
-    // of the basename is . (dot), then it returns an empty string.
+    // Step 2: Call `path.extname()` from Node.js's path module.
+    // `path.extname(p)` returns the extension of the path `p`.
+    // The extension is the substring from the last occurrence of the . (period) character
+    // to the end of the string in the last portion of the path.
+    //
+    // Key behaviors:
+    // - If there is no '.' in the last portion of the path, or if the path is a
+    //   dotfile and the '.' is the first character of the basename (e.g., '.bashrc'),
+    //   it returns an empty string.
+    // - If the path ends with a '.', that '.' is returned (e.g., 'file.' -> '.').
+    // - For directory paths, it usually returns an empty string.
     return path.extname(p);
 }
 //# sourceMappingURL=getExtension.js.map

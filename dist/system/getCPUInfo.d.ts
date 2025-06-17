@@ -1,91 +1,123 @@
 /**
+ * Defines the structure for CPU time statistics.
+ * These times are reported in milliseconds.
  * @typedef {object} CpuTimes
- * @property {number} user - The number of milliseconds the CPU has spent in user mode.
- * @property {number} nice - The number of milliseconds the CPU has spent in nice mode.
- * @property {number} sys - The number of milliseconds the CPU has spent in sys mode.
- * @property {number} idle - The number of milliseconds the CPU has spent in idle mode.
- * @property {number} irq - The number of milliseconds the CPU has spent in irq mode.
+ * @property {number} user - Milliseconds the CPU spent in user mode.
+ * @property {number} nice - Milliseconds the CPU spent in "nice" mode (niced user processes on POSIX).
+ * @property {number} sys - Milliseconds the CPU spent in system (kernel) mode.
+ * @property {number} idle - Milliseconds the CPU spent in idle mode.
+ * @property {number} irq - Milliseconds the CPU spent servicing interrupts (Interrupt ReQuest).
  */
 /**
+ * Defines the simplified structure for information about a single logical CPU core.
  * @typedef {object} SimplifiedCpuInfo
- * @property {string} model - The model name of the CPU. Defaults to 'unknown' if not available.
- * @property {number} speed - The clock speed of the CPU in MHz. Defaults to 0 if the speed is invalid or not available.
- * @property {CpuTimes} times - An object detailing the CPU time spent in different modes (user, nice, sys, idle, irq).
+ * @property {string} model - The model name of the CPU core (e.g., "Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz").
+ *                            Defaults to 'unknown' if the information is not available.
+ * @property {number} speed - The clock speed of the CPU core in MHz (e.g., 2200 for 2.2GHz).
+ *                            Defaults to 0 if the speed is not available or invalid (e.g., negative).
+ * @property {CpuTimes} times - An object containing the cumulative time (in milliseconds) this CPU core
+ *                              has spent in various states (user, nice, sys, idle, irq) since system boot.
  */
 /**
- * Retrieves information about each logical CPU core on the system.
- * This function is specific to Node.js environments as it uses `os.cpus()`.
- * It returns a simplified structure for each CPU compared to the raw `os.CpuInfo`.
+ * Retrieves simplified information about each logical CPU core on the system.
+ * This function is specific to Node.js environments as it relies on `os.cpus()`.
  *
- * @param {import('node:os').CpuInfo[]} [cpuData] - Optional. Pre-fetched CPU data, primarily for testing purposes.
- *   If not provided, `os.cpus()` will be called.
- * @returns {SimplifiedCpuInfo[]} An array of objects, where each object contains `model`, `speed`,
- *   and `times` (an object with user, nice, sys, idle, irq times) for a logical CPU core.
- *   Returns an empty array if `os.cpus()` returns an empty array or if `cpuData` is an empty array.
+ * It calls `os.cpus()` to get raw CPU data and then maps this data to a more
+ * consistent and slightly simplified structure defined by `SimplifiedCpuInfo`.
+ *
+ * The `os.cpus()` method returns an array of objects, each representing a logical CPU core.
+ * Each object contains details like `model`, `speed` (in MHz), and a `times` object
+ * (with `user`, `nice`, `sys`, `idle`, `irq` properties in milliseconds).
+ * This function provides default values ('unknown' for model, 0 for speed) if the
+ * underlying data is missing or invalid for those fields.
+ *
+ * @param {import('node:os').CpuInfo[]} [cpuData] - Optional. Pre-fetched CPU data, typically
+ *   an array of `os.CpuInfo` objects. This parameter is primarily intended for testing
+ *   or for scenarios where `os.cpus()` data has already been retrieved. If not provided
+ *   or if falsy (excluding `null`), the function will call `os.cpus()` internally.
+ *   If `null` is explicitly passed, an empty array is returned.
+ * @returns {SimplifiedCpuInfo[]} An array of `SimplifiedCpuInfo` objects. Each object
+ *   corresponds to a logical CPU core found on the system. Returns an empty array if
+ *   `os.cpus()` returns no data, if `cpuData` is explicitly `null`, or if the provided
+ *   `cpuData` is an empty array.
  *
  * @example
- * const cpuInfo = getCPUInfo();
- * if (cpuInfo.length > 0) {
- *   console.info(`System has ${cpuInfo.length} logical CPU cores.`);
- *   const firstCpu = cpuInfo[0];
- *   console.info('First CPU Core Info:');
- *   console.info(`  Model: ${firstCpu.model}`);
- *   console.info(`  Speed: ${firstCpu.speed} MHz`);
- *   console.info(`  Times (ms):`);
- *   console.info(`    User: ${firstCpu.times.user}`);
- *   console.info(`    Idle: ${firstCpu.times.idle}`);
- *   // ... and other times (nice, sys, irq)
+ * const cpuInformation = getCPUInfo();
+ *
+ * if (cpuInformation.length > 0) {
+ *   console.log(`Total logical CPU cores: ${cpuInformation.length}`);
+ *   cpuInformation.forEach((cpu, index) => {
+ *     console.log(`--- Core ${index + 1} ---`);
+ *     console.log(`  Model: ${cpu.model}`);
+ *     console.log(`  Speed: ${cpu.speed} MHz`);
+ *     console.log(`  Times (ms):`);
+ *     console.log(`    User: ${cpu.times.user}`);
+ *     console.log(`    Nice: ${cpu.times.nice}`);
+ *     console.log(`    Sys:  ${cpu.times.sys}`);
+ *     console.log(`    Idle: ${cpu.times.idle}`);
+ *     console.log(`    IRQ:  ${cpu.times.irq}`);
+ *   });
  * } else {
- *   console.info('Could not retrieve CPU information.');
+ *   console.log('No CPU information could be retrieved.');
  * }
  *
- * // Example structure of a returned object in the array:
+ * // Example of what one object in the returned array might look like:
  * // {
- * //   model: 'Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz',
- * //   speed: 2208, // or some other speed value
+ * //   model: 'Intel(R) Core(TM) i7-10750H CPU @ 2.60GHz',
+ * //   speed: 2592, // Speed in MHz
  * //   times: {
- * //     user: 1234560,
- * //     nice: 0,
- * //     sys: 876540,
- * //     idle: 98765430,
- * //     irq: 0
+ * //     user: 5363800, // Milliseconds spent in user mode
+ * //     nice: 0,       // Milliseconds spent in nice mode
+ * //     sys: 2213170,  // Milliseconds spent in system mode
+ * //     idle: 41370410, // Milliseconds spent in idle mode
+ * //     irq: 0         // Milliseconds spent servicing interrupts
  * //   }
  * // }
  */
 export function getCPUInfo(cpuData?: import("node:os").CpuInfo[]): SimplifiedCpuInfo[];
+/**
+ * Defines the structure for CPU time statistics.
+ * These times are reported in milliseconds.
+ */
 export type CpuTimes = {
     /**
-     * - The number of milliseconds the CPU has spent in user mode.
+     * - Milliseconds the CPU spent in user mode.
      */
     user: number;
     /**
-     * - The number of milliseconds the CPU has spent in nice mode.
+     * - Milliseconds the CPU spent in "nice" mode (niced user processes on POSIX).
      */
     nice: number;
     /**
-     * - The number of milliseconds the CPU has spent in sys mode.
+     * - Milliseconds the CPU spent in system (kernel) mode.
      */
     sys: number;
     /**
-     * - The number of milliseconds the CPU has spent in idle mode.
+     * - Milliseconds the CPU spent in idle mode.
      */
     idle: number;
     /**
-     * - The number of milliseconds the CPU has spent in irq mode.
+     * - Milliseconds the CPU spent servicing interrupts (Interrupt ReQuest).
      */
     irq: number;
 };
+/**
+ * Defines the simplified structure for information about a single logical CPU core.
+ */
 export type SimplifiedCpuInfo = {
     /**
-     * - The model name of the CPU. Defaults to 'unknown' if not available.
+     * - The model name of the CPU core (e.g., "Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz").
+     *   Defaults to 'unknown' if the information is not available.
      */
     model: string;
     /**
-     * - The clock speed of the CPU in MHz. Defaults to 0 if the speed is invalid or not available.
+     * - The clock speed of the CPU core in MHz (e.g., 2200 for 2.2GHz).
+     *   Defaults to 0 if the speed is not available or invalid (e.g., negative).
      */
     speed: number;
     /**
-     * - An object detailing the CPU time spent in different modes (user, nice, sys, idle, irq).
+     * - An object containing the cumulative time (in milliseconds) this CPU core
+     *   has spent in various states (user, nice, sys, idle, irq) since system boot.
      */
     times: CpuTimes;
 };

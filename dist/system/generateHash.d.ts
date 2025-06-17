@@ -1,47 +1,66 @@
 /**
- * Generates a cryptographic hash of a given string using the specified algorithm and encoding.
- * This function is specific to Node.js environments as it utilizes the `node:crypto` module.
+ * Generates a cryptographic hash (digest) of a given string using a specified algorithm
+ * and output encoding. This function is specific to Node.js environments as it leverages
+ * the `node:crypto` module.
  *
- * The input `data` is assumed to be a UTF-8 string. For other input encodings,
- * pre-processing or direct Buffer input (not supported by this function directly) would be needed.
+ * The input `data` string is hashed using UTF-8 encoding by default when passed to
+ * the `hash.update()` method.
  *
- * @param {string} data - The string data to hash.
+ * It's important to choose an algorithm appropriate for the use case:
+ * - For security purposes (e.g., password hashing - though salting and key stretching via
+ *   `crypto.scrypt` or `crypto.pbkdf2` is recommended for passwords, not direct hashing),
+ *   strong algorithms like 'sha256' or 'sha512' should be used.
+ * - For non-cryptographic purposes like checksums or simple data integrity checks,
+ *   faster (but less secure) algorithms like 'md5' might be acceptable, though MD5
+ *   is considered cryptographically broken and should not be used for security.
+ *
+ * @param {string} data - The string data to be hashed. It's treated as UTF-8.
  * @param {string} [algorithm='sha256'] - Optional. The hashing algorithm to use.
- *   Common values include 'sha256', 'sha512', 'md5' (MD5 is generally not recommended
- *   for security purposes but can be used for non-cryptographic checksums).
- *   A list of supported algorithms can be obtained via `crypto.getHashes()`.
- * @param {'hex' | 'base64' | 'latin1'} [encoding='hex'] - Optional. The encoding for the output hash string.
- *   Valid options are 'hex', 'base64', or 'latin1'.
- * @returns {string} The generated hash string in the specified encoding.
+ *   Examples: 'sha256' (default), 'sha512', 'sha1', 'md5'.
+ *   To get a list of all supported algorithms on the current Node.js version,
+ *   you can use `crypto.getHashes()`.
+ * @param {'hex' | 'base64' | 'latin1'} [encoding='hex'] - Optional. The encoding for the
+ *   returned hash string.
+ *   - `'hex'`: Represents bytes as a sequence of hexadecimal characters (0-9, a-f).
+ *   - `'base64'`: Base64 encoding.
+ *   - `'latin1'`: Interprets each byte of the hash as a Latin-1 character (binary string).
+ * @returns {string} The generated cryptographic hash as a string, formatted according
+ *                   to the specified `encoding`.
  * @throws {Error} Throws an error if the specified `algorithm` is not supported by
- *   the `node:crypto` module (e.g., `TypeError: Digest method not supported`).
+ *   the `node:crypto` module (e.g., a `TypeError` with a message like "Digest method not supported").
+ *   It may also throw errors for other crypto-related issues.
  *
  * @example
- * // Default usage: SHA256 with hex encoding
- * const sha256HexHash = generateHash('Hello, world!');
- * console.info('SHA256 (hex):', sha256HexHash);
- * // e.g., SHA256 (hex): 315f5bdb76d078c43b8ac0064e4a0164612b1fce77c869345bfc94c75894edd3
+ * // Example 1: Default usage (SHA256 algorithm, hex encoding)
+ * const text1 = "Hello, secure world!";
+ * const hash1 = generateHash(text1);
+ * console.log(`SHA256 (hex) of "${text1}": ${hash1}`);
+ * // Example output: ... (a 64-character hex string)
  *
- * // Using SHA512 with base64 encoding
- * const sha512Base64Hash = generateHash('Hello, world!', 'sha512', 'base64');
- * console.info('SHA512 (base64):', sha512Base64Hash);
- * // e.g., SHA512 (base64): MZZgH4g4Fj/usUvL9L6L0ZldVmnStHzVJFmH8AhjM3z0x9oWOT8SMh8HkfFh3S0mJp6/JzBOVfLqYubUoNglcA==
+ * // Example 2: Using SHA512 algorithm and base64 encoding
+ * const text2 = "Another piece of data.";
+ * const hash2 = generateHash(text2, 'sha512', 'base64');
+ * console.log(`SHA512 (base64) of "${text2}": ${hash2}`);
+ * // Example output: ... (a base64 encoded string)
  *
- * // Using MD5 with hex encoding (for checksums, not security)
- * const md5HexHash = generateHash('Important file content', 'md5', 'hex');
- * console.info('MD5 (hex):', md5HexHash);
- * // e.g., MD5 (hex): d8902458204515411991916188507968
+ * // Example 3: Using MD5 algorithm (typically for non-security checksums)
+ * const fileContent = "This could be the content of a file.";
+ * const md5Checksum = generateHash(fileContent, 'md5', 'hex');
+ * console.log(`MD5 (hex) checksum for content: ${md5Checksum}`);
+ * // Example output: ... (a 32-character hex string)
  *
- * // Hashing an empty string
- * const hashOfEmpty = generateHash('');
- * console.info('SHA256 of empty string (hex):', hashOfEmpty);
- * // e.g., SHA256 of empty string (hex): e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+ * // Example 4: Hashing an empty string
+ * const hashOfEmptyString = generateHash('');
+ * console.log('SHA256 (hex) of empty string:', hashOfEmptyString);
+ * // Output: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
  *
- * // Example of an unsupported algorithm (would throw an error)
+ * // Example 5: Attempting to use an unsupported algorithm (will throw an error)
  * try {
- *   generateHash('test', 'unsupportedAlgorithm');
+ *   const invalidHash = generateHash('test data', 'nonExistentAlgorithm');
+ *   console.log(invalidHash); // This line will not be reached.
  * } catch (error) {
- *   console.error('Hashing error:', error.message); // e.g., Hashing error: Digest method not supported
+ *   console.error(`Error during hashing: ${error.message}`);
+ *   // Example output: "Error during hashing: Digest method not supported"
  * }
  */
 export function generateHash(data: string, algorithm?: string, encoding?: "hex" | "base64" | "latin1"): string;

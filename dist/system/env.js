@@ -1,65 +1,98 @@
 /**
- * Accesses an environment variable by its key and returns its value.
- * If the environment variable is not set, a provided default value is returned.
- * This function is specific to Node.js environments as it uses `process.env`.
+ * Retrieves the value of an environment variable by its key from `process.env`.
+ * If the environment variable is not set (i.e., it's `undefined` in `process.env`),
+ * this function returns a provided `defaultValue`.
  *
- * Note: All environment variables are inherently strings. If an environment variable
- * is found, this function returns it as a string. If a `defaultValue` is returned,
- * it is returned as-is, without type coercion. If you expect a non-string type
- * (e.g., number, boolean), you'll need to parse or coerce the result.
+ * This function is specifically designed for Node.js environments, as it relies on the
+ * global `process.env` object.
  *
- * @template T
- * @param {string} key - The key (name) of the environment variable to retrieve.
- * @param {T} [defaultValue] - Optional. The value to return if the environment
- *   variable specified by `key` is not found in `process.env`.
- * @returns {string | T} The string value of the environment variable if it is set,
- *   otherwise `defaultValue`. If `defaultValue` is not provided and the variable
- *   is not set, returns `undefined`.
+ * **Important Notes on Environment Variables:**
+ * - All values stored in `process.env` are strings. If an environment variable represents
+ *   a number, boolean, or JSON object, the calling code is responsible for parsing or
+ *   coercing the returned string value into the expected type.
+ * - An environment variable that is set to an empty string (e.g., `MY_VAR=""` in the shell)
+ *   is considered **set**. In this case, `process.env.MY_VAR` will be `""` (an empty string),
+ *   and this function will return `""`, not the `defaultValue`.
+ * - The `key` for environment variables is typically case-sensitive on POSIX systems (Linux, macOS)
+ *   and case-insensitive on Windows, but `process.env` in Node.js often reflects the
+ *   case as it was set or as normalized by the OS. It's best practice to use consistent casing.
+ *
+ * @template T - The type of the `defaultValue`. This allows for typed default values,
+ *               though the function primarily returns `string` if the variable is found.
+ * @param {string} key - The name (key) of the environment variable to retrieve (e.g., 'NODE_ENV', 'API_PORT').
+ * @param {T} [defaultValue] - Optional. The value to return if the environment variable specified by `key`
+ *                             is not found (i.e., `process.env[key]` is `undefined`).
+ *                             If `defaultValue` is not provided and the variable is not set, this function
+ *                             will return `undefined`.
+ * @returns {string | T} The value of the environment variable as a string if it is set.
+ *                       Otherwise, it returns the `defaultValue`. If `defaultValue` is also `undefined`
+ *                       (or not provided) and the variable is not set, then `undefined` is returned.
  *
  * @example
- * // Assuming environment variables are set like:
- * // USERNAME=john_doe
- * // PORT=8080
- * // DEBUG_MODE=true
- * // EMPTY_VAR=
+ * // Assume the following environment variables are set in the shell:
+ * // export APP_NAME="MyApplication"
+ * // export APP_PORT="8080"
+ * // export ENABLE_FEATURE_X="true"
+ * // export EMPTY_CONFIG_VALUE=""
  *
- * // Get an existing environment variable
- * const user = env('USERNAME'); // "john_doe"
- * console.info(user);
+ * // Example 1: Get an existing environment variable
+ * const appName = env('APP_NAME');
+ * console.log(appName); // Output: "MyApplication" (string)
  *
- * // Get an existing variable, provide a default (default won't be used)
- * const port = env('PORT', 3000); // "8080" (as string)
- * console.info(port);
+ * // Example 2: Get an existing variable, provide a default (default won't be used)
+ * const appPortString = env('APP_PORT', '3000');
+ * console.log(appPortString); // Output: "8080" (string)
+ * // To use as a number:
+ * const appPortNumber = parseInt(env('APP_PORT', '3000'), 10);
+ * console.log(appPortNumber); // Output: 8080 (number)
  *
- * // Get a non-existent variable, use provided default
- * const apiKey = env('API_KEY', 'default_api_key_12345'); // "default_api_key_12345"
- * console.info(apiKey);
+ * // Example 3: Get a non-existent variable, use the provided default value
+ * const apiKey = env('API_KEY', 'default-key-if-not-set');
+ * console.log(apiKey); // Output: "default-key-if-not-set"
  *
- * // Get a non-existent variable, no default provided
- * const dbHost = env('DB_HOST'); // undefined
- * console.info(dbHost);
+ * // Example 4: Get a non-existent variable, no default value provided
+ * const dbHost = env('DATABASE_HOST');
+ * console.log(dbHost); // Output: undefined
  *
- * // Variable is set but is an empty string
- * const emptyVar = env('EMPTY_VAR', 'was_not_set'); // "" (empty string)
- * console.info(emptyVar);
+ * // Example 5: Variable is set but is an empty string
+ * const emptyConfig = env('EMPTY_CONFIG_VALUE', 'default-for-empty');
+ * console.log(emptyConfig); // Output: "" (empty string, because the variable IS set)
  *
- * // Demonstrating need for type coercion for non-string types
- * const debugMode = env('DEBUG_MODE', false); // "true" (string)
- * if (debugMode === 'true') { // Manual coercion needed
- *   console.info('Debug mode is on');
- * }
+ * // Example 6: Handling boolean-like environment variables
+ * const featureXEnabledString = env('ENABLE_FEATURE_X', 'false'); // Returns "true" (string)
+ * const isFeatureXEnabled = featureXEnabledString === 'true'; // Manual conversion to boolean
+ * console.log(isFeatureXEnabled); // Output: true (boolean)
  *
- * const numericPort = parseInt(env('PORT', '3000'), 10); // Coerce to number
- * console.info(numericPort + 1); // 8081
+ * // Example 7: Using a number as a default value
+ * const timeout = env('REQUEST_TIMEOUT_MS', 5000); // If TIMEOUT_MS is not set, timeout is 5000 (number)
+ *                                                 // If TIMEOUT_MS is "10000", timeout is "10000" (string)
+ * console.log(typeof timeout); // 'string' if set, 'number' if default is used. Be mindful of type.
  */
 export function env(key, defaultValue) {
+    // Step 1: Access the environment variable from `process.env`.
+    // `process.env` is an object in Node.js that contains all environment variables
+    // passed to the current process.
+    // - `key` is the name of the environment variable.
+    // - If the variable `key` exists, `process.env[key]` will be its string value.
+    // - If `key` does not exist in `process.env`, `process.env[key]` will be `undefined`.
     const value = process.env[key];
-    // Check if the environment variable is defined.
-    // An environment variable set to an empty string (e.g., MY_VAR=) is considered defined.
+    // Step 2: Check if the environment variable was found.
+    // It's crucial to check against `undefined` specifically.
+    // An environment variable can be set to an empty string (e.g., `MY_VAR=""`).
+    // In such a case, `value` would be `""` (an empty string), not `undefined`.
+    // So, `value === undefined` correctly identifies only unset variables.
     if (value === undefined) {
-        // @ts-ignore
+        // If the environment variable is not set (is undefined), return the `defaultValue`.
+        // If `defaultValue` was not provided by the caller, then `defaultValue` itself is `undefined`,
+        // so `undefined` will be returned, correctly indicating the variable is not set and no default was available.
+        // @ts-ignore - This is to handle the generic type T for defaultValue.
+        // If defaultValue is explicitly undefined, T could be `undefined`.
         return defaultValue;
     }
-    return value; // Environment variables are always strings.
+    // Step 3: Return the found environment variable's value.
+    // All environment variables are inherently strings when accessed via `process.env`.
+    // If the caller expects a different type (e.g., number, boolean), they must
+    // perform the type conversion/parsing on the returned string value.
+    return value;
 }
 //# sourceMappingURL=env.js.map

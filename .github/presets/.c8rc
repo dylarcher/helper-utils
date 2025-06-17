@@ -39,7 +39,7 @@
     "reporter": [],
     "require": [],
     "resolve": "",
-    "skip-full": false,
+    "skip-full": true,
     "sourceMap": true,
     "src": true,
     "statements": 100,

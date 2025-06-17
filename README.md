@@ -269,6 +269,16 @@ manageFiles();
 
 ---
 
+## API Documentation
+
+Detailed API documentation for this library is automatically generated using Google's Gemini AI.
+It includes descriptions, code signatures, and examples for all available utility methods.
+
+You can find the generated documentation in the [docs/gemini](./docs/gemini/) directory.
+The documentation is updated automatically whenever changes are pushed to the `main` branch.
+
+---
+
 ## Development
 
 ### Project Structure

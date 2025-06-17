@@ -1693,7 +1693,7 @@
 			//     - The function must have no external dependencies.
 			//     - It must include detailed JSDoc comments explaining its purpose, parameters (with types), and return value (with type).
 			//     - The function name should be descriptive and in camelCase.
-			//     - Provide only the JavaScript code for the function, wrapped in markdown format (\`\`\`javascript). Do not add any extra explanations outside of the code block.`;
+			//     - Provide only the JavaScript code for the function, wrapped in markdown format (```javascript). Do not add any extra explanations outside of the code block.`;
 
 			//     let generatedCode = await callGeminiAPI(prompt);
 			//     generatedCode = generatedCode.replace(/```javascript/g, '').replace(/```/g, '').trim();
@@ -1716,7 +1716,7 @@
 			//     if (!userPrompt || !generatedCode) return;
 			//     const title = encodeURIComponent(`[FEAT] New Utility from AI Generator`);
 			//     const descriptionParam = encodeURIComponent(`A user requested a new utility function with the following prompt:\n\n> ${userPrompt}`);
-			//     const solutionParam = encodeURIComponent(`The AI assistant generated the following code as a proposed solution:\n\n\`\`\`javascript\n${generatedCode}\n\`\`\``);
+			//     const solutionParam = encodeURIComponent(`The AI assistant generated the following code as a proposed solution:\n\n```javascript\n${generatedCode}\n````);
 			//     const issueUrl = `https://github.com/dylarcher/js.helper-utils/issues/new?template=feature_request.yml&title=${title}&description=${descriptionParam}&solution=${solutionParam}`;
 			//     window.open(issueUrl, '_blank');
 			// });

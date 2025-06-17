@@ -1,52 +1,70 @@
 /**
- * Finds the closest ancestor of the given element (or the element itself)
- * that matches the specified CSS selector. This function is a wrapper around
- * the native `Element.closest()` method.
+ * Finds the closest ancestor of a given DOM element (or the element itself)
+ * that matches a specified CSS selector. This function utilizes the native
+ * `Element.closest()` method, providing a safe wrapper that handles potential null inputs
+ * and invalid selectors.
  *
- * If the provided `element` is `null` or `undefined`, this function will return `null`.
- * If the `selector` is invalid and causes `element.closest()` to throw an error,
- * this function will catch the error and return `null`.
+ * The `Element.closest()` method traverses up the DOM tree, starting from the
+ * element itself, then its parent, grandparent, and so on, until it finds an
+ * element that matches the provided selector string.
  *
- * @param {Element} element - The starting DOM element from which to begin the search.
- * @param {string} selector - A string containing a CSS selector list to match against.
- * @returns {Element|null} The closest ancestor element matching the selector,
- *   the element itself if it matches, or `null` if no such element is found,
- *   if the input `element` is `null`, or if the `selector` is invalid.
+ * If the `element` argument is `null` or `undefined`, this function will gracefully
+ * return `null` instead of throwing an error.
+ * If the `selector` is syntactically invalid and causes `element.closest()` to throw
+ * a `SyntaxError`, this function will catch that error and return `null`.
+ *
+ * @param {Element | null | undefined} element - The starting DOM element from which to begin the search.
+ *                                    Can be `null` or `undefined`, in which case the function returns `null`.
+ * @param {string} selector - A string containing one or more CSS selectors to match against
+ *                            (e.g., 'div', '.my-class', '#my-id', 'div.my-class[data-attr="value"]').
+ * @returns {Element | null} The first ancestor element (including the element itself) that matches
+ *                           the selector. Returns `null` if:
+ *                           - No such element is found.
+ *                           - The input `element` is `null` or `undefined`.
+ *                           - The `selector` string is invalid, causing a `SyntaxError`.
  *
  * @example
- * // HTML:
- * // <form id="myForm">
- * //   <div class="field">
- * //     <input type="text" id="myInput" />
- * //     <button id="submitButton">Submit</button>
+ * // Consider the following HTML structure:
+ * // <div id="grandparent" class="container">
+ * //   <div id="parent" class="row">
+ * //     <p id="child" class="text-muted">Hello</p>
  * //   </div>
- * // </form>
+ * // </div>
  *
- * const button = document.getElementById('submitButton');
- * if (button) {
- *   // Find the closest form ancestor
- *   const formElement = findClosest(button, 'form'); // Returns the form#myForm element
- *   console.info(formElement ? formElement.id : 'No form found'); // 'myForm'
+ * const childElement = document.getElementById('child');
  *
- *   // Find the closest ancestor with class 'field'
- *   const fieldDiv = findClosest(button, '.field'); // Returns the div.field element
- *   console.info(fieldDiv ? fieldDiv.className : 'No field div found'); // 'field'
- *
- *   // The element itself can be a match
- *   const selfMatch = findClosest(button, '#submitButton'); // Returns the button itself
- *   console.info(selfMatch ? selfMatch.id : 'Button not found'); // 'submitButton'
- *
- *   // No matching ancestor
- *   const noMatch = findClosest(button, '.non-existent-class'); // Returns null
- *   console.info(noMatch); // null
+ * // Example 1: Find the closest ancestor with a specific ID
+ * if (childElement) {
+ *   const parentDiv = findClosest(childElement, '#parent');
+ *   console.log(parentDiv ? parentDiv.id : 'Not found'); // Output: "parent"
  * }
  *
- * // If element is null
- * const nullElementResult = findClosest(null, 'div');
- * console.info(nullElementResult); // null
+ * // Example 2: Find the closest ancestor with a specific class
+ * if (childElement) {
+ *   const containerDiv = findClosest(childElement, '.container');
+ *   console.log(containerDiv ? containerDiv.id : 'Not found'); // Output: "grandparent"
+ * }
  *
- * // Example with an invalid selector
- * const invalidSel = findClosest(button, ':[invalid]');
- * console.info(invalidSel); // null (error caught internally)
+ * // Example 3: The element itself can be a match
+ * if (childElement) {
+ *   const selfMatch = findClosest(childElement, 'p.text-muted');
+ *   console.log(selfMatch ? selfMatch.id : 'Not found'); // Output: "child"
+ * }
+ *
+ * // Example 4: No matching ancestor
+ * if (childElement) {
+ *   const noMatch = findClosest(childElement, '.non-existent-class');
+ *   console.log(noMatch); // Output: null
+ * }
+ *
+ * // Example 5: Handling a null input element
+ * const nullElementResult = findClosest(null, 'div');
+ * console.log(nullElementResult); // Output: null
+ *
+ * // Example 6: Handling an invalid CSS selector
+ * if (childElement) {
+ *   const invalidSelectorResult = findClosest(childElement, ':[invalid-selector]');
+ *   console.log(invalidSelectorResult); // Output: null (SyntaxError is caught)
+ * }
  */
-export function findClosest(element: Element, selector: string): Element | null;
+export function findClosest(element: Element | null | undefined, selector: string): Element | null;

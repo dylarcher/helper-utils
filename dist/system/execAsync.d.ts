@@ -1,63 +1,99 @@
 /**
- * Executes a shell command asynchronously using Node.js's `child_process.exec`.
- * This function is Node.js specific.
+ * Executes a shell command asynchronously using Node.js's `child_process.exec`
+ * and returns a Promise. This function is specific to Node.js environments.
  *
- * **Security Warning:** Building commands from external input can be dangerous.
- * Always sanitize inputs to prevent command injection vulnerabilities. Consider using
- * `child_process.spawn` for more complex scenarios or when dealing with untrusted input.
+ * **Security Warning:** Constructing shell commands from external or untrusted user input
+ * can lead to command injection vulnerabilities. If you need to use external input,
+ * always sanitize it rigorously or, preferably, use `child_process.spawn` with an array
+ * of arguments, which is inherently safer against command injection as it doesn't involve
+ * shell interpretation in the same way.
  *
- * @param {string} command - The command to execute (e.g., 'ls -lh' or 'echo "Hello"').
+ * @async
+ * @param {string} command - The shell command to execute (e.g., 'ls -la', 'npm install', 'git status').
  * @param {import('node:child_process').ExecOptions} [options] - Optional.
- *   Standard options for `child_process.exec` (e.g., `cwd`, `env`, `shell`, `timeout`, `maxBuffer`).
- * @returns {Promise<{stdout: string, stderr: string}>} A promise that resolves with an object
- *   containing `stdout` and `stderr` as strings from the executed command.
- * @throws {Error & {code?: number, signal?: string, stdout?: string, stderr?: string}}
- *   Rejects the promise if the command fails to execute or exits with a non-zero code.
- *   The error object is typically an instance of `Error` and may include properties like:
- *   - `code` (number): The exit code of the child process.
- *   - `signal` (string): The signal that terminated the process (e.g., 'SIGTERM').
- *   - `stdout` (string): The standard output from the command before it errored.
- *   - `stderr` (string): The standard error output from the command.
- *   It can also throw if `command` is empty or `options` are invalid.
+ *   Standard options for `child_process.exec`. Common options include:
+ *   - `cwd` (string): Current working directory of the child process.
+ *   - `env` (object): Environment key-value pairs.
+ *   - `shell` (string): Shell to execute the command with (e.g., '/bin/bash').
+ *   - `timeout` (number): Max time in milliseconds the process is allowed to run.
+ *   - `maxBuffer` (number): Largest amount of data (in bytes) allowed on stdout or stderr.
+ *                           If exceeded, the child process is terminated. Default: 1024 * 1024.
+ *   - `encoding` (string): Encoding for stdout/stderr (default is 'utf8').
+ * @returns {Promise<{stdout: string, stderr: string}>} A Promise that resolves with an object
+ *   containing `stdout` (standard output) and `stderr` (standard error) as strings
+ *   from the executed command, assuming the command executed successfully (exit code 0).
+ * @throws {Error & {code?: number | null, signal?: NodeJS.Signals | null, stdout?: string, stderr?: string}}
+ *   The Promise rejects if the command:
+ *   - Fails to launch.
+ *   - Exits with a non-zero status code.
+ *   - Is terminated by a signal.
+ *   - Exceeds `maxBuffer` or `timeout`.
+ *   The rejected error object is typically an instance of `Error` and usually includes:
+ *   - `message` (string): Standard error message, often includes command, exit code, stdout, stderr.
+ *   - `code` (number | null): The exit code of the child process if it exited on its own.
+ *   - `signal` (NodeJS.Signals | null): The signal that terminated the process (e.g., 'SIGTERM').
+ *   - `stdout` (string): The content from standard output collected before the error.
+ *   - `stderr` (string): The content from standard error collected before the error.
+ *   It can also throw if `command` is empty or `options` are invalid before `exec` is even called.
  *
  * @example
- * async function listDirectoryContents() {
+ * // Example 1: Listing directory contents
+ * async function listDirectory() {
  *   try {
- *     const { stdout, stderr } = await execAsync('ls -la');
+ *     const { stdout, stderr } = await execAsync('ls -lh'); // Use 'dir' on Windows
  *     if (stderr) {
- *       console.warn('Command produced stderr:', stderr);
+ *       console.warn('Command produced stderr output:', stderr);
  *     }
- *     console.info('Directory Contents:\n', stdout);
+ *     console.log('Directory Listing:\n', stdout);
  *   } catch (error) {
- *     console.error(`Command failed. Exit code: ${error.code}`);
- *     console.error('Error stdout:', error.stdout); // Output before error
- *     console.error('Error stderr:', error.stderr); // Error messages
- *     // error.message usually contains the command, exit code, stdout and stderr.
+ *     console.error(`Command execution failed! Exit code: ${error.code}`);
+ *     console.error('Error details:', error.message); // Comprehensive message
+ *     // error.stdout and error.stderr might contain partial output
  *   }
  * }
- * // listDirectoryContents();
+ * // listDirectory();
  *
- * async function executeWithOption() {
+ * @example
+ * // Example 2: Running a command with options (e.g., in a different directory)
+ * async function echoInSrc() {
  *   try {
- *     // Example: using 'echo' command in a specific directory (though 'echo' is not path-dependent)
- *     const { stdout } = await execAsync('echo Hello from subfolder', { cwd: './src' });
- *     console.info(stdout.trim()); // "Hello from subfolder"
+ *     const { stdout } = await execAsync('echo "Hello from src directory"', { cwd: './src' });
+ *     console.log(stdout.trim()); // Output: "Hello from src directory"
  *   } catch (error) {
- *     console.error('Failed to execute with options:', error.message);
+ *     console.error('Failed to execute echo in ./src:', error.message);
  *   }
  * }
- * // executeWithOption();
+ * // echoInSrc();
  *
- * async function exampleFailingCommand() {
+ * @example
+ * // Example 3: Handling a failing command
+ * async function runFailingCommand() {
  *   try {
- *     await execAsync('command_that_does_not_exist');
+ *     await execAsync('this_command_will_fail');
  *   } catch (error) {
- *     console.error(`Execution failed: ${error.message}`);
- *     // Typically error.code will be non-zero (e.g., 127 for command not found on POSIX)
- *     // error.stderr might contain "command not found" or similar.
+ *     console.error(`Command failed as expected.`);
+ *     console.error(`Error Code: ${error.code}`); // e.g., 127 on Linux for "command not found"
+ *     console.error(`Stderr: ${error.stderr}`);   // e.g., "...command not found..."
+ *     // console.error(`Full error message: ${error.message}`);
  *   }
  * }
- * // exampleFailingCommand();
+ * // runFailingCommand();
+ *
+ * @example
+ * // Example 4: Checking Git status
+ * async function checkGitStatus() {
+ *   try {
+ *     const { stdout } = await execAsync('git status --porcelain');
+ *     if (stdout) {
+ *       console.log('Git changes detected:\n', stdout);
+ *     } else {
+ *       console.log('Git working directory is clean.');
+ *     }
+ *   } catch (error) { // This might happen if not a git repo or git is not installed
+ *     console.error('Failed to get Git status:', error.message);
+ *   }
+ * }
+ * // checkGitStatus();
  */
 export function execAsync(command: string, options?: import("node:child_process").ExecOptions): Promise<{
     stdout: string;

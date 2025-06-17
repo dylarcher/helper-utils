@@ -1,36 +1,80 @@
 /**
- * Sets one or more CSS styles on an HTML element.
- * The function does nothing if the provided element is null, undefined, or lacks a `style` property.
+ * Sets one or more inline CSS style properties on an HTML element.
  *
- * @param {HTMLElement} element - The DOM element on which to set the styles.
- * @param {string | Record<string, string>} property - Either a single CSS property name (string, e.g., 'color')
- *   or an object where keys are CSS property names (camelCase or kebab-case, though camelCase is safer
- *   for direct `element.style` access) and values are the corresponding style values (e.g., `{ color: 'blue', fontSize: '16px' }`).
- * @param {string} [value] - The CSS property value to set if `property` is a string (e.g., 'red').
- *   This parameter is ignored if `property` is an object. Must be provided if `property` is a string.
- * @returns {void}
+ * This function allows setting either a single style property or multiple style properties
+ * at once by passing an object.
+ *
+ * How styles are applied:
+ * - Styles are applied directly to the `element.style` object. This means they are
+ *   set as inline styles on the element.
+ * - Inline styles have high specificity but can be overridden by CSS rules marked with
+ *   `!important`.
+ * - For CSS property names that contain hyphens (e.g., `background-color`), they should generally
+ *   be provided in camelCase when used as keys in an object or as the `property` string
+ *   (e.g., `backgroundColor`). Direct assignment like `element.style.backgroundColor = 'red'`
+ *   is standard. If providing kebab-case property names in an object, they would be accessed
+ *   via bracket notation like `element.style['background-color'] = 'red'`. This function's
+ *   object iteration `element.style[key] = property[key]` will work correctly if `key` is
+ *   the camelCase version or if the browser supports direct assignment of kebab-case to `style` object
+ *   via bracket notation (which modern browsers generally do).
+ *
+ * The function includes safeguards:
+ * - It does nothing if the provided `element` is `null`, `undefined`, or lacks a `style` property.
+ * - When setting a single style, it ensures the `property` name is a non-empty string and `value` is provided.
+ * - When setting styles from an object, it iterates over the object's own keys.
+ *
+ * @param {HTMLElement | SVGElement | null | undefined} element - The DOM element on which to set the styles.
+ *        If `null` or `undefined` or an element without a `style` property (e.g., a text node),
+ *        the function does nothing.
+ * @param {string | Record<string, string | number | undefined | null>} property - Either:
+ *   1. A single CSS property name as a string (e.g., 'color', 'fontSize', 'backgroundColor').
+ *      When using this form, the `value` parameter must also be provided.
+ *   2. An object where keys are CSS property names (preferably camelCased, e.g., `fontSize`)
+ *      and values are the corresponding style values (e.g., `{ color: 'blue', fontSize: '16px', opacity: 0.5 }`).
+ *      Values can be strings or numbers (which will be converted to strings, usually with 'px' appended by the browser
+ *      for length properties if unitless, though explicitly providing units is safer). `null` or `undefined` values
+ *      for object properties might effectively remove/reset the style or be ignored by the browser.
+ * @param {string | number | undefined | null} [value] - The CSS property value to set if `property` is a string (e.g., 'red', 10, '1.5em').
+ *   This parameter is ignored if `property` is an object. It is required if `property` is a string.
+ *   If `value` is `null` or `undefined` when `property` is a string, the style might be removed or set to its default,
+ *   depending on the browser and property (often equivalent to setting it to an empty string).
+ * @returns {void} This function does not return a value.
  *
  * @example
- * const myDiv = document.getElementById('myDiv');
- * if (myDiv) {
- *   // Set a single style property
- *   setStyle(myDiv, 'color', 'red');
- *   setStyle(myDiv, 'backgroundColor', 'lightgray');
+ * const myBox = document.getElementById('myBox');
+ * if (myBox) {
+ *   // Example 1: Set a single style property
+ *   setStyle(myBox, 'color', 'white');
+ *   setStyle(myBox, 'backgroundColor', 'dodgerblue'); // camelCase for 'background-color'
+ *   setStyle(myBox, 'opacity', 0.9); // Numbers are usually fine for properties that accept them
  *
- *   // Set multiple style properties using an object
- *   setStyle(myDiv, {
- *     fontSize: '18px',
+ *   // Example 2: Set multiple style properties using an object
+ *   setStyle(myBox, {
+ *     fontSize: '20px',
  *     fontWeight: 'bold',
- *     border: '1px solid black'
+ *     border: '2px solid navy',
+ *     padding: '15px',
+ *     borderRadius: '5px' // camelCase for 'border-radius'
  *   });
+ *   // myBox.style will now have: color: white; background-color: dodgerblue; opacity: 0.9;
+ *   //                            font-size: 20px; font-weight: bold; border: 2px solid navy;
+ *   //                            padding: 15px; border-radius: 5px;
  *
- *   // Example of property names (camelCase is generally used with element.style)
- *   // setStyle(myDiv, 'margin-top', '10px'); // Works, but element.style['margin-top']
- *   setStyle(myDiv, 'marginTop', '10px'); // More common for direct style access
+ *   // Example 3: Using kebab-case in object (works in modern browsers via bracket notation)
+ *   // setStyle(myBox, { 'margin-top': '10px' });
+ *
+ *   // Example 4: Setting a style to an empty string to remove/reset it
+ *   // setStyle(myBox, 'fontStyle', ''); // Removes previously set font-style
  * }
  *
- * // No error if element is null
- * const nullElement = null;
- * setStyle(nullElement, 'color', 'red'); // Does nothing
+ * // Example 5: Element is null or invalid (does nothing, no error)
+ * const nonExistent = null;
+ * setStyle(nonExistent, 'color', 'red');
+ *
+ * // Example 6: Property is an empty string or value is undefined when property is a string
+ * if (myBox) {
+ *   setStyle(myBox, '', 'red'); // Does nothing
+ *   setStyle(myBox, 'color', undefined); // May remove/reset 'color' style
+ * }
  */
-export function setStyle(element: HTMLElement, property: string | Record<string, string>, value?: string): void;
+export function setStyle(element: HTMLElement | SVGElement | null | undefined, property: string | Record<string, string | number | undefined | null>, value?: string | number | undefined | null): void;

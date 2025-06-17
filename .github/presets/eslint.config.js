@@ -22,6 +22,16 @@ export default [
 			},
 		},
 	},
+	// Global ignores
+	{
+		ignores: [
+			'dist/**',
+			'docs/**',
+			'coverage/**',
+			'node_modules/**',
+			'scripts/**', // Ignore build/utility scripts
+		],
+	},
 	// Base configurations
 	pluginJs.configs.recommended,
 	...eslintPluginMarkdown.configs.recommended,

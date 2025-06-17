@@ -1,38 +1,59 @@
 /**
- * Checks if a DOM element has a specific CSS class.
+ * Checks if a given DOM element has a specific CSS class.
+ * This function provides a robust way to check for class existence,
+ * utilizing the `element.classList.contains()` method.
  *
- * This function safely handles cases where:
- * - The `element` is null, undefined, or does not have a `classList` property.
- * - The `className` is null, undefined, or an empty string.
- * - `element.classList.contains` might throw an error (e.g., for invalid class name syntax,
- *   though modern browsers are often permissive).
- * In all such exceptional cases, the function will return `false`.
+ * It includes several safeguards:
+ * - Returns `false` if the provided `element` is `null`, `undefined`, or does not
+ *   possess a `classList` property (e.g., it's not a valid Element node).
+ * - Returns `false` if the `className` is `null`, `undefined`, or an empty string,
+ *   as these are not valid class names to check for.
+ * - Includes a `try...catch` block because `element.classList.contains()` can throw
+ *   an error (e.g., a `DOMException` with `SyntaxError` or `InvalidCharacterError`)
+ *   if the `className` string contains spaces or other characters invalid for class names.
+ *   In such error cases, this function will return `false`.
  *
- * @param {Element} element - The DOM element to check.
- * @param {string} className - The CSS class name to look for.
- * @returns {boolean} Returns `true` if the element has the specified class, `false` otherwise.
+ * @param {Element | null | undefined} element - The DOM element to inspect.
+ * @param {string | null | undefined} className - The CSS class name to search for within the element's class list.
+ * @returns {boolean} Returns `true` if the element has the specified class, and `false` otherwise
+ *                    (including cases of invalid input or internal errors).
  *
  * @example
- * // HTML: <div id="myDiv" class="active featured"></div>
- * const myDiv = document.getElementById('myDiv');
+ * // HTML structure:
+ * // <div id="testElement" class="active featured user-profile"></div>
+ * // <span id="emptyElement"></span>
  *
- * if (myDiv) {
- *   console.info(hasClass(myDiv, 'active'));   // true
- *   console.info(hasClass(myDiv, 'featured')); // true
- *   console.info(hasClass(myDiv, 'hidden'));   // false
+ * const el = document.getElementById('testElement');
+ * const emptyEl = document.getElementById('emptyElement');
  *
- *   // Invalid class name (e.g., with space) - should return false
- *   console.info(hasClass(myDiv, 'invalid class')); // false (and logs error internally if browser throws)
+ * if (el) {
+ *   // Basic checks
+ *   console.log(hasClass(el, 'active'));   // Output: true
+ *   console.log(hasClass(el, 'featured')); // Output: true
+ *   console.log(hasClass(el, 'user-profile')); // Output: true
+ *   console.log(hasClass(el, 'hidden'));   // Output: false (class not present)
  *
- *   // Empty class name
- *   console.info(hasClass(myDiv, '')); // false
+ *   // Checks with potentially problematic class names
+ *   console.log(hasClass(el, ''));         // Output: false (empty class name string)
+ *   console.log(hasClass(el, ' '));        // Output: false (class name with only space, invalid)
+ *   console.log(hasClass(el, 'active featured')); // Output: false (contains space, invalid for .contains())
  * }
  *
- * // Null element
- * console.info(hasClass(null, 'active')); // false
+ * // Checks with an element that has no classes
+ * if (emptyEl) {
+ *   console.log(hasClass(emptyEl, 'active')); // Output: false
+ * }
  *
- * // Element without classList (e.g., a text node - though Element type hint implies it has classList)
- * // const textNode = document.createTextNode('text');
- * // console.info(hasClass(textNode, 'active')); // false (if it were passed, though TS would complain)
+ * // Checks with invalid inputs
+ * console.log(hasClass(null, 'active'));          // Output: false (null element)
+ * console.log(hasClass(undefined, 'active'));     // Output: false (undefined element)
+ * if (el) {
+ *    console.log(hasClass(el, null));             // Output: false (null class name)
+ *    console.log(hasClass(el, undefined));        // Output: false (undefined class name)
+ * }
+ *
+ * // Example with a non-element node (e.g., a text node)
+ * // const textNode = document.createTextNode("hello");
+ * // console.log(hasClass(textNode, "anyClass")); // Output: false (textNode.classList is undefined)
  */
-export function hasClass(element: Element, className: string): boolean;
+export function hasClass(element: Element | null | undefined, className: string | null | undefined): boolean;
