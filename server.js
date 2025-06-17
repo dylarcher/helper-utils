@@ -57,7 +57,8 @@ app.use(async (req, res, next) => {
 
   // Normalize and validate the path
   const fullPath = path.resolve(DOCS_DIR, filePath);
-  if (!fullPath.startsWith(DOCS_DIR)) {
+  const relativePath = path.relative(DOCS_DIR, fullPath);
+  if (relativePath.startsWith('..') || path.isAbsolute(relativePath)) {
     res.status(403).send('Forbidden: Invalid file path.');
     return;
   }
