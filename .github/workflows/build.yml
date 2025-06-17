@@ -60,6 +60,7 @@ jobs:
           echo "$GPR_INT" > pr_details/GPR_INT
           echo "$HEAD_REF" > pr_details/HEAD_REF
           echo "$HEAD_SHA" > pr_details/HEAD_SHA
+
       - name: Upload PR details
         uses: actions/upload-artifact@v4
         with:
