@@ -166,8 +166,8 @@ ${ex}
 
 	try {
 		console.log("Sending prompt to Gemini API. Prompt length:", prompt.length);
-        if (prompt.length > 30000) { // Gemini Pro has a limit, this is a rough check
-            console.warn("Prompt is very long, might exceed API limits. Consider summarizing or splitting data.");
+        if (prompt.length > PROMPT_LENGTH_LIMIT) { // Gemini Pro has a limit, configurable via PROMPT_LENGTH_LIMIT
+            console.warn(`Prompt is very long (length: ${prompt.length}), might exceed API limits (${PROMPT_LENGTH_LIMIT}). Consider summarizing or splitting data.`);
         }
 		const result = await model.generateContent(prompt);
 		const response = await result.response;

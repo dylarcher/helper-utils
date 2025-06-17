@@ -104,7 +104,9 @@ export function createElement(
 			// If value is `null` or `undefined`, setAttribute might behave differently across browsers/attributes,
 			// generally, it's better to explicitly not call setAttribute or use removeAttribute.
 			// However, common usage passes strings, numbers, or booleans.
-			element.setAttribute(key, value);
+			if (value != null) { // Skip if value is null or undefined
+				element.setAttribute(key, value);
+			}
 		}
 	}
 
