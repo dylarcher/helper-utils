@@ -1,0 +1,174 @@
+# Workflow to integrate changes from PR Build, commit, version, and package
+name: PR Integrate
+
+on:
+  workflow_run:
+    workflows:
+      - "PR Build" # Must match the 'name' field of the pr-build.yml workflow
+    types:
+      - completed
+
+jobs:
+  integrate:
+    name: Integrate, Commit, Version, and Package
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success'
+
+    permissions:
+      contents: write # Required to push commits and tags
+      packages: write # Required for npm publish (if it were to GitHub Packages)
+
+    steps:
+      - name: Download PR details artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: pr-details-$GIT_RID
+          path: pr_details_artifact
+
+      - name: Load PR details into environment
+        id: pr_vars
+        run: |
+          GPR_INT=$(cat pr_details_artifact/GPR_INT)
+          HEAD_REF=$(cat pr_details_artifact/HEAD_REF)
+          HEAD_SHA=$(cat pr_details_artifact/HEAD_SHA)
+          echo "GPR_INT=$GPR_INT" >> $GITHUB_ENV
+          echo "HEAD_REF=$HEAD_REF" >> $GITHUB_ENV
+          echo "HEAD_SHA=$HEAD_SHA" >> $GITHUB_ENV
+          # For GITHUB_OUTPUT if other steps need it via needs context (not used here)
+          echo "GPR_INT=$GPR_INT" >> $GITHUB_OUTPUT
+          echo "head_ref=$HEAD_REF" >> $GITHUB_OUTPUT
+          echo "head_sha=$HEAD_SHA" >> $GITHUB_OUTPUT
+
+      - name: Checkout specific PR commit state
+        uses: actions/checkout@v4
+        with:
+          ref: $HEAD_SHA # Checkout the exact SHA that was built
+          fetch-depth: 0 # Fetch full history
+
+      - name: Download built repository artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: built-repo-$GIT_RID
+          path: ./ # Download into the current checkout, overwriting files with the built state
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          registry-url: https://registry.npmjs.org # For npm version and publish
+          cache: npm
+
+      - name: Install Dependencies
+        run: npm ci # Install devDependencies needed for npm version scripts, etc.
+
+      - name: Configure Git and Prepare Branch
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git remote set-url origin "https://x-access-token:$GIT_TOKEN@github.com/$GIT_REPOository }}"
+
+          # Fetch the latest state of the PR branch and checkout
+          git fetch origin "$HEAD_REF"
+          git checkout "$HEAD_REF"
+          # Reset the branch to the specific SHA that was built and tested.
+          # The working directory already contains files from 'built-repo' artifact (the built state of HEAD_SHA).
+          git reset --hard "$HEAD_SHA"
+
+      - name: Check-in built changes
+        id: build_and_commit
+        run: |
+          echo "Applying built changes (lint fixes, test coverage, dist generation)..."
+          ANY_COMMITS_MADE=false
+
+          git_reset() {
+            if [ "$1" = "clear" ]; then
+              git reset > /dev/null 2>&1 # Unstage all
+            elif [ "$1" = "unstage" ] && [ -d "$2" ] && git diff --name-only --staged -- "$2" | grep -q .; then
+              echo "Unstaging $2/ for the current commit."
+              git reset HEAD -- "$2" # Unstage specific directory
+            fi
+          }
+
+          # Commit 1: Lint/Format changes (all changes not in dist/ or coverage/)
+          echo "Checking for lint/format changes..."
+          git_reset clear
+          git add -A # Stage all changes from the build (already in working dir)
+          git_reset unstage "dist"
+          git_reset unstage "coverage"
+          if ! git diff --staged --quiet; then
+            echo "Committing lint/format changes..."
+            git commit -m "fix: aligns syntax to lint and format standards"
+            ANY_COMMITS_MADE=true
+          else
+            echo "No lint/format changes to commit."
+          fi
+
+          # Commit 2: Test coverage results
+          echo "Checking for test coverage changes..."
+          git_reset clear
+          if [ -d "coverage" ]; then # Check if coverage dir exists from artifact
+            git add coverage/
+            if ! git diff --staged --quiet; then
+              echo "Committing test coverage results..."
+              git commit -m "chore: updates test coverage results"
+              ANY_COMMITS_MADE=true
+            else
+              echo "No new or modified test coverage results to commit."
+            fi
+          else
+            echo "Coverage directory not found in artifact, skipping coverage commit."
+          fi
+
+          # Commit 3: Distributable files
+          echo "Checking for dist directory changes..."
+          git_reset clear
+          if [ -d "dist" ]; then # Check if dist dir exists from artifact
+            git add dist/
+            if ! git diff --staged --quiet; then
+              echo "Committing dist files..."
+              git commit -m "dist: updates type, source-map, and library files"
+              ANY_COMMITS_MADE=true
+            else
+              echo "No new or modified dist files to commit."
+            fi
+          else
+            echo "Dist directory not found in artifact, skipping dist commit."
+          fi
+
+          if [ "$ANY_COMMITS_MADE" = true ]; then
+            echo "Pushing build changes to $HEAD_REF..."
+            git push origin "$HEAD_REF"
+          else
+            echo "No changes were committed by this step."
+          fi
+          echo "any_commits_made=$ANY_COMMITS_MADE" >> $GITHUB_OUTPUT
+
+      - name: Package, Version, and Publish
+        id: version_publish_compress
+        run: |
+          if [ ! -d "dist" ] || [ ! -f "package.json" ]; then
+            echo "Dist directory or package.json not found. Skipping versioning, publishing, and compression."
+            echo "skipped_all=true" >> $GITHUB_OUTPUT; exit 0
+          fi; echo "skipped_all=false" >> $GITHUB_OUTPUT
+
+          BRANCH_NAME="$HEAD_REF"; VERSION_BUMP="minor"
+          if [[ "$BRANCH_NAME" == fix/* ]]; then VERSION_BUMP="patch"; elif [[ "$BRANCH_NAME" == refac/* ]]; then VERSION_BUMP="major"; fi
+          echo "Determined version bump: $VERSION_BUMP for branch $BRANCH_NAME"
+
+          echo "Updating package version (triggers postversion script for push & publish)..."
+          npm version $VERSION_BUMP -m "chore(release): version %s for PR #$GPR_INT"
+          # 'postversion' script in package.json ("git push && git push --tags && npm run publish:npm") handles push and publish.
+
+          echo "Compressing dist directory..."
+          tar -czf dist.tar.gz dist; zip -r dist.zip dist
+          LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`); echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
+
+      - name: Upload Distribution Archives
+        if: steps.version_publish_compress.outputs.skipped_all != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: distribution-archives-$GIT_RID
+          path: |
+            dist.tar.gz
+            dist.zip
+          if-no-files-found: error

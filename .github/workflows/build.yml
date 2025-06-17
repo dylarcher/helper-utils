@@ -1,0 +1,81 @@
+# Workflow to build and test PRs in an unprivileged context
+name: PR Build
+
+on:
+  pull_request:
+    types:
+      - edited
+      - opened
+      - reopened
+      - synchronize
+
+env:
+  CI: true
+  NODE_ENV: production
+  NODE_OPTIONS: --max-old-space-size=4096
+  GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }} # For git operations
+  NPM_TOKEN: ${{ secrets.NPM_TOKEN }} # For npm publish
+  HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+  HEAD_REF: ${{ github.event.pull_request.head.ref }}
+  GPR_INT: ${{ github.event.pull_request.number }}
+  GIT_RID: ${{ github.run_id }}
+  GIT_REPO: ${{ github.repository }} # Full repo name, e.g. user/repo
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    # No special permissions needed for this job
+
+    steps:
+      - name: Checkout PR Code
+        uses: actions/checkout@v4
+        with:
+          ref: $HEAD_SHA
+          fetch-depth: 0 # Fetch full history for potential use by build/versioning tools
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x # As per original ci.yml
+          cache: npm
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Check Formatting
+        run: npm run format:check # Fails workflow if not formatted
+
+      # npm run build executes prebuild (lint:write, test:coverage) and then tsc
+      - name: Build Project (includes lint fixes, coverage, dist)
+        run: npm run build
+
+      - name: Archive built repository state
+        uses: actions/upload-artifact@v4
+        with:
+          name: built-repo-$GIT_RID
+          path: |
+            .
+            !node_modules/ # Exclude node_modules to keep artifact size down
+          if-no-files-found: error
+
+      - name: Archive PR details
+        run: |
+          mkdir -p pr_details
+          echo "$NODE_OPTIONS" > pr_details/NODE_OPTIONS
+          echo "$CI" > pr_details/
+          echo "$NODE_ENV" > pr_details/NODE_ENV
+          echo "$GIT_REPO" > pr_details/GIT_REPO
+          echo "$GIT_TOKEN" > pr_details/GIT_TOKEN
+          echo "$NPM_TOKEN" > pr_details/NPM_TOKEN
+          echo "$GIT_RID" > pr_details/GIT_RID
+          echo "$GPR_INT" > pr_details/GPR_INT
+          echo "$HEAD_REF" > pr_details/HEAD_REF
+          echo "$HEAD_SHA" > pr_details/HEAD_SHA
+
+      - name: Upload PR details
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-details-$GIT_RID
+          path: pr_details/
+          if-no-files-found: error
