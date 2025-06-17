@@ -11,8 +11,6 @@ on:
   workflow_dispatch:
 
 env:
-  CI: true
-  NODE_OPTIONS: --max-old-space-size=4096
   GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   HEAD_SHA: ${{ github.event.pull_request.head.sha }}
   HEAD_REF: ${{ github.event.pull_request.head.ref }}

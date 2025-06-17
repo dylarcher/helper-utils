@@ -9,8 +9,6 @@ on:
       - completed
 
 env:
-  CI: true
-  NODE_OPTIONS: --max-old-space-size=4096
   GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   GIT_REPO: ${{ github.repository }}
 
