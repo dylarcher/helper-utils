@@ -98,6 +98,7 @@
 		"test:coverage": "c8 --config .github/presets/.c8rc --experimental-monocart --reporter=v8 --reporter=console-details -- npm run test",
 		"test:debug": "npm test --inspect-brk",
 		"test:watch": "npm test --watch",
+		"start:docs": "node server.js",
 		"update": "npm update && npm clean-install && npm run build",
 		"version": "npm run changelog:released && git add CHANGELOG.md",
 		"version:major": "npm version major -m \"chore(release-major): v%s\"",
@@ -107,5 +108,9 @@
 	},
 	"type": "module",
 	"types": "dist/index.d.ts",
-	"version": "2.0.0"
+	"version": "2.0.0",
+	"dependencies": {
+		"@markdoc/markdoc": "0.5.2",
+		"express": "5.1.0"
+	}
 }
