@@ -90,7 +90,7 @@ jobs:
       - name: Commit and Push Build Changes
         id: build_and_commit
         run: |
-          echo "Applying built changes (lint fixes, test coverage, dist generation)..."
+          echo "Applying built changes (lint fixes, test coverage, dist generation)…"
           ANY_COMMITS_MADE=false
 
           git_reset() {
@@ -103,13 +103,13 @@ jobs:
           }
 
           # Commit 1: Lint/Format changes (all changes not in dist/ or coverage/)
-          echo "Checking for lint/format changes..."
+          echo "Checking for lint/format changes…"
           git_reset clear
           git add -A # Stage all changes from the build (already in working dir)
           git_reset unstage "dist"
           git_reset unstage "coverage"
           if ! git diff --staged --quiet; then
-            echo "Committing lint/format changes..."
+            echo "Committing lint/format changes…"
             git commit -m "fix: aligns syntax to lint and format standards"
             ANY_COMMITS_MADE=true
           else
@@ -117,12 +117,12 @@ jobs:
           fi
 
           # Commit 2: Test coverage results
-          echo "Checking for test coverage changes..."
+          echo "Checking for test coverage changes…"
           git_reset clear
           if [ -d "coverage" ]; then # Check if coverage dir exists from artifact
             git add coverage/
             if ! git diff --staged --quiet; then
-              echo "Committing test coverage results..."
+              echo "Committing test coverage results…"
               git commit -m "chore: updates test coverage results"
               ANY_COMMITS_MADE=true
             else
@@ -133,12 +133,12 @@ jobs:
           fi
 
           # Commit 3: Distributable files
-          echo "Checking for dist directory changes..."
+          echo "Checking for dist directory changes…"
           git_reset clear
           if [ -d "dist" ]; then # Check if dist dir exists from artifact
             git add dist/
             if ! git diff --staged --quiet; then
-              echo "Committing dist files..."
+              echo "Committing dist files…"
               git commit -m "dist: updates type, source-map, and library files"
               ANY_COMMITS_MADE=true
             else
@@ -149,7 +149,7 @@ jobs:
           fi
 
           if [ "$ANY_COMMITS_MADE" = true ]; then
-            echo "Pushing build changes to ${{ env.HEAD_REF }}..."
+            echo "Pushing build changes to ${{ env.HEAD_REF }}…"
             git push origin "${{ env.HEAD_REF }}"
           else
             echo "No changes were committed by this step."
@@ -168,11 +168,11 @@ jobs:
           if [[ "$BRANCH_NAME" == fix/* ]]; then VERSION_BUMP="patch"; elif [[ "$BRANCH_NAME" == refac/* ]]; then VERSION_BUMP="major"; fi
           echo "Determined version bump: $VERSION_BUMP for branch $BRANCH_NAME"
 
-          echo "Updating package version (triggers postversion script for push & publish)..."
+          echo "Updating package version (triggers postversion script for push & publish)…"
           npm version $VERSION_BUMP -m "chore(release): version %s for PR #${{ env.GPR_INT }}"
           # 'postversion' script in package.json ("git push && git push --tags && npm run publish:npm") handles push and publish.
 
-          echo "Compressing dist directory..."
+          echo "Compressing dist directory…"
           tar -czf dist.tar.gz dist; zip -r dist.zip dist
           LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`); echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
 
