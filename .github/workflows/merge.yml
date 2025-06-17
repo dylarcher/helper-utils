@@ -27,9 +27,12 @@ jobs:
         uses: dawidd6/action-download-artifact@ac66b43f0e6a346234dd65d4d0c8fbb31cb316e5
         with:
           workflow_conclusion: success
-          run_id: $GIT_ACTION
-          name: pr-details-$GIT_ACTION
+          run_id: ${{ env.GIT_ACTION }}
+          name: pr-details-${{ env.GIT_ACTION }}
           path: ${{ runner.temp }}/artifacts/pr_details_artifact
+          github_token: ${{ env.GIT_TOKEN }}
+          repo: ${{ github.repository }}
+          if_no_artifact_found: fail
 
       - name: Load PR Metadata into Environment
         id: pr_vars
@@ -102,16 +105,16 @@ jobs:
         uses: dawidd6/action-download-artifact@ac66b43f0e6a346234dd65d4d0c8fbb31cb316e5
         with:
           workflow_conclusion: success
-          run_id: $GIT_ACTION
-          name: built-repo-$GIT_ACTION
-          path: ${{ runner.temp }}/artifacts/built_repo_$GIT_ACTION
+          run_id: ${{ env.GIT_ACTION }}
+          name: built-repo-${{ env.GIT_ACTION }}
+          path: ${{ runner.temp }}/artifacts/built_repo_${{ env.GIT_ACTION }}
+          github_token: ${{ env.GIT_TOKEN }}
+          repo: ${{ github.repository }}
+          if_no_artifact_found: fail
 
       - name: Install Dependencies
         run: |
           echo "Verifying artifact contents..."
-          if [ ! -f "${{ runner.temp }}/built-repo-$GIT_ACTION/package.json" ] || [ ! -f "${{ runner.temp }}/built-repo-$GIT_ACTION/package-lock.json" ]; then
-            echo "Error: Required files are missing from the artifact." >&2
-          fi
           if [ ! -f "${{ runner.temp }}/artifacts/built_repo_${{ env.GIT_ACTION }}/package.json" ] || [ ! -f "${{ runner.temp }}/artifacts/built_repo_${{ env.GIT_ACTION }}/package-lock.json" ]; then
             echo "Error: Required files are missing from the artifact." >&2
             exit 1
@@ -195,12 +198,11 @@ jobs:
           fi
 
           if [[ ! "$GPR_INT" =~ ^[0-9]+$ ]]; then
-
-          if [[ ! "$GPR_INT" =~ ^[0-9]+$ ]]; then
             echo "Invalid PR number format: $GPR_INT" >&2
             exit 1
           fi
 
+          VERSION_BUMP="patch"
           if [[ "$BRANCH_NAME" == fix/* ]]; then VERSION_BUMP="patch";
           elif [[ "$BRANCH_NAME" == refac/* ]]; then VERSION_BUMP="major"; fi
           echo "Determined version bump: $VERSION_BUMP for branch $BRANCH_NAME"
@@ -214,7 +216,7 @@ jobs:
           LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`);
           echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
 
-          if [[ steps.build_and_commit.outputs.any_commits_made == 'true' ]]; then
+          if [[ "${{ steps.build_and_commit.outputs.any_commits_made }}" == 'true' ]]; then
             echo "Publishing package to GitHub Packages…"
             npm publish --access public --registry https://npm.pkg.github.com
             echo "Package published successfully."
