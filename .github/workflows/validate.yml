@@ -10,8 +10,8 @@ jobs:
     name: Lint & Format
     runs-on: ubuntu-latest
     permissions:
-      contents: write # Changed from read to write
-      packages: write
+      contents: read
+      packages: read
 
     strategy:
       fail-fast: true
@@ -24,7 +24,7 @@ jobs:
         with:
           fetch-depth: 0
           submodules: recursive
-          ref: ${{ github.head_ref }} # Checkout the PR branch
+          ref: ${{ github.event.pull_request.head.sha }} # Checkout the PR branch securely
 
       - name: Setup
         uses: actions/setup-node@v4
