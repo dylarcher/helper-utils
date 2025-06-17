@@ -52,16 +52,15 @@ app.use(async (req, res, next) => {
   if (filePath.endsWith('/')) {
     filePath += 'index.md';
   } else if (!filePath.endsWith('.md')) {
-    const potentialMdPath = path.join(DOCS_DIR, filePath + '.md');
-    try {
-      await fs.access(potentialMdPath);
-      filePath += '.md';
-    } catch (e) {
-      return next();
-    }
+    filePath += '.md';
   }
 
-  const fullPath = path.join(DOCS_DIR, filePath);
+  // Normalize and validate the path
+  const fullPath = path.resolve(DOCS_DIR, filePath);
+  if (!fullPath.startsWith(DOCS_DIR)) {
+    res.status(403).send('Forbidden: Invalid file path.');
+    return;
+  }
 
   try {
     await fs.access(fullPath);
