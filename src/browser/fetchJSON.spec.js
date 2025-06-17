@@ -473,7 +473,8 @@ describe('fetchJSON(url, options)', () => {
 
 		await assert.rejects(() => fetchJSON('https://api.example.com/error'), {
 			name: 'Error',
-			message: 'HTTP error 500: Internal Server Error. Body: [Could not read error response body]',
+			message:
+				'HTTP error 500: Internal Server Error. Body: [Could not read error response body]',
 		});
 	});
 });

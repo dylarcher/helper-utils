@@ -133,8 +133,12 @@ export function decrypt(encryptedTextWithIv, key) {
 		// Re-throw the error with a more informative prefix to aid in debugging.
 		// The original error message (`error.message`) often contains specific details from the crypto library.
 		// Check if error is an instance of Error to safely access message property
-		const errorMessage = error instanceof Error ? error.message : 
-			(error && typeof error.message === 'string') ? error.message : 'Unknown error';
+		const errorMessage =
+			error instanceof Error
+				? error.message
+				: error && typeof error.message === 'string'
+					? error.message
+					: 'Unknown error';
 		throw new Error(`Decryption failed: ${errorMessage}`);
 	}
 }

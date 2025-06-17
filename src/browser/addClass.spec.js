@@ -123,7 +123,16 @@ describe('addClass(element, ...classNames)', () => {
 
 	it('should handle non-string class names safely', () => {
 		// Test with various non-string values that could be passed as classNames
-		addClass(mockElement, 'valid-class', 123, null, undefined, {}, [], 'another-valid');
+		addClass(
+			mockElement,
+			'valid-class',
+			123,
+			null,
+			undefined,
+			{},
+			[],
+			'another-valid',
+		);
 
 		// Only string values that can be trimmed should be added
 		assert.ok(
@@ -143,19 +152,31 @@ describe('addClass(element, ...classNames)', () => {
 	it('should handle various non-string and edge case inputs comprehensively', () => {
 		// Test to achieve 100% branch coverage for the filter condition
 		// The filter checks: Boolean(className && typeof className === 'string' && className.trim())
-		
+
 		// Test case 1: Non-string values (should be filtered out)
 		addClass(mockElement, 123, true, false, {}, [], Symbol('test'));
-		assert.strictEqual(mockElement.className, '', 'Non-string values should be filtered out');
+		assert.strictEqual(
+			mockElement.className,
+			'',
+			'Non-string values should be filtered out',
+		);
 
 		// Test case 2: String values that fail the trim test (empty after trim)
 		addClass(mockElement, '', '   ', '\t\n  ');
-		assert.strictEqual(mockElement.className, '', 'Empty and whitespace-only strings should be filtered out');
+		assert.strictEqual(
+			mockElement.className,
+			'',
+			'Empty and whitespace-only strings should be filtered out',
+		);
 
 		// Test case 3: Valid strings that pass all checks
 		addClass(mockElement, 'valid1', '  valid2  ', ' valid3');
 		const classes = mockElement.className.split(' ').filter(c => c.length > 0);
-		assert.strictEqual(classes.length, 3, 'Should have exactly 3 valid classes');
+		assert.strictEqual(
+			classes.length,
+			3,
+			'Should have exactly 3 valid classes',
+		);
 		assert.ok(mockElement.classList.has('valid1'));
 		assert.ok(mockElement.classList.has('valid2')); // The function should trim and use 'valid2'
 		assert.ok(mockElement.classList.has('valid3'));
@@ -164,7 +185,17 @@ describe('addClass(element, ...classNames)', () => {
 		mockElement = new MockElement();
 
 		// Test case 4: Mixed valid and invalid to ensure filter works correctly
-		addClass(mockElement, null, 'class1', undefined, '', '  class2  ', 42, '   ', 'class3');
+		addClass(
+			mockElement,
+			null,
+			'class1',
+			undefined,
+			'',
+			'  class2  ',
+			42,
+			'   ',
+			'class3',
+		);
 		const finalClasses = Array.from(mockElement.classList);
 		assert.strictEqual(finalClasses.length, 3, 'Should have exactly 3 classes');
 		assert.ok(mockElement.classList.has('class1'));
@@ -175,7 +206,11 @@ describe('addClass(element, ...classNames)', () => {
 		// When no valid class names are provided, the add operation should be skipped
 		mockElement = new MockElement();
 		addClass(mockElement, null, undefined, '', '   ', 123, {});
-		assert.strictEqual(mockElement.className, '', 'No classes should be added when all inputs are invalid');
+		assert.strictEqual(
+			mockElement.className,
+			'',
+			'No classes should be added when all inputs are invalid',
+		);
 	});
 
 	describe('JSDOM Environment Tests', () => {

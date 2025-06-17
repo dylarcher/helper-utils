@@ -310,7 +310,8 @@ describe('decrypt(encryptedTextWithIv, key) - Additional Error Handling', () => 
 		const invalidCiphertext = 'notvalidhex';
 
 		assert.throws(
-			() => { // This will throw during decipher.update('notvalidhex', 'hex', 'utf8')
+			() => {
+				// This will throw during decipher.update('notvalidhex', 'hex', 'utf8')
 				decrypt(`${validIv}:${invalidCiphertext}`, testKey);
 			},
 			{
@@ -325,7 +326,8 @@ describe('decrypt(encryptedTextWithIv, key) - Additional Error Handling', () => 
 		const shortCiphertext = '12';
 
 		assert.throws(
-			() => { // This will likely throw "bad decrypt" or similar during decipher.final()
+			() => {
+				// This will likely throw "bad decrypt" or similar during decipher.final()
 				decrypt(`${validIv}:${shortCiphertext}`, testKey);
 			},
 			{
@@ -376,17 +378,24 @@ describe('decrypt(encryptedTextWithIv, key) - Additional Error Handling', () => 
 
 		// Test with malformed hex that causes Buffer.from to throw
 		const malformedEncryptedWithIv = 'invalidhex:malformeddata';
-		const key = Buffer.from('0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef', 'hex');
+		const key = Buffer.from(
+			'0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef',
+			'hex',
+		);
 
 		// Mock Buffer.from to throw a non-Error object (this is a theoretical test scenario)
 		const originalBufferFrom = Buffer.from;
 		let callCount = 0;
-		
-		Buffer.from = function(...args) {
+
+		Buffer.from = function (...args) {
 			callCount++;
 			// On the first call (IV conversion), throw a non-Error object without message
 			if (callCount === 1 && args[1] === 'hex') {
-				throw { code: 'BUFFER_ERROR', details: 'hex conversion failed' };
+				// eslint-disable-next-line no-throw-literal
+				throw {
+					code: 'BUFFER_ERROR',
+					details: 'hex conversion failed',
+				};
 			}
 			// For other calls, use original Buffer.from
 			return originalBufferFrom.apply(this, args);
@@ -395,7 +404,7 @@ describe('decrypt(encryptedTextWithIv, key) - Additional Error Handling', () => 
 		try {
 			assert.throws(
 				() => decrypt(malformedEncryptedWithIv, key),
-				(err) => {
+				err => {
 					return (
 						err instanceof Error &&
 						err.message.includes('Decryption failed: Unknown error')
@@ -413,16 +422,22 @@ describe('decrypt(encryptedTextWithIv, key) - Additional Error Handling', () => 
 		// Test with a scenario where Buffer.from throws a non-Error object with a message property
 		const customErrorMessage = 'Custom error from a plain object';
 		const malformedEncryptedWithIv = 'invalidhex:malformeddata';
-		const key = Buffer.from('0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef', 'hex');
+		const key = Buffer.from(
+			'0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef',
+			'hex',
+		);
 
 		const originalBufferFrom = Buffer.from;
 		let callCount = 0;
-		
-		Buffer.from = function(...args) {
+
+		Buffer.from = function (...args) {
 			callCount++;
 			// On the first call (IV conversion), throw a non-Error object with message
 			if (callCount === 1 && args[1] === 'hex') {
-				const errObj = { message: customErrorMessage, code: 'CUSTOM_BUFFER_ERROR' };
+				const errObj = {
+					message: customErrorMessage,
+					code: 'CUSTOM_BUFFER_ERROR',
+				};
 				throw errObj;
 			}
 			// For other calls, use original Buffer.from
@@ -432,12 +447,19 @@ describe('decrypt(encryptedTextWithIv, key) - Additional Error Handling', () => 
 		try {
 			assert.throws(
 				() => decrypt(malformedEncryptedWithIv, key),
-				(errThrown) => {
-					assert.ok(errThrown instanceof Error, 'Outer thrown error should be an Error instance');
-					assert.strictEqual(errThrown.message, `Decryption failed: ${customErrorMessage}`);
+				errThrown => {
+					assert.ok(
+						errThrown instanceof Error,
+						'Outer thrown error should be an Error instance',
+					);
+					assert.strictEqual(
+						errThrown.message,
+						`Decryption failed: ${customErrorMessage}`,
+					);
 					return true;
 				},
-				'Should use message from non-Error object that has a message property');
+				'Should use message from non-Error object that has a message property',
+			);
 		} finally {
 			// Restore original Buffer.from function
 			Buffer.from = originalBufferFrom;
