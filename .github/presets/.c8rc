@@ -1,0 +1,50 @@
+{
+    "$schema": "https://json.schemastore.org/c8rc.json",
+    "all": false,
+    "all-statements": true,
+    "allow-empty": false,
+    "allowExternal": false,
+    "branches": 100,
+    "branches-unchanged": true,
+    "check-coverage": true,
+    "clean": true,
+    "exclude": [
+        "node_modules/**/*",
+        "coverage/**/*",
+        "utils/**/*",
+        "dist/**/*",
+        "src/**/*.spec.js",
+        "src/**/*.test.js"
+    ],
+    "exclude-after-remap": false,
+    "exclude-node-modules": true,
+    "excludeNodeModules": true,
+    "experimental-monocart": true,
+    "extensions": [
+        ".js"
+    ],
+    "functions": 100,
+    "functions-unchanged": true,
+    "include": [
+        "src/**/*.js"
+    ],
+    "include-node-modules": false,
+    "lines": 100,
+    "lines-unchanged": true,
+    "merge-async": true,
+    "omit-relative": true,
+    "output-file": null,
+    "per-file": true,
+    "report-dir": "docs/tests/",
+    "reporter": [],
+    "require": [],
+    "resolve": "",
+    "skip-full": false,
+    "sourceMap": true,
+    "src": true,
+    "statements": 100,
+    "statements-unchanged": false,
+    "temp-directory": "docs/tests/.temp/",
+    "work-dir": "docs/tests/.work/",
+    "wrapper-length": 0
+}

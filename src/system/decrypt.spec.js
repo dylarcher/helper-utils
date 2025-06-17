@@ -124,6 +124,8 @@ describe('decrypt(encryptedTextWithIv, key)', () => {
 });
 
 describe('decrypt(encryptedTextWithIv, key) - Additional Error Handling', () => {
+	const testKey = cryptoModule.randomBytes(32); // 256-bit key for AES-256
+
 	it('should throw if key is not a Buffer or appropriate string', () => {
 		const originalText = 'Some data to encrypt and decrypt';
 		const validKey = cryptoModule.randomBytes(32);
@@ -289,5 +291,84 @@ describe('decrypt(encryptedTextWithIv, key) - Additional Error Handling', () => 
 					err.message.toLowerCase().includes('bad hex string')),
 			'Should throw a wrapped error for non-hex IV part',
 		);
+	});
+	it('should handle crypto errors during decryption process', () => {
+		// Test crypto errors that might occur during the decryption process
+		const validIv = '1234567890abcdef1234567890abcdef';
+		const invalidCiphertext = 'notvalidhex';
+
+		assert.throws(
+			() => {
+				decrypt(`${validIv}:${invalidCiphertext}`, testKey);
+			},
+			{
+				message: /Decryption failed:/,
+			},
+		);
+	});
+
+	it('should handle error objects without message property', () => {
+		// Create a scenario that might trigger an error without standard message property
+		const validIv = '1234567890abcdef1234567890abcdef';
+		// Use a very short ciphertext that might cause internal crypto errors
+		const shortCiphertext = '12';
+
+		assert.throws(
+			() => {
+				decrypt(`${validIv}:${shortCiphertext}`, testKey);
+			},
+			{
+				message: /Decryption failed:/,
+			},
+		);
+	});
+
+	it('should handle falsy error values in catch block', () => {
+		// This is a bit contrived but tests the 'Unknown error' fallback
+		const validIv = '1234567890abcdef1234567890abcdef';
+		// Try with completely invalid hex that might cause unexpected error types
+		const invalidHex = 'gggggggggggggggggggggggggggggggg';
+
+		assert.throws(
+			() => {
+				decrypt(`${validIv}:${invalidHex}`, testKey);
+			},
+			{
+				message: /Decryption failed:/,
+			},
+		);
+	});
+	it('should handle error without message property triggering Unknown error fallback', t => {
+		// Use Node.js test mocking to replace the Buffer.from method temporarily
+		const originalBufferFrom = Buffer.from;
+
+		// Mock Buffer.from to throw an error without a message property when called with 'hex'
+		const mockBufferFrom = t.mock.fn((input, encoding) => {
+			if (encoding === 'hex' && input === '1234567890abcdef1234567890abcdef') {
+				const errorWithoutMessage = { code: 'MOCK_ERROR' };
+				throw errorWithoutMessage;
+			}
+			return originalBufferFrom(input, encoding);
+		});
+
+		// Replace Buffer.from temporarily
+		Buffer.from = mockBufferFrom;
+
+		try {
+			const validIv = '1234567890abcdef1234567890abcdef';
+			const validEncrypted = 'abcdef1234567890abcdef1234567890';
+
+			assert.throws(
+				() => {
+					decrypt(`${validIv}:${validEncrypted}`, testKey);
+				},
+				{
+					message: 'Decryption failed: Unknown error',
+				},
+			);
+		} finally {
+			// Restore the original method
+			Buffer.from = originalBufferFrom;
+		}
 	});
 });

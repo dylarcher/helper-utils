@@ -1,10 +1,10 @@
-import { describe, it, beforeEach, afterEach, mock } from 'node:test'; // Added mock
+import { describe, it, beforeEach, afterEach } from 'node:test'; // Added mock
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { listDirectoryContents } from './listDirectoryContents.js';
 
-const PERF_TEST_ENABLED = false; // Set to true to enable performance tests
+const PERF_TEST_ENABLED = true; // Set to true to enable performance tests
 
 describe('listDirectoryContents(dirPath)', () => {
 	let testDir;
@@ -281,9 +281,9 @@ describe('Async Generator Behavior (Mocked fs.promises.readdir)', () => {
 		);
 	});
 
-	it.skip('should yield all items from fs.promises.readdir (mocked)', async t => {
+	it('should yield all items from fs.promises.readdir (mocked)', async t => {
 		const mockItems = ['file1.txt', 'file2.js', 'subdir'];
-		const readdirMock = t.mock.fn(fs, 'readdir', async dirPath => {
+		const readdirMock = t.mock.method(fs, 'readdir', async dirPath => {
 			assert.strictEqual(
 				dirPath,
 				'test_dir_mocked',
@@ -309,8 +309,8 @@ describe('Async Generator Behavior (Mocked fs.promises.readdir)', () => {
 		);
 	});
 
-	it.skip('should yield no items for an empty directory (mocked)', async t => {
-		const readdirMock = t.mock.fn(fs, 'readdir', async dirPath => {
+	it('should yield no items for an empty directory (mocked)', async t => {
+		const readdirMock = t.mock.method(fs, 'readdir', async dirPath => {
 			assert.strictEqual(
 				dirPath,
 				'empty_dir_mocked',
@@ -336,9 +336,9 @@ describe('Async Generator Behavior (Mocked fs.promises.readdir)', () => {
 		);
 	});
 
-	it.skip('should propagate errors from fs.promises.readdir (mocked)', async t => {
+	it('should propagate errors from fs.promises.readdir (mocked)', async t => {
 		const mockError = new Error('Mocked readdir failure');
-		const readdirMock = t.mock.fn(fs, 'readdir', async dirPath => {
+		const readdirMock = t.mock.method(fs, 'readdir', async dirPath => {
 			assert.strictEqual(
 				dirPath,
 				'error_dir_mocked',
@@ -377,7 +377,7 @@ describe('Performance Tests for listDirectoryContents', () => {
 			}
 
 			// Using node:test's built-in mocking capabilities
-			const readdirMock = mock.fn(fs.promises, 'readdir', async dirPath => {
+			const readdirMock = t.mock.method(fs, 'readdir', async dirPath => {
 				if (dirPath === 'perf_test_dummy_dir') {
 					return Promise.resolve(mockFiles);
 				}
@@ -385,8 +385,6 @@ describe('Performance Tests for listDirectoryContents', () => {
 				// For this test, we expect only 'perf_test_dummy_dir'
 				throw new Error(`Mock readdir called with unexpected path: ${dirPath}`);
 			});
-			// Ensure mock is restored after the test
-			t.after(() => readdirMock.restore());
 			let count = 0;
 			console.info(
 				`[INFO] Running listDirectoryContents performance test with ${fileCount} simulated files.`,

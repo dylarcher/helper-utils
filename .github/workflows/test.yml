@@ -1,13 +1,13 @@
 ---
-name: c8
+name: Test
 
 on:
   pull_request:
-    types: [edited, opened, reopened, synchronize]
+    types: [edited,opened,reopened,synchronize]
 
 jobs:
-  c8:
-    name: Test
+  test:
+    name: Node & Browser
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -36,5 +36,5 @@ jobs:
       - name: Install
         run: npm install
 
-      - name: Test
-        run: npm run test:coverage
+      - name: Coverage
+        run: npm test

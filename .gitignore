@@ -1,7 +1,30 @@
-# files
-.DS_Store
-.node-version
+# Editor directories and files
+.idea/
+.vscode/
 
-# folders
-dist/
+# OS generated files
+.DS_Store
+.Spotlight-V100
+.Trashes
+._*
+Desktop.ini
+Thumbs.db
+ehthumbs.db
+
+# Logs
+logs
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# Dependency directories
 node_modules/
+
+# Coverage directories
+docs/tests/.temp/
+docs/tests/tmp/
+
+# Temporary files
+*~

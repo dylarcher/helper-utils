@@ -1,0 +1,1 @@
+{"version":3,"file":"removeClass.js","sourceRoot":"","sources":["../../src/browser/removeClass.js"],"names":[],"mappings":"AAAA;;;;;;;;;;;;;;;;GAgBG;AACH,MAAM,UAAU,WAAW,CAAC,OAAO,EAAE,GAAG,UAAU;IACjD,IAAI,OAAO,EAAE,SAAS,EAAE,CAAC;QACxB,OAAO,CAAC,SAAS,CAAC,MAAM,CAAC,GAAG,UAAU,CAAC,MAAM,CAAC,OAAO,CAAC,CAAC,CAAC;IACzD,CAAC;AACF,CAAC"}

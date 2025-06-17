@@ -1,86 +1,145 @@
 {
-	"[javascript]": {
-		"editor.codeActionsOnSave": {
-			"source.fixAll": "explicit"
-		},
-		"editor.defaultFormatter": "esbenp.prettier-vscode"
-	},
-	"[json]": {
-		"editor.codeActionsOnSave": {
-			"source.fixAll": "explicit"
-		},
-		"editor.defaultFormatter": "esbenp.prettier-vscode"
-	},
-	"[markdown]": {
-		"editor.codeActionsOnSave": {
-			"source.fixAll": "explicit"
-		},
-		"editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
-	},
-	"[typescript]": {
-		"editor.codeActionsOnSave": {
-			"source.fixAll": "explicit"
-		},
-		"editor.defaultFormatter": "dbaeumer.vscode-eslint"
-	},
-	"[html]": {
-		"editor.codeActionsOnSave": {
-			"source.fixAll": "explicit"
-		},
-		"editor.defaultFormatter": "dbaeumer.vscode-eslint"
-	},
-	"[yaml]": {
-		"editor.codeActionsOnSave": {
-			"source.fixAll": "explicit"
-		},
-		"editor.defaultFormatter": "googlecloudtools.cloudcode"
-	},
-	"editor.codeActionsOnSave": {
-		"source.fixAll.eslint": "explicit"
-	},
-	"editor.defaultFormatter": "esbenp.prettier-vscode",
-	"editor.formatOnPaste": false,
-	"editor.formatOnSave": true,
-	"editor.formatOnType": false,
-	"eslint.format.enable": true,
-	"eslint.lintTask.enable": true,
-	"eslint.useFlatConfig": true,
-	"eslint.packageManager": "npm",
-	"eslint.codeActionsOnSave.mode": "problems",
-	"eslint.enable": true,
-	"eslint.options": {
-		"configFile": "${workspaceRoot}/.github/presets/eslint.config.js",
-		"extensions": [".js"]
-	},
-	"eslint.validate": ["javascript", "typescript"],
-	"explorer.fileNesting.enabled": true,
-	"explorer.fileNesting.expand": false,
-	"explorer.fileNesting.patterns": {
-		"*.js": "${basename}.*.${extname}, ${basename}.d.ts, ${basename}.${extname}.map",
-		"jsconfig.json": "${basename}.*.${extname}",
-		"package.json": "${basename}-lock.${extname}, npm-shrinkwrap.${extname}, yarn.lock, pnpm-lock.yaml, bun.lockb, bun.lock",
-		"tsconfig.json": "${basename}.*.${extname}"
-	},
-	"files.associations": {
-		".editorconfig": "ini",
-		".gitignore": "properties",
-		".npmrc": "properties",
-		".nvmrc": "properties",
-		"LICENSE": "plaintext"
-	},
-	"html.format.enable": true,
-	"html.validate.scripts": true,
-	"html.validate.styles": true,
-	"javascript.format.enable": false,
-	"javascript.validate.enable": false,
-	"json.format.enable": false,
-	"json.validate.enable": false,
-	"prettier.configPath": "${workspaceRoot}/.github/presets/.prettierrc.yml",
-	"prettier.enable": true,
-	"prettier.useEditorConfig": true,
-	"prettier.withNodeModules": false,
-	"typescript.format.enable": false,
-	"typescript.validate.enable": false,
-	"yaml.format.enable": false,
-	"yaml.validate": false
+    "[css]": {
+        "editor.codeActionsOnSave": {
+            "source.fixAll.css": "explicit"
+        },
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true
+    },
+    "[html]": {
+        "editor.codeActionsOnSave": {
+            "source.fixAll.html": "explicit"
+        },
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true
+    },
+    "[ini]": {
+        "editor.codeActionsOnSave": {
+            "source.fixAll.ini": "explicit"
+        },
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+        "editor.formatOnSave": true
+    },
+    "[javascript]": {
+        "editor.codeActionsOnSave": {
+            "source.fixAll.ts": "explicit"
+        },
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+        "editor.formatOnSave": true
+    },
+    "[json]": {
+        "editor.codeActionsOnSave": {
+            "source.fixAll.json": "explicit",
+            "source.fixAll.sortJSON": "explicit"
+        },
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+        "editor.formatOnSave": true
+    },
+    "[markdown]": {
+        "editor.codeActionsOnSave": {
+            "source.fixAll.markdown": "explicit",
+            "source.fixAll.markdownlint": "explicit",
+            "source.fixAll.md": "explicit"
+        },
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+        "editor.formatOnSave": true
+    },
+    "[plaintext]": {
+        "editor.codeActionsOnSave": {
+            "source.fixAll.plaintext": "explicit"
+        },
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+        "editor.formatOnSave": true
+    },
+    "[properties]": {
+        "editor.codeActionsOnSave": {
+            "source.fixAll.properties": "explicit"
+        },
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+        "editor.formatOnSave": true
+    },
+    "[svg]": {
+        "editor.codeActionsOnSave": {
+            "source.fixAll.svg": "explicit",
+            "source.fixAll.svgo": "explicit"
+        },
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+        "editor.formatOnSave": true
+    },
+    "[typescript]": {
+        "editor.codeActionsOnSave": {
+            "source.fixAll.ts": "explicit"
+        },
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+        "editor.formatOnSave": true
+    },
+    "[yaml]": {
+        "editor.codeActionsOnSave": {
+            "source.fixAll.sort": "explicit",
+            "source.fixAll.yaml": "explicit"
+        },
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+        "editor.formatOnSave": true
+    },
+    "editor.codeActionsOnSave": {
+        "source.fixAll": "always",
+        "source.fixAll.eslint": "explicit",
+        "source.fixAll.prettier": "explicit",
+        "source.fixAll.stylelint": "explicit"
+    },
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnPaste": false,
+    "editor.formatOnSave": false,
+    "editor.formatOnType": false,
+    "eslint.codeActionsOnSave.mode": "problems",
+    "eslint.enable": true,
+    "eslint.format.enable": false,
+    "eslint.lintTask.enable": true,
+    "eslint.options": {
+        "overrideConfigFile": "${workspaceFolder}/.github/presets/eslint.config.js"
+    },
+    "eslint.packageManager": "npm",
+    "eslint.useFlatConfig": true,
+    "eslint.validate": [
+        "javascript",
+        "typescript",
+        "markdown",
+        "yaml"
+    ],
+    "eslint.workingDirectories": [
+        "${workspaceFolder}"
+    ],
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.expand": false,
+    "explorer.fileNesting.patterns": {
+        "*.js": "${basename}.*.${extname}, ${basename}.d.ts, ${basename}.${extname}.map",
+        "jsconfig.json": "${basename}.*.${extname}",
+        "package.json": "${basename}-lock.${extname}, npm-shrinkwrap.${extname}, yarn.lock, pnpm-lock.yaml, bun.lockb, bun.lock",
+        "tsconfig.json": "${basename}.*.${extname}"
+    },
+    "files.associations": {
+        ".c8rc": "json",
+        ".editorconfig": "ini",
+        ".gitignore": "properties",
+        ".npmrc": "properties",
+        ".nvmrc": "properties",
+        ".prettierrc": "json",
+        "CITATION.cff": "yaml",
+        "LICENSE": "plaintext"
+    },
+    "html.format.enable": false,
+    "html.validate.scripts": true,
+    "html.validate.styles": true,
+    "javascript.format.enable": false,
+    "javascript.validate.enable": false,
+    "json.format.enable": false,
+    "json.validate.enable": false,
+    "prettier.configPath": "${workspaceFolder}/.github/presets/.prettierrc.yml",
+    "prettier.enable": true,
+    "prettier.useEditorConfig": true,
+    "prettier.withNodeModules": false,
+    "typescript.format.enable": false,
+    "typescript.validate.enable": false,
+    "yaml.format.enable": false,
+    "yaml.validate": false
 }

@@ -241,4 +241,68 @@ describe('setStyle(element, property, value)', () => {
 		assert.strictEqual(domLikeElement.style.fontSize, '20px');
 		assert.strictEqual(domLikeElement.style.fontWeight, 'bold');
 	});
+
+	it('should work with DOM-like element', () => {
+		// Test when element.style is falsy
+		const elementWithNullStyle = { style: null };
+		assert.doesNotThrow(() => setStyle(elementWithNullStyle, 'color', 'red'));
+
+		// Test when property is empty string
+		setStyle(mockElement, '', 'value');
+		assert.strictEqual(mockElement.style[''], undefined); // Empty string property should not be set
+
+		// Test when property is null
+		setStyle(mockElement, null, 'value');
+		assert.strictEqual(mockElement.style[null], undefined); // Null property should not be set
+
+		// Test when value is null
+		setStyle(mockElement, 'color', null);
+		assert.strictEqual(mockElement.style.color, null);
+
+		// Test when value is exactly undefined (different from not passing value)
+		setStyle(mockElement, 'background', undefined);
+		assert.strictEqual(mockElement.style.background, undefined);
+	});
+
+	it('should handle object properties with empty keys', () => {
+		const styles = {
+			'': 'should-not-be-set',
+			color: 'blue',
+			'   ': 'should-be-set', // Non-empty string with spaces
+		};
+
+		setStyle(mockElement, styles);
+
+		// Empty string key should be skipped
+		assert.strictEqual(mockElement.style[''], undefined);
+		// Valid property should be set
+		assert.strictEqual(mockElement.style.color, 'blue');
+		// Whitespace-only key should be set (it's a non-empty string)
+		assert.strictEqual(mockElement.style['   '], 'should-be-set');
+	});
+
+	it('should handle when property is string but value is undefined', () => {
+		// This tests the branch where property is string and property is truthy,
+		// but value is undefined
+		setStyle(mockElement, 'color'); // No value passed
+
+		// The function should not set the property when value is undefined
+		assert.strictEqual(mockElement.style.color, undefined);
+	});
+
+	it('should handle property as non-string non-object', () => {
+		// Test with number as property (should not set anything)
+		setStyle(mockElement, 123, 'value');
+		assert.strictEqual(mockElement.style[123], undefined);
+
+		// Test with boolean as property (should not set anything)
+		setStyle(mockElement, true, 'value');
+		assert.strictEqual(mockElement.style[true], undefined);
+	});
+
+	it('should handle null property object', () => {
+		// When property is null, it should not crash
+		setStyle(mockElement, null, 'value');
+		assert.strictEqual(mockElement.style.color, undefined);
+	});
 });

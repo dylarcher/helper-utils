@@ -41,18 +41,34 @@
 			"type": "shell"
 		},
 		{
-			"command": "npm run lint",
+			"command": "npm run lint:check",
+			"group": "test",
+			"isBackground": false,
+			"label": "Lint: Check ESLint",
+			"problemMatcher": ["$eslint-stylish"],
+			"type": "shell"
+		},
+		{
+			"command": "npm run lint:write",
 			"group": "cleanup",
 			"isBackground": false,
-			"label": "Lint: Run ESLint",
+			"label": "Lint: Fix ESLint",
+			"problemMatcher": ["$eslint-stylish"],
+			"type": "shell"
+		},
+		{
+			"command": "npm run format:check",
+			"group": "test",
+			"isBackground": false,
+			"label": "Format: Check Prettier",
 			"problemMatcher": [],
 			"type": "shell"
 		},
 		{
-			"command": "npm run format",
+			"command": "npm run format:write",
 			"group": "cleanup",
 			"isBackground": false,
-			"label": "Format: Run Prettier",
+			"label": "Format: Fix Prettier",
 			"problemMatcher": [],
 			"type": "shell"
 		}
