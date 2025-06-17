@@ -15,13 +15,13 @@ export const codeblock = {
       default: 'javascript'
     }
   },
-  transform(node, config) {
+  async transform(node, config) {
     const attributes = node.transformAttributes(config);
     const { src, lang } = attributes;
     const filePath = path.join(process.cwd(), src); // Assuming src is relative to project root
 
     try {
-      const code = fs.readFileSync(filePath, 'utf-8');
+      const code = await fs.promises.readFile(filePath, 'utf-8');
       return new Tag('fence', { content: code, language: lang }, []);
     } catch (error) {
       console.error(`Error reading file ${filePath}:`, error);
