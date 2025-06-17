@@ -37,54 +37,85 @@ jobs:
       - name: Debug Artifact Contents
         run: |
           ARTIFACT_DIR="${{ runner.temp }}/artifacts/pr_details_artifact"
-          echo "Artifact directory contents:"
-          ls -la "$ARTIFACT_DIR"
-          echo "GPR_INT content:"
-          cat "$ARTIFACT_DIR/GPR_INT" | hexdump -C
-          echo "HEAD_REF content:"
-          cat "$ARTIFACT_DIR/HEAD_REF" | hexdump -C
-          echo "HEAD_SHA content:"
-          cat "$ARTIFACT_DIR/HEAD_SHA" | hexdump -C
+          echo "=== Artifact Directory Debug ==="
+          echo "Artifact directory: $ARTIFACT_DIR"
+          if [ -d "$ARTIFACT_DIR" ]; then
+            echo "Directory exists. Contents:"
+            ls -la "$ARTIFACT_DIR"
+
+            for file in GPR_INT HEAD_REF HEAD_SHA; do
+              if [ -f "$ARTIFACT_DIR/$file" ]; then
+                echo "=== $file ==="
+                echo "Size: $(wc -c < "$ARTIFACT_DIR/$file") bytes"
+                echo "Content (raw):"
+                cat "$ARTIFACT_DIR/$file"
+                echo ""
+                echo "Content (hex dump):"
+                cat "$ARTIFACT_DIR/$file" | hexdump -C
+                echo ""
+              else
+                echo "ERROR: $file does not exist!"
+              fi
+            done
+          else
+            echo "ERROR: Artifact directory does not exist!"
+            echo "Available directories in ${{ runner.temp }}/artifacts/:"
+            ls -la "${{ runner.temp }}/artifacts/" || echo "Artifacts directory not found"
+          fi
 
       - name: Load PR Metadata into Environment
         id: pr_vars
         run: |
           ARTIFACT_DIR="${{ runner.temp }}/artifacts/pr_details_artifact"
-          if [ ! -f "$ARTIFACT_DIR/GPR_INT" ] || [ ! -f "$ARTIFACT_DIR/HEAD_REF" ] || [ ! -f "$ARTIFACT_DIR/HEAD_SHA" ]; then
-            echo "Required artifact files are missing or corrupted. Exiting."; exit 1
+
+          missing_files=()
+          for file in GPR_INT HEAD_REF HEAD_SHA; do
+            if [ ! -f "$ARTIFACT_DIR/$file" ]; then
+              missing_files+=("$file")
+            fi
+          done
+
+          if [ ${#missing_files[@]} -gt 0 ]; then
+            echo "Error: Required artifact files are missing: ${missing_files[*]}" >&2
+            echo "Available files in $ARTIFACT_DIR:"
+            ls -la "$ARTIFACT_DIR" || echo "Directory does not exist"
+            exit 1
           fi
 
-          GPR_INT=$(cat "$ARTIFACT_DIR/GPR_INT" | tr -d '\n')
-          HEAD_REF=$(cat "$ARTIFACT_DIR/HEAD_REF" | tr -d '\n')
-          HEAD_SHA=$(cat "$ARTIFACT_DIR/HEAD_SHA" | tr -d '\n')
+          GPR_INT=$(cat "$ARTIFACT_DIR/GPR_INT" | tr -d '[:space:]')
+          HEAD_REF=$(cat "$ARTIFACT_DIR/HEAD_REF" | tr -d '[:space:]')
+          HEAD_SHA=$(cat "$ARTIFACT_DIR/HEAD_SHA" | tr -d '[:space:]')
 
-          # Validate the values
+          echo "=== Loaded Values ==="
+          echo "GPR_INT: '$GPR_INT' (length: ${#GPR_INT})"
+          echo "HEAD_REF: '$HEAD_REF' (length: ${#HEAD_REF})"
+          echo "HEAD_SHA: '$HEAD_SHA' (length: ${#HEAD_SHA})"
+
           if [[ ! "$GPR_INT" =~ ^[0-9]+$ ]]; then
-            echo "Invalid GPR_INT value: '$GPR_INT'" >&2
+            echo "Error: Invalid GPR_INT value: '$GPR_INT'" >&2
+            echo "Expected: positive integer" >&2
             exit 1
           fi
 
-          if [[ ! "$HEAD_SHA" =~ ^[0-9a-f]{40}$ ]]; then
-            echo "Invalid HEAD_SHA value: '$HEAD_SHA'" >&2
+          if [[ ! "$HEAD_SHA" =~ ^[a-f0-9]{40}$ ]]; then
+            echo "Error: Invalid HEAD_SHA value: '$HEAD_SHA'" >&2
+            echo "Expected: 40-character hexadecimal string (Git SHA-1)" >&2
             exit 1
           fi
 
-          if [[ ! "$HEAD_REF" =~ ^[a-zA-Z0-9/_.-]+$ ]]; then
-            echo "Invalid HEAD_REF value: '$HEAD_REF'" >&2
+          if [[ ! "$HEAD_REF" =~ ^[a-zA-Z0-9/_-]+$ ]]; then
+            echo "Error: Invalid HEAD_REF value: '$HEAD_REF'" >&2
+            echo "Expected: branch/tag name with alphanumeric, slash, underscore, hyphen characters" >&2
             exit 1
           fi
 
-          echo "Loaded PR metadata:"
-          echo "  GPR_INT: $GPR_INT"
-          echo "  HEAD_REF: $HEAD_REF"
-          echo "  HEAD_SHA: $HEAD_SHA"
+          echo "=== Validation Passed ==="
+          echo "All metadata values are valid"
 
-          # Set outputs for use in subsequent steps
           echo "GPR_INT=$GPR_INT" >> $GITHUB_OUTPUT
           echo "HEAD_REF=$HEAD_REF" >> $GITHUB_OUTPUT
           echo "HEAD_SHA=$HEAD_SHA" >> $GITHUB_OUTPUT
 
-          # Also set as environment variables for shell scripts
           {
             echo "GPR_INT=$GPR_INT"
             echo "HEAD_REF=$HEAD_REF"
@@ -93,10 +124,19 @@ jobs:
 
       - name: Debug Environment Variables
         run: |
-          echo "Debug: Values before checkout"
+          echo "=== Environment Variable Debug ==="
           echo "HEAD_REF from step output: '${{ steps.pr_vars.outputs.HEAD_REF }}'"
           echo "HEAD_SHA from step output: '${{ steps.pr_vars.outputs.HEAD_SHA }}'"
           echo "GPR_INT from step output: '${{ steps.pr_vars.outputs.GPR_INT }}'"
+          echo ""
+          echo "HEAD_REF from env: '$HEAD_REF'"
+          echo "HEAD_SHA from env: '$HEAD_SHA'"
+          echo "GPR_INT from env: '$GPR_INT'"
+          echo ""
+          echo "Git context:"
+          echo "Repository: ${{ github.repository }}"
+          echo "Workflow run ID: ${{ github.run_id }}"
+          echo "Triggering workflow run ID: ${{ github.event.workflow_run.id }}"
 
       - name: Checkout PR Branch
         uses: actions/checkout@v4
@@ -118,14 +158,41 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git remote set-url origin "https://x-access-token:$GIT_TOKEN@github.com/${{ github.repository }}"
-          echo "Ensuring branch $HEAD_REF is at commit $HEAD_SHA"
-          git fetch origin "$HEAD_REF"
-          if [[ "$HEAD_SHA" =~ ^[0-9a-f]{40}$ ]]; then
-            git reset --hard "$HEAD_SHA"
-          else
-            echo "Invalid HEAD_SHA value: $HEAD_SHA" >&2
+
+          echo "Debugging git state:"
+          echo "Current HEAD: $(git rev-parse HEAD)"
+          echo "Expected HEAD_SHA: $HEAD_SHA"
+          echo "Expected HEAD_REF: $HEAD_REF"
+
+          echo "Fetching all refs..."
+          git fetch origin --all --tags
+
+          if ! git cat-file -e "$HEAD_SHA" 2>/dev/null; then
+            echo "Error: Commit $HEAD_SHA does not exist in the repository" >&2
             exit 1
           fi
+
+          if git show-ref --verify --quiet "refs/remotes/origin/$HEAD_REF"; then
+            echo "Found remote branch: origin/$HEAD_REF"
+            git checkout -B "$HEAD_REF" "origin/$HEAD_REF"
+          elif git show-ref --verify --quiet "refs/tags/$HEAD_REF"; then
+            echo "Found tag: $HEAD_REF"
+            git checkout "$HEAD_REF"
+          else
+            echo "Branch or tag $HEAD_REF not found, checking out commit directly"
+            git checkout -B "$HEAD_REF" "$HEAD_SHA"
+          fi
+
+          echo "Resetting to exact commit: $HEAD_SHA"
+          git reset --hard "$HEAD_SHA"
+
+          CURRENT_SHA=$(git rev-parse HEAD)
+          if [ "$CURRENT_SHA" != "$HEAD_SHA" ]; then
+            echo "Error: Failed to checkout correct commit. Expected: $HEAD_SHA, Got: $CURRENT_SHA" >&2
+            exit 1
+          fi
+
+          echo "Successfully positioned at commit $HEAD_SHA on branch $HEAD_REF"
 
       - name: Download and Apply Built Code Artifact
         uses: dawidd6/action-download-artifact@ac66b43f0e6a346234dd65d4d0c8fbb31cb316e5
@@ -138,15 +205,59 @@ jobs:
           repo: ${{ github.repository }}
           if_no_artifact_found: fail
 
-      - name: Install Dependencies
+      - name: Apply Built Code from Artifact
         run: |
-          echo "Verifying artifact contents..."
-          if [ ! -f "${{ runner.temp }}/artifacts/built_repo_${{ env.GIT_ACTION }}/package.json" ] || [ ! -f "${{ runner.temp }}/artifacts/built_repo_${{ env.GIT_ACTION }}/package-lock.json" ]; then
-            echo "Error: Required files are missing from the artifact." >&2
+          BUILT_ARTIFACT_DIR="${{ runner.temp }}/artifacts/built_repo_${{ env.GIT_ACTION }}"
+
+          echo "=== Built Artifact Debug ==="
+          echo "Artifact directory: $BUILT_ARTIFACT_DIR"
+
+          if [ ! -d "$BUILT_ARTIFACT_DIR" ]; then
+            echo "Error: Built artifact directory does not exist" >&2
+            echo "Available directories in ${{ runner.temp }}/artifacts/:"
+            ls -la "${{ runner.temp }}/artifacts/" || echo "Artifacts directory not found"
             exit 1
           fi
-          cp "${{ runner.temp }}/artifacts/built_repo_${{ env.GIT_ACTION }}/package.json" ./
-          cp "${{ runner.temp }}/artifacts/built_repo_${{ env.GIT_ACTION }}/package-lock.json" ./
+
+          echo "Built artifact contents:"
+          ls -la "$BUILT_ARTIFACT_DIR"
+
+          if [ ! -f "$BUILT_ARTIFACT_DIR/package.json" ]; then
+            echo "Error: package.json is missing from the built artifact" >&2
+            exit 1
+          fi
+
+          if [ ! -f "$BUILT_ARTIFACT_DIR/package-lock.json" ]; then
+            echo "Error: package-lock.json is missing from the built artifact" >&2
+            exit 1
+          fi
+
+          echo "Copying built files from artifact..."
+
+          cp "$BUILT_ARTIFACT_DIR/package.json" ./
+          cp "$BUILT_ARTIFACT_DIR/package-lock.json" ./
+
+          if [ -d "$BUILT_ARTIFACT_DIR/dist" ]; then
+            echo "Copying dist directory..."
+            cp -r "$BUILT_ARTIFACT_DIR/dist" ./
+          fi
+
+          if [ -d "$BUILT_ARTIFACT_DIR/coverage" ]; then
+            echo "Copying coverage directory..."
+            cp -r "$BUILT_ARTIFACT_DIR/coverage" ./
+          fi
+
+          if [ -d "$BUILT_ARTIFACT_DIR/src" ]; then
+            echo "Copying updated source files..."
+            cp -r "$BUILT_ARTIFACT_DIR/src" ./
+          fi
+
+          echo "Built artifact application completed"
+
+      - name: Install Dependencies
+        run: |
+          echo "Installing dependencies..."
+          npm ci
 
       - name: Commit and Push Build Changes
         id: build_and_commit
@@ -212,6 +323,13 @@ jobs:
       - name: Version, Package, and Publish
         id: version_publish_compress
         run: |
+          if [ -z "$HEAD_REF" ] || [ -z "$GPR_INT" ]; then
+            echo "Error: Required environment variables are missing" >&2
+            echo "HEAD_REF: '$HEAD_REF'" >&2
+            echo "GPR_INT: '$GPR_INT'" >&2
+            exit 1
+          fi
+
           if [ ! -d "dist" ] || [ ! -f "package.json" ]; then
             echo "Dist directory or package.json not found. Skipping versioning, publishing, and compression."
             echo "skipped_all=true" >> $GITHUB_OUTPUT; exit 0
@@ -229,11 +347,16 @@ jobs:
           fi
 
           VERSION_BUMP="patch"
+
+          BRANCH_PATTERNS="feat/=minor,feature/=minor,fix/=patch,hotfix/=patch,major/=major"
+
+          echo "Using branch patterns: $BRANCH_PATTERNS"
           IFS=',' read -r -a patterns <<< "$BRANCH_PATTERNS"
           for pattern in "${patterns[@]}"; do
             IFS='=' read -r prefix bump <<< "$pattern"
-            if [[ "$BRANCH_NAME" == $prefix ]]; then
+            if [[ "$BRANCH_NAME" == $prefix* ]]; then
               VERSION_BUMP="$bump"
+              echo "Matched pattern '$prefix' -> version bump: $VERSION_BUMP"
               break
             fi
           done
@@ -241,11 +364,14 @@ jobs:
           echo "Updating package version (triggers postversion script for push & publish)…"
           npm version "$VERSION_BUMP" -m "chore(release): version %s for PR #$GPR_INT"
           echo "version_bump=$VERSION_BUMP" >> $GITHUB_OUTPUT
-          tar -czf dist.tar.gz dist;
+
+          echo "Creating distribution archives..."
+          tar -czf dist.tar.gz dist
           echo "dist_tarball=dist.tar.gz" >> $GITHUB_OUTPUT
           zip -r dist.zip dist
           echo "dist_zip=dist.zip" >> $GITHUB_OUTPUT
-          LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`);
+
+          LATEST_TAG=$(git describe --tags $(git rev-list --tags --max-count=1) 2>/dev/null || echo "v0.0.0")
           echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
 
           if [[ "${{ steps.build_and_commit.outputs.any_commits_made }}" == 'true' ]]; then
