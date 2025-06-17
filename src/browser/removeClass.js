@@ -62,9 +62,7 @@ export function removeClass(element, ...classNames) {
 		// empty strings (`''`), `0`, `NaN`, and `false` if they were passed.
 		// This is crucial because `element.classList.remove('')` would throw a DOMException.
 		// Other falsy values might also cause issues or be ignored by `remove` in an unpredictable way.
-		const validClassNamesToRemove = classNames.filter(
-			name => typeof name === 'string' && name.trim() !== '',
-		);
+		const validClassNamesToRemove = classNames.filter(Boolean);
 
 		// Step 3: Remove the filtered class names if any are valid.
 		// Only proceed if there are actual valid class names to remove.
