@@ -37,4 +37,4 @@ jobs:
         run: npm install
 
       - name: Coverage
-        run: npm run test:coverage
+        run: npm test
