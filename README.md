@@ -8,7 +8,7 @@
 [![Size](https://img.shields.io/github/repo-size/dylarcher/js.helper-utils.svg)](https://github.com/dylarcher/js.helper-utils)
 
 A collection of reusable JavaScript helper utility methods for browser and
-Node.js environments.
+Node.js environments. (public npmjs library: [@darcher/helper-utils](https://www.npmjs.com/package/@darcher/js-helpers "Go to npmjs library"))
 
 ---
 
@@ -64,7 +64,6 @@ Make sure you have the following installed:
   ```sh
   node -v
   ```
-
 - npm (version >=10.8.2 recommended)
 
   ```sh
@@ -79,7 +78,6 @@ Make sure you have the following installed:
    git clone https://github.com/dylarcher/js.helper-utils.git
    cd js.helper-utils
    ```
-
 2. Install NPM packages:
 
    ```sh
@@ -318,85 +316,3 @@ npm run test:coverage
 <table><tr><td>
 <details>
  <summary>Test coverage results report</summary>
-
-Coverage reports will be generated in the `coverage/` directory.
-
-To run tests in watch mode (re-running tests on file changes):
-
-```sh
-npm run test:watch
-```
-
-### Linting and Formatting
-
-This project uses ESLint for linting and Prettier for code formatting.
-
-- **Check formatting:**
-
-  ```sh
-  npm run format:check
-  ```
-
-- **Apply formatting:**
-
-  ```sh
-  npm run format
-  ```
-
-- **Check for linting errors:**
-
-  ```sh
-  npm run lint:check
-  ```
-
-- **Apply linting fixes:**
-
-  ```sh
-  npm run lint
-  ```
-
-It's recommended to set up your editor to use these tools for a better
-development experience.
-
-### Building the Project
-
-To build the project (compile TypeScript/JavaScript from `src/` to `dist/`):
-
-```sh
-npm run build
-npm run bundle
-```
-
----
-
-## Contributing
-
-Contributions are what make the open-source community such an amazing place to
-learn, inspire, and create. Any contributions you make are **greatly
-appreciated**.
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-Please ensure your code adheres to the existing style and all tests pass.
-
----
-
-## License
-
-Distributed under the MIT License. See `LICENSE` file (if one exists) or
-`package.json` for more information.
-
----
-
-## Contact
-
-Dylan Archer - @dylarcher - <dylarcher@gmail.com>
-
-Project Link:
-[https://github.com/dylarcher/js.helper-utils](https://github.com/dylarcher/js.helper-utils)
-Homepage:
-[https://dylarcher.github.io/js.helper-utils/](https://dylarcher.github.io/js.helper-utils/)
