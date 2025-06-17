@@ -75,7 +75,7 @@ jobs:
       - name: Checkout PR Branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ steps.pr_vars.outputs.HEAD_REF }}
+          ref: ${{ steps.pr_vars.outputs.HEAD_SHA }}
           token: ${{ env.GIT_TOKEN }}
           fetch-depth: 0
 
@@ -85,7 +85,7 @@ jobs:
           node-version: 22.x
           cache: npm
         env:
-          NODE_AUTH_TOKEN: ${{ steps.pr_vars.outputs.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Configure Git User and Synchronize Branch
         run: |
