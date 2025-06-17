@@ -285,6 +285,19 @@
 					</div>
 				</div>
 			</div>
+			<!-- API Key Button -->
+			<div id="api-key-button-container" class="absolute top-4 left-14 z-20">
+				<button
+					id="api-key-modal-toggle"
+					class="relative p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+					aria-label="Set API Key">
+					<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 1 1 0 000-2zM8 8a1 1 0 100-2 1 1 0 000 2zm2 2a1 1 0 10-2 0 1 1 0 002 0zm2-2a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd"></path></svg>
+					<span
+						id="api-key-notice-dot"
+						class="hidden absolute top-0 right-0 block h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-white dark:ring-gray-900"
+						aria-hidden="true"></span>
+				</button>
+			</div>
 		</div>
 		<div class="container mx-auto p-4 md:p-8 max-w-7xl">
 			<header
@@ -879,6 +892,21 @@
 									Implement unit tests for common use cases and edge cases to
 									ensure reliability.
 								</p>
+								<div class="mt-3">
+									<a
+										href="tests/index.html"
+										target="_blank"
+										rel="noopener noreferrer"
+										class="inline-flex items-center px-3 py-2 text-sm font-medium text-white rounded-md transition-colors duration-200"
+										style="background-color: var(--button-color); color: var(--button-text-color);"
+										onmouseover="this.style.opacity='0.9'"
+										onmouseout="this.style.opacity='1'">
+										<svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+										</svg>
+										View Test Coverage Results
+									</a>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -1060,6 +1088,34 @@
 				</div>
 			</div>
 		</div>
+
+		<!-- API Key Modal -->
+		<div
+			id="api-key-modal"
+			class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4"
+			role="dialog"
+			aria-modal="true"
+			aria-labelledby="api-key-modal-title">
+			<div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full">
+				<div class="p-6 border-b dark:border-gray-700 flex justify-between items-center" style="border-color: var(--border-color);">
+					<h3 id="api-key-modal-title" class="text-xl font-bold">Set Google Gemini API Key</h3>
+					<button id="api-key-modal-close-btn" class="text-2xl font-bold leading-none p-1" aria-label="Close API Key modal">&times;</button>
+				</div>
+				<div class="p-6 space-y-4">
+					<p class="text-sm text-gray-600 dark:text-gray-400">
+						Your API key is stored locally in your browser's <code>localStorage</code> and is only used to communicate with the Gemini API for explanations.
+					</p>
+					<div>
+						<label for="gemini-api-key-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">API Key</label>
+						<input type="password" id="gemini-api-key-input" class="block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter your API key">
+					</div>
+					<button id="save-api-key-btn" class="w-full font-bold py-2 px-4 rounded-lg transition-colors text-white hover:opacity-90" style="background-color: var(--button-color); color: var(--button-text-color);">
+						Save Key
+					</button>
+				</div>
+			</div>
+		</div>
+
 
 		<script>
 			const themeToggle = document.getElementById('theme-toggle');
@@ -1421,6 +1477,14 @@
 			const browserUtilsList = document.getElementById('browser-utils-list');
 			const systemUtilsList = document.getElementById('system-utils-list');
 
+			// API Key Modal Elements
+			const apiKeyModalToggle = document.getElementById('api-key-modal-toggle');
+			const apiKeyNoticeDot = document.getElementById('api-key-notice-dot');
+			const apiKeyModal = document.getElementById('api-key-modal');
+			const apiKeyModalCloseBtn = document.getElementById('api-key-modal-close-btn');
+			const geminiApiKeyInput = document.getElementById('gemini-api-key-input');
+			const saveApiKeyBtn = document.getElementById('save-api-key-btn');
+			const GEMINI_API_KEY_STORAGE_KEY = 'geminiApiKey';
 			const browserUtils = [
 				'addClass.js',
 				'copyToClipboardAsync.js',
@@ -1474,8 +1538,33 @@
 				.map(u => createUtilityLink(u, 'system'))
 				.join('');
 
+			// API Key Management
+			const getGeminiApiKey = () => {
+				return localStorage.getItem(GEMINI_API_KEY_STORAGE_KEY);
+			};
+
+			const updateApiKeyNoticeDot = () => {
+				const key = getGeminiApiKey();
+				if (key && key.trim() !== '') {
+					apiKeyNoticeDot.classList.add('hidden');
+				} else {
+					apiKeyNoticeDot.classList.remove('hidden');
+				}
+			};
+
 			const callGeminiAPI = async prompt => {
-				const apiKey = '';
+				const apiKey = getGeminiApiKey();
+
+				if (!apiKey || apiKey.trim() === '') {
+					console.warn('Gemini API key is not set or is empty. Please set it via the UI.');
+					return `<div class="text-center">
+								<p class="font-semibold text-lg mb-2">API Key Not Set</p>
+								<p class="mb-1">To use this feature, please set your Google Gemini API Key.</p>
+								<p class="mb-3">Click the <svg class="inline w-5 h-5 align-text-bottom" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 1 1 0 000-2zM8 8a1 1 0 100-2 1 1 0 000 2zm2 2a1 1 0 10-2 0 1 1 0 002 0zm2-2a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd"></path></svg> icon (top-left) to enter your key.</p>
+								<p><a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="text-sm underline" style="color: var(--accent-color-blue);">Get a Gemini API Key from Google AI Studio</a></p>
+							</div>`;
+				}
+
 				const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 				const payload = {
 					contents: [{ role: 'user', parts: [{ text: prompt }] }],
@@ -1505,14 +1594,16 @@
 				const open = () => {
 					lastFocusedElement = document.activeElement;
 					modal.classList.replace('hidden', 'flex');
-					closeBtn.focus();
+					// Focus the first focusable element in the modal or the close button
+					const firstFocusable = modal.querySelector('input, button, [href]');
+					if (firstFocusable) firstFocusable.focus();
+					else closeBtn.focus();
 				};
 				const close = () => {
 					modal.classList.replace('flex', 'hidden');
 					if (lastFocusedElement) lastFocusedElement.focus();
 				};
-
-				openBtn.addEventListener('click', open);
+				if (openBtn) openBtn.addEventListener('click', open);
 				closeBtn.addEventListener('click', close);
 				modal.addEventListener('click', e => e.target === modal && close());
 				modal.addEventListener('keydown', e => {
@@ -1545,6 +1636,23 @@
 				modalCloseBtn,
 			);
 			setupModal(downloadModal, downloadBtn, downloadModalCloseBtn);
+
+			// API Key Modal specific setup
+			const apiKeyModalSystem = setupModal(apiKeyModal, null, apiKeyModalCloseBtn); // openBtn handled manually
+
+			apiKeyModalToggle.addEventListener('click', () => {
+				const existingKey = getGeminiApiKey();
+				geminiApiKeyInput.value = existingKey || '';
+				apiKeyModalSystem.open();
+			});
+
+			saveApiKeyBtn.addEventListener('click', () => {
+				const key = geminiApiKeyInput.value.trim();
+				if (key) localStorage.setItem(GEMINI_API_KEY_STORAGE_KEY, key);
+				else localStorage.removeItem(GEMINI_API_KEY_STORAGE_KEY);
+				updateApiKeyNoticeDot();
+				apiKeyModalSystem.close();
+			});
 
 			utilityCollections.addEventListener('click', async e => {
 				const explainBtn = e.target.closest('.explain-btn');
@@ -1688,6 +1796,9 @@
 					}
 				}
 			});
+
+			// Initial UI updates
+			updateApiKeyNoticeDot();
 		</script>
 	</body>
 </html>
