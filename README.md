@@ -8,7 +8,7 @@
 [![Size](https://img.shields.io/github/repo-size/dylarcher/js.helper-utils.svg)](https://github.com/dylarcher/js.helper-utils)
 
 A collection of reusable JavaScript helper utility methods for browser and
-Node.js environments. (public npmjs library: [@darcher/helper-utils](https://www.npmjs.com/package/@darcher/js-helpers "Go to npmjs library"))
+Node.js environments. (public npmjs library: [@darcher/js-helpers](https://www.npmjs.com/package/@darcher/js-helpers "Go to npmjs library"))
 
 ---
 
