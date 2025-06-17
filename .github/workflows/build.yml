@@ -26,7 +26,8 @@ jobs:
   build:
     name: Build and Test
     runs-on: ubuntu-latest
-    # No special permissions needed for this job
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout PR Code
