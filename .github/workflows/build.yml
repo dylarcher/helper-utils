@@ -58,7 +58,6 @@ jobs:
         run: |
           mkdir -p pr_details
           echo "$GPR_INT" > pr_details/GPR_INT
-          echo "$GPR_INT" > pr_details/GPR_INT
           echo "$HEAD_REF" > pr_details/HEAD_REF
           echo "$HEAD_SHA" > pr_details/HEAD_SHA
       - name: Upload PR details
