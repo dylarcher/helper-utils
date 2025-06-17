@@ -88,8 +88,8 @@ jobs:
 
           echo "=== Loaded Values ==="
           echo "GPR_INT: '$GPR_INT' (length: ${#GPR_INT})"
-          echo "HEAD_REF: '$HEAD_REF' (length: ${#HEAD_REF})"
-          echo "HEAD_SHA: '$HEAD_SHA' (length: ${#HEAD_SHA})"
+          echo "HEAD_REF: '${{ steps.pr_vars.outputs.HEAD_REF }}' (length: ${#HEAD_REF})"
+          echo "HEAD_SHA: '${{ steps.pr_vars.outputs.HEAD_SHA }}' (length: ${#HEAD_SHA})"
 
           if [[ ! "$GPR_INT" =~ ^[0-9]+$ ]]; then
             echo "Error: Invalid GPR_INT value: '$GPR_INT'" >&2
@@ -97,14 +97,14 @@ jobs:
             exit 1
           fi
 
-          if [[ ! "$HEAD_SHA" =~ ^[a-f0-9]{40}$ ]]; then
-            echo "Error: Invalid HEAD_SHA value: '$HEAD_SHA'" >&2
+          if [[ ! "${{ steps.pr_vars.outputs.HEAD_SHA }}" =~ ^[a-f0-9]{40}$ ]]; then
+            echo "Error: Invalid HEAD_SHA value: '${{ steps.pr_vars.outputs.HEAD_SHA }}'" >&2
             echo "Expected: 40-character hexadecimal string (Git SHA-1)" >&2
             exit 1
           fi
 
-          if [[ ! "$HEAD_REF" =~ ^[a-zA-Z0-9/_-]+$ ]]; then
-            echo "Error: Invalid HEAD_REF value: '$HEAD_REF'" >&2
+          if [[ ! "${{ steps.pr_vars.outputs.HEAD_REF }}" =~ ^[a-zA-Z0-9/_-]+$ ]]; then
+            echo "Error: Invalid HEAD_REF value: '${{ steps.pr_vars.outputs.HEAD_REF }}'" >&2
             echo "Expected: branch/tag name with alphanumeric, slash, underscore, hyphen characters" >&2
             exit 1
           fi
@@ -113,13 +113,13 @@ jobs:
           echo "All metadata values are valid"
 
           echo "GPR_INT=$GPR_INT" >> $GITHUB_OUTPUT
-          echo "HEAD_REF=$HEAD_REF" >> $GITHUB_OUTPUT
-          echo "HEAD_SHA=$HEAD_SHA" >> $GITHUB_OUTPUT
+          echo "HEAD_REF=${{ steps.pr_vars.outputs.HEAD_REF }}" >> $GITHUB_OUTPUT
+          echo "HEAD_SHA=${{ steps.pr_vars.outputs.HEAD_SHA }}" >> $GITHUB_OUTPUT
 
           {
             echo "GPR_INT=$GPR_INT"
-            echo "HEAD_REF=$HEAD_REF"
-            echo "HEAD_SHA=$HEAD_SHA"
+            echo "HEAD_REF=${{ steps.pr_vars.outputs.HEAD_REF }}"
+            echo "HEAD_SHA=${{ steps.pr_vars.outputs.HEAD_SHA }}"
           } >> $GITHUB_ENV
 
       - name: Debug Environment Variables
@@ -129,8 +129,8 @@ jobs:
           echo "HEAD_SHA from step output: '${{ steps.pr_vars.outputs.HEAD_SHA }}'"
           echo "GPR_INT from step output: '${{ steps.pr_vars.outputs.GPR_INT }}'"
           echo ""
-          echo "HEAD_REF from env: '$HEAD_REF'"
-          echo "HEAD_SHA from env: '$HEAD_SHA'"
+          echo "HEAD_REF from env: '${{ steps.pr_vars.outputs.HEAD_REF }}'"
+          echo "HEAD_SHA from env: '${{ steps.pr_vars.outputs.HEAD_SHA }}'"
           echo "GPR_INT from env: '$GPR_INT'"
           echo ""
           echo "Git context:"
@@ -161,38 +161,38 @@ jobs:
 
           echo "Debugging git state:"
           echo "Current HEAD: $(git rev-parse HEAD)"
-          echo "Expected HEAD_SHA: $HEAD_SHA"
-          echo "Expected HEAD_REF: $HEAD_REF"
+          echo "Expected HEAD_SHA: ${{ steps.pr_vars.outputs.HEAD_SHA }}"
+          echo "Expected HEAD_REF: ${{ steps.pr_vars.outputs.HEAD_REF }}"
 
           echo "Fetching all refs..."
           git fetch origin --all --tags
 
-          if ! git cat-file -e "$HEAD_SHA" 2>/dev/null; then
-            echo "Error: Commit $HEAD_SHA does not exist in the repository" >&2
+          if ! git cat-file -e "${{ steps.pr_vars.outputs.HEAD_SHA }}" 2>/dev/null; then
+            echo "Error: Commit ${{ steps.pr_vars.outputs.HEAD_SHA }} does not exist in the repository" >&2
             exit 1
           fi
 
-          if git show-ref --verify --quiet "refs/remotes/origin/$HEAD_REF"; then
-            echo "Found remote branch: origin/$HEAD_REF"
-            git checkout -B "$HEAD_REF" "origin/$HEAD_REF"
-          elif git show-ref --verify --quiet "refs/tags/$HEAD_REF"; then
-            echo "Found tag: $HEAD_REF"
-            git checkout "$HEAD_REF"
+          if git show-ref --verify --quiet "refs/remotes/origin/${{ steps.pr_vars.outputs.HEAD_REF }}"; then
+            echo "Found remote branch: origin/${{ steps.pr_vars.outputs.HEAD_REF }}"
+            git checkout -B "${{ steps.pr_vars.outputs.HEAD_REF }}" "origin/${{ steps.pr_vars.outputs.HEAD_REF }}"
+          elif git show-ref --verify --quiet "refs/tags/${{ steps.pr_vars.outputs.HEAD_REF }}"; then
+            echo "Found tag: ${{ steps.pr_vars.outputs.HEAD_REF }}"
+            git checkout "${{ steps.pr_vars.outputs.HEAD_REF }}"
           else
-            echo "Branch or tag $HEAD_REF not found, checking out commit directly"
-            git checkout -B "$HEAD_REF" "$HEAD_SHA"
+            echo "Branch or tag ${{ steps.pr_vars.outputs.HEAD_REF }} not found, checking out commit directly"
+            git checkout -B "${{ steps.pr_vars.outputs.HEAD_REF }}" "${{ steps.pr_vars.outputs.HEAD_SHA }}"
           fi
 
-          echo "Resetting to exact commit: $HEAD_SHA"
-          git reset --hard "$HEAD_SHA"
+          echo "Resetting to exact commit: ${{ steps.pr_vars.outputs.HEAD_SHA }}"
+          git reset --hard "${{ steps.pr_vars.outputs.HEAD_SHA }}"
 
           CURRENT_SHA=$(git rev-parse HEAD)
-          if [ "$CURRENT_SHA" != "$HEAD_SHA" ]; then
-            echo "Error: Failed to checkout correct commit. Expected: $HEAD_SHA, Got: $CURRENT_SHA" >&2
+          if [ "$CURRENT_SHA" != "${{ steps.pr_vars.outputs.HEAD_SHA }}" ]; then
+            echo "Error: Failed to checkout correct commit. Expected: ${{ steps.pr_vars.outputs.HEAD_SHA }}, Got: $CURRENT_SHA" >&2
             exit 1
           fi
 
-          echo "Successfully positioned at commit $HEAD_SHA on branch $HEAD_REF"
+          echo "Successfully positioned at commit ${{ steps.pr_vars.outputs.HEAD_SHA }} on branch ${{ steps.pr_vars.outputs.HEAD_REF }}"
 
       - name: Download and Apply Built Code Artifact
         uses: dawidd6/action-download-artifact@ac66b43f0e6a346234dd65d4d0c8fbb31cb316e5
@@ -313,8 +313,8 @@ jobs:
             echo "Dist directory not found in artifact, skipping dist commit."
           fi
           if [ "$ANY_COMMITS_MADE" = true ]; then
-            echo "Pushing build changes to $HEAD_REF…"
-            git push origin "$HEAD_REF"
+            echo "Pushing build changes to ${{ steps.pr_vars.outputs.HEAD_REF }}…"
+            git push origin "${{ steps.pr_vars.outputs.HEAD_REF }}"
           else
             echo "No changes were committed by this step."
           fi
@@ -323,9 +323,9 @@ jobs:
       - name: Version, Package, and Publish
         id: version_publish_compress
         run: |
-          if [ -z "$HEAD_REF" ] || [ -z "$GPR_INT" ]; then
+          if [ -z "${{ steps.pr_vars.outputs.HEAD_REF }}" ] || [ -z "$GPR_INT" ]; then
             echo "Error: Required environment variables are missing" >&2
-            echo "HEAD_REF: '$HEAD_REF'" >&2
+            echo "HEAD_REF: '${{ steps.pr_vars.outputs.HEAD_REF }}'" >&2
             echo "GPR_INT: '$GPR_INT'" >&2
             exit 1
           fi
@@ -335,7 +335,7 @@ jobs:
             echo "skipped_all=true" >> $GITHUB_OUTPUT; exit 0
           fi; echo "skipped_all=false" >> $GITHUB_OUTPUT
 
-          BRANCH_NAME="$HEAD_REF"
+          BRANCH_NAME="${{ steps.pr_vars.outputs.HEAD_REF }}"
           if [[ ! "$BRANCH_NAME" =~ ^[a-zA-Z0-9/_-]+$ ]]; then
             echo "Invalid branch name format: $BRANCH_NAME" >&2
             exit 1
