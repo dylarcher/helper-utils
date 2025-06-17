@@ -64,6 +64,7 @@ Make sure you have the following installed:
   ```sh
   node -v
   ```
+
 - npm (version >=10.8.2 recommended)
 
   ```sh
@@ -78,6 +79,7 @@ Make sure you have the following installed:
    git clone https://github.com/dylarcher/js.helper-utils.git
    cd js.helper-utils
    ```
+
 2. Install NPM packages:
 
    ```sh
@@ -105,17 +107,17 @@ import { addClass, readFileAsync } from '@dylarcher/js-helpers';
 // Example for a browser utility
 const myElement = document.getElementById('my-element');
 if (myElement) {
-	addClass(myElement, 'new-class', 'another-class');
+ addClass(myElement, 'new-class', 'another-class');
 }
 
 // Example for a system utility (if in a Node.js environment)
 async function logFile() {
-	try {
-		const content = await readFileAsync('path/to/my-file.txt');
-		console.info(content);
-	} catch (err) {
-		console.error('Error reading file:', err);
-	}
+ try {
+  const content = await readFileAsync('path/to/my-file.txt');
+  console.info(content);
+ } catch (err) {
+  console.error('Error reading file:', err);
+ }
 }
 logFile();
 ```
@@ -185,9 +187,9 @@ These functions are intended for use in a browser environment.
 import { createElement, addClass, setStyle } from '@dylarcher/js-helpers';
 
 const newDiv = createElement(
-	'div',
-	{ id: 'myDiv', 'data-custom': 'value' },
-	'Hello World!',
+ 'div',
+ { id: 'myDiv', 'data-custom': 'value' },
+ 'Hello World!',
 );
 addClass(newDiv, 'mt-2', 'p-4');
 setStyle(newDiv, { backgroundColor: 'lightblue', borderRadius: '5px' });
@@ -238,30 +240,30 @@ polyfills.
 
 ```javascript
 import {
-	writeFileAsync,
-	readFileAsync,
-	joinPaths,
-	createDirectory,
+ writeFileAsync,
+ readFileAsync,
+ joinPaths,
+ createDirectory,
 } from '@dylarcher/js-helpers';
 import { homedir } from 'os'; // Node.js core module
 
 async function manageFiles() {
-	const userHome = homedir();
-	const myAppDir = joinPaths(userHome, '.myApp');
-	const myFile = joinPaths(myAppDir, 'example.txt');
+ const userHome = homedir();
+ const myAppDir = joinPaths(userHome, '.myApp');
+ const myFile = joinPaths(myAppDir, 'example.txt');
 
-	try {
-		await createDirectory(myAppDir);
-		console.info('Directory created:', myAppDir);
+ try {
+  await createDirectory(myAppDir);
+  console.info('Directory created:', myAppDir);
 
-		await writeFileAsync(myFile, 'Hello from js-helpers!\nThis is a new line.');
-		console.info('File written:', myFile);
+  await writeFileAsync(myFile, 'Hello from js-helpers!\nThis is a new line.');
+  console.info('File written:', myFile);
 
-		const content = await readFileAsync(myFile, 'utf8');
-		console.info('File content:', content);
-	} catch (error) {
-		console.error('An error occurred:', error);
-	}
+  const content = await readFileAsync(myFile, 'utf8');
+  console.info('File content:', content);
+ } catch (error) {
+  console.error('An error occurred:', error);
+ }
 }
 
 manageFiles();
@@ -323,6 +325,84 @@ To run tests and generate a coverage report (currently 0%):
 npm run test:coverage
 ```
 
-<table><tr><td>
-<details>
- <summary>Test coverage results report</summary>
+Coverage reports will be generated in the `coverage/` directory.
+
+To run tests in watch mode (re-running tests on file changes):
+
+```sh
+npm run test:watch
+```
+
+### Linting and Formatting
+
+This project uses ESLint for linting and Prettier for code formatting.
+
+- **Check formatting:**
+
+  ```sh
+  npm run format:check
+  ```
+
+- **Apply formatting:**
+
+  ```sh
+  npm run format
+  ```
+
+- **Check for linting errors:**
+
+  ```sh
+  npm run lint:check
+  ```
+
+- **Apply linting fixes:**
+
+  ```sh
+  npm run lint
+  ```
+
+It's recommended to set up your editor to use these tools for a better
+development experience.
+
+### Building the Project
+
+To build the project (compile TypeScript/JavaScript from `src/` to `dist/`):
+
+```sh
+npm run build
+npm run bundle
+```
+
+---
+
+## Contributing
+
+Contributions are what make the open-source community such an amazing place to
+learn, inspire, and create. Any contributions you make are **greatly
+appreciated**.
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+Please ensure your code adheres to the existing style and all tests pass.
+
+---
+
+## License
+
+Distributed under the MIT License. See `LICENSE` file (if one exists) or
+`package.json` for more information.
+
+---
+
+## Contact
+
+Dylan Archer - @dylarcher - <dylarcher@gmail.com>
+
+Project Link:
+[https://github.com/dylarcher/js.helper-utils](https://github.com/dylarcher/js.helper-utils)
+Homepage:
+[https://dylarcher.github.io/js.helper-utils/](https://dylarcher.github.io/js.helper-utils/)
