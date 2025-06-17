@@ -49,8 +49,9 @@ jobs:
           git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
 
           #* · The checkout action checks out the PR head SHA. We need to be on the branch for commits.
-          git fetch origin ${{ github.event.pull_request.head.ref }}
-          git checkout ${{ github.event.pull_request.head.ref }}
+          HEAD_REF="${{ github.event.pull_request.head.ref }}"
+          git fetch origin "$HEAD_REF"
+          git checkout "$HEAD_REF"
 
       - name: Check-in
         id: build_and_commit
