@@ -75,7 +75,7 @@ jobs:
       - name: Checkout PR Branch
         uses: actions/checkout@v4
         with:
-          ref: $HEAD_REF
+          ref: ${{ steps.pr_vars.outputs.HEAD_REF }}
           token: ${{ env.GIT_TOKEN }}
           fetch-depth: 0
 
