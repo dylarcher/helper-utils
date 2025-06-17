@@ -55,6 +55,8 @@ jobs:
 
       - name: Check-in
         id: build_and_commit
+        env:
+          BRANCH_REF: ${{ github.event.pull_request.head.ref }}
         run: |
           echo "Running build process (lint fixes, test coverage, dist generation)…"
 
@@ -117,8 +119,8 @@ jobs:
             echo "Dist directory not found, skipping dist commit."
           fi
           if [ "$ANY_COMMITS_MADE" = true ]; then
-            echo "Pushing committed changes to ${{ github.event.pull_request.head.ref }}…"
-            git push origin ${{ github.event.pull_request.head.ref }}
+            echo "Pushing committed changes to $BRANCH_REF…"
+            git push origin "$BRANCH_REF"
           else
             echo "No changes were committed by this step."
           fi
