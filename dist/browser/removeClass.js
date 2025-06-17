@@ -51,33 +51,31 @@
  * removeClass(plainObject, 'anyClass'); // Does nothing, no error thrown.
  */
 export function removeClass(element, ...classNames) {
-	// Step 1: Validate the input element.
-	// Check if `element` is provided (not null/undefined) and if it has a `classList` property.
-	// `element?.classList` uses optional chaining for safe access.
-	// If `element` is invalid or lacks `classList`, the function exits silently.
-	if (element?.classList) {
-		// Step 2: Filter the list of class names to remove.
-		// `classNames.filter(Boolean)` creates a new array containing only truthy values
-		// from the `classNames` arguments. This effectively removes `null`, `undefined`,
-		// empty strings (`''`), `0`, `NaN`, and `false` if they were passed.
-		// This is crucial because `element.classList.remove('')` would throw a DOMException.
-		// Other falsy values might also cause issues or be ignored by `remove` in an unpredictable way.
-		const validClassNamesToRemove = classNames.filter(
-			name => typeof name === 'string' && name.trim() !== '',
-		);
-
-		// Step 3: Remove the filtered class names if any are valid.
-		// Only proceed if there are actual valid class names to remove.
-		if (validClassNamesToRemove.length > 0) {
-			// Use the spread operator (`...`) to pass the filtered class names as individual
-			// arguments to `element.classList.remove()`.
-			// For example, if `validClassNamesToRemove` is `['class1', 'class2']`,
-			// this is equivalent to calling `element.classList.remove('class1', 'class2')`.
-			// `classList.remove()` will:
-			// - Remove each specified class if it's present on the element.
-			// - Silently ignore any specified classes that are not present on the element (no error is thrown).
-			element.classList.remove(...validClassNamesToRemove);
-		}
-	}
-	// If element is invalid or has no classList, the function implicitly does nothing and returns undefined.
+    // Step 1: Validate the input element.
+    // Check if `element` is provided (not null/undefined) and if it has a `classList` property.
+    // `element?.classList` uses optional chaining for safe access.
+    // If `element` is invalid or lacks `classList`, the function exits silently.
+    if (element?.classList) {
+        // Step 2: Filter the list of class names to remove.
+        // `classNames.filter(Boolean)` creates a new array containing only truthy values
+        // from the `classNames` arguments. This effectively removes `null`, `undefined`,
+        // empty strings (`''`), `0`, `NaN`, and `false` if they were passed.
+        // This is crucial because `element.classList.remove('')` would throw a DOMException.
+        // Other falsy values might also cause issues or be ignored by `remove` in an unpredictable way.
+        const validClassNamesToRemove = classNames.filter(name => typeof name === 'string' && name.trim() !== '');
+        // Step 3: Remove the filtered class names if any are valid.
+        // Only proceed if there are actual valid class names to remove.
+        if (validClassNamesToRemove.length > 0) {
+            // Use the spread operator (`...`) to pass the filtered class names as individual
+            // arguments to `element.classList.remove()`.
+            // For example, if `validClassNamesToRemove` is `['class1', 'class2']`,
+            // this is equivalent to calling `element.classList.remove('class1', 'class2')`.
+            // `classList.remove()` will:
+            // - Remove each specified class if it's present on the element.
+            // - Silently ignore any specified classes that are not present on the element (no error is thrown).
+            element.classList.remove(...validClassNamesToRemove);
+        }
+    }
+    // If element is invalid or has no classList, the function implicitly does nothing and returns undefined.
 }
+//# sourceMappingURL=removeClass.js.map

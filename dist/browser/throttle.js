@@ -87,44 +87,40 @@
  * @param {number} limit
  */
 export function throttle(func, limit) {
-	// `lastCallTime`: Timestamp (milliseconds since epoch) of the last time `func` was actually executed.
-	// Initialized to 0, allowing the first call to `func` to proceed immediately.
-	let lastCallTime = 0;
-
-	// `lastResult`: Stores the result of the last successful execution of `func`.
-	// This is used if the throttle design were to return the last known result on throttled calls.
-	// However, this specific implementation returns `undefined` for throttled calls.
-	/** @type {any} */
-	let lastResult; // The type 'any' is used here as TReturn isn't directly accessible in this scope for lastResult
-
-	// This is the actual throttled function that gets returned.
-	// It uses a closure to maintain access to `lastCallTime`, `lastResult`, `func`, and `limit`.
-	/** @ts-ignore */
-	return function (...args) {
-		// Get the current timestamp.
-		const now = Date.now();
-
-		// Check if the call should proceed:
-		// 1. If `limit` is 0, throttling is disabled, so always proceed.
-		// 2. If `limit` > 0, check if enough time (`limit` milliseconds) has passed since `lastCallTime`.
-		if (limit === 0 || now - lastCallTime >= limit) {
-			// Update `lastCallTime` to the current timestamp, marking this execution.
-			lastCallTime = now;
-
-			// Execute the original function (`func`).
-			// `func.apply(this, args)` calls `func` with:
-			// - `this`: The `this` context from how the throttled function was called.
-			// - `args`: The arguments passed to the throttled function.
-			// @ts-ignore - Suppresses TypeScript error if `this` context is not strictly typed,
-			// or if TArgs/TReturn are complex and apply isn't perfectly matched by TS inference here.
-			lastResult = func.apply(this, args);
-
-			// Return the result of the executed function.
-			return lastResult;
-		}
-		// The call is throttled because not enough time has passed since the last execution.
-		// As per the function's design, return `undefined` for throttled calls.
-		// (An alternative design might return `lastResult` here, to provide the most recent successful value).
-		return undefined;
-	};
+    // `lastCallTime`: Timestamp (milliseconds since epoch) of the last time `func` was actually executed.
+    // Initialized to 0, allowing the first call to `func` to proceed immediately.
+    let lastCallTime = 0;
+    // `lastResult`: Stores the result of the last successful execution of `func`.
+    // This is used if the throttle design were to return the last known result on throttled calls.
+    // However, this specific implementation returns `undefined` for throttled calls.
+    /** @type {any} */
+    let lastResult; // The type 'any' is used here as TReturn isn't directly accessible in this scope for lastResult
+    // This is the actual throttled function that gets returned.
+    // It uses a closure to maintain access to `lastCallTime`, `lastResult`, `func`, and `limit`.
+    /** @ts-ignore */
+    return function (...args) {
+        // Get the current timestamp.
+        const now = Date.now();
+        // Check if the call should proceed:
+        // 1. If `limit` is 0, throttling is disabled, so always proceed.
+        // 2. If `limit` > 0, check if enough time (`limit` milliseconds) has passed since `lastCallTime`.
+        if (limit === 0 || now - lastCallTime >= limit) {
+            // Update `lastCallTime` to the current timestamp, marking this execution.
+            lastCallTime = now;
+            // Execute the original function (`func`).
+            // `func.apply(this, args)` calls `func` with:
+            // - `this`: The `this` context from how the throttled function was called.
+            // - `args`: The arguments passed to the throttled function.
+            // @ts-ignore - Suppresses TypeScript error if `this` context is not strictly typed,
+            // or if TArgs/TReturn are complex and apply isn't perfectly matched by TS inference here.
+            lastResult = func.apply(this, args);
+            // Return the result of the executed function.
+            return lastResult;
+        }
+        // The call is throttled because not enough time has passed since the last execution.
+        // As per the function's design, return `undefined` for throttled calls.
+        // (An alternative design might return `lastResult` here, to provide the most recent successful value).
+        return undefined;
+    };
 }
+//# sourceMappingURL=throttle.js.map
