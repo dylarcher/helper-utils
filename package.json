@@ -81,7 +81,7 @@
         "url": "git+https://github.com/dylarcher/js.helper-utils.git"
     },
     "scripts": {
-        "build": "npm run clean:dist && tsc",
+        "build": "tsc",
         "changelog:released": "npx auto-changelog --package --output CHANGELOG.md --template keepachangelog --commit-limit false",
         "changelog:unreleased": "npx auto-changelog --commit-limit false --unreleased-only --template keepachangelog",
         "clean:c8": "rimraf coverage/tmp/",
@@ -96,7 +96,6 @@
         "lint:write": "npm run lint -- --fix src",
         "postversion": "git push && git push --tags && npm run publish:npm",
         "prebuild": "npm run clean:dist && npm run clean:c8 && npm run lint:write && npm run test:coverage",
-        "preinstall": "npm run clean:npm",
         "prepare": "npm dedupe && npm prune",
         "prepublishOnly": "npm run build",
         "publish:npm": "npm publish",
