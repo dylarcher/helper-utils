@@ -1,0 +1,48 @@
+name: Generate API Documentation
+
+on:
+  push:
+    branches:
+      - main # Or your default branch
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  generate_docs:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Required to commit back to the repo
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x' # Specify your desired Node.js version
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: |
+          npm install @google/generative-ai
+          echo "Installed @google/generative-ai"
+
+      - name: Generate Documentation
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          node scripts/generate-documentation.js
+
+      - name: Commit and Push Documentation
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add docs/gemini/
+          # Check if there are changes to commit
+          if git diff --staged --quiet; then
+            echo "No changes to commit in documentation."
+          else
+            git commit -m "docs: Generate API documentation"
+            git push
+            echo "Documentation committed and pushed."
+          fi

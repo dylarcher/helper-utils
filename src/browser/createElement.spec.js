@@ -208,5 +208,24 @@ describe('createElement(tagName, attributes, children)', () => {
 			assert.strictEqual(element.childNodes[1].textContent, '');
 			assert.strictEqual(element.childNodes[2].textContent, 'text');
 		});
+
+		it('should handle attributes with null and undefined values', () => {
+			const attributes = {
+				'data-valid': 'valid-value',
+				'data-null': null,
+				'data-undefined': undefined,
+				'data-empty': '',
+				'data-zero': 0,
+			};
+
+			const element = createElement('div', attributes);
+
+			// Only non-null/undefined values should be set as attributes
+			assert.strictEqual(element.getAttribute('data-valid'), 'valid-value');
+			assert.strictEqual(element.getAttribute('data-null'), null); // Should not be set
+			assert.strictEqual(element.getAttribute('data-undefined'), null); // Should not be set
+			assert.strictEqual(element.getAttribute('data-empty'), ''); // Empty string is valid
+			assert.strictEqual(element.getAttribute('data-zero'), '0'); // 0 is valid
+		});
 	});
 });

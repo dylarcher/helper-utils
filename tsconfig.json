@@ -30,8 +30,10 @@
 		"dist",
 		"test",
 		"utils",
+		"coverage",
 		"src/**/*.spec.js",
-		"src/**/*.test.js"
+		"src/**/*.test.js",
+		"scripts"
 	],
 	"include": ["src/**/*.js"],
 	"typeAcquisition": {

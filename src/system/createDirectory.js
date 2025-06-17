@@ -1,57 +1,124 @@
+// Import the `promises` API from Node.js's built-in 'fs' (file system) module.
+// This provides asynchronous file system methods that return Promises.
 import fs from 'node:fs/promises';
 
 /**
- * Asynchronously creates a directory. This function is a wrapper around Node.js's `fs.mkdir`.
+ * Asynchronously creates a directory at the specified `dirPath`.
+ * This function is essentially a wrapper around the Node.js `fs.promises.mkdir()` method,
+ * providing a convenient default for recursive directory creation.
  *
- * By default, it creates directories recursively (`options.recursive = true`).
+ * By default, this function will create directories recursively (i.e., if parent directories
+ * in the path do not exist, they will be created). This is controlled by the `recursive: true`
+ * option, which is enabled by default.
  *
- * @param {string} dirPath - The file system path of the directory to create.
+ * If `recursive: true` (the default):
+ *   - If the directory already exists, the Promise resolves successfully, and no error is thrown.
+ *     The resolved value will be `undefined` in this case (or the path of the first
+ *     directory actually created if some part of the path was new).
+ *   - It creates parent directories as needed.
+ *
+ * If `recursive: false` is passed in options:
+ *   - The function will throw an error if any parent directory in the path does not exist.
+ *   - It will also throw an error (typically `EEXIST`) if the target `dirPath` itself already exists.
+ *
+ * @async
+ * @param {string} dirPath - The file system path of the directory to be created.
+ *                           This path should conform to the conventions of the underlying operating system.
  * @param {import('node:fs').MakeDirectoryOptions & {recursive?: boolean}} [options={ recursive: true }] -
- *   Optional. Configuration options for `fs.mkdir`. Defaults to `{ recursive: true }`.
- *   Common options include `recursive` (boolean) and `mode` (number).
- * @returns {Promise<string | undefined>} A promise that resolves when the directory is created.
- *   - If `options.recursive` is `true`, the promise resolves with the path of the first
- *     directory created, or `undefined` if no new directory was created (e.g., path already existed).
- *   - If `options.recursive` is `false` (or not set and the default is changed), the promise
- *     resolves with `undefined`.
- * @throws {Error} Throws an error if `fs.mkdir` fails. Common reasons include:
- *   - `EACCES`: Permission denied.
- *   - `EEXIST`: Path already exists and is not a directory (and `recursive` is `false`).
- *               Note: if path exists and is a directory, `fs.mkdir` with `recursive: true`
- *               does not throw an error.
- *   - `ENOENT`: A component of the path prefix does not exist (and `recursive` is `false`).
- *   - `EINVAL`: Invalid path or options.
+ *   Optional. Configuration options for `fs.promises.mkdir()`.
+ *   Defaults to `{ recursive: true }`, enabling recursive directory creation.
+ *   Other common options include `mode` (permission string or number, e.g., `0o755`).
+ * @returns {Promise<string | undefined>} A Promise that resolves when the directory (and any
+ *   necessary parents, if `recursive: true`) has been created.
+ *   - If `options.recursive` is `true` (the default): The Promise resolves with the path of the
+ *     first directory that had to be created. If all parts of the path already existed,
+ *     it resolves with `undefined`.
+ *   - If `options.recursive` is `false`: The Promise resolves with `undefined` upon successful
+ *     creation of the non-recursively specified directory.
+ * @throws {Error} Throws an error if `fs.promises.mkdir()` fails. Common error codes include:
+ *   - `EACCES`: Permission denied (user does not have permission to create the directory).
+ *   - `EEXIST`: Path already exists and is not a directory (only if `recursive` is `false`),
+ *               or path already exists as a file.
+ *   - `ENOENT`: A component of the path prefix does not exist (only if `recursive` is `false`).
+ *   - `EINVAL`: Invalid path or options provided.
+ *   - Other file system errors.
  *
  * @example
- * // Basic usage (recursive by default)
- * async function manageMyDirectory() {
+ * // Example 1: Basic recursive directory creation
+ * async function setupAppDirectories() {
  *   try {
- *     const newDirPath = await createDirectory('./my-app/new-folder');
- *     if (newDirPath) {
- *       console.info(`Directory created at: ${newDirPath}`);
+ *     const logsPath = await createDirectory('./app-data/logs');
+ *     if (logsPath) {
+ *       console.log(`Logs directory created at: ${logsPath}`);
  *     } else {
- *       console.info('Directory already existed or no new directory path returned.');
+ *       console.log('Logs directory already existed or no specific path returned.');
  *     }
  *
- *     // Create a directory with specific mode (non-recursive)
- *     // First ensure './my-app' exists if using non-recursive for a subfolder
- *     await createDirectory('./my-app'); // Ensure parent exists
- *     await createDirectory('./my-app/another-folder', { recursive: false, mode: 0o755 });
- *     console.info('Another folder created with specific mode.');
- *
+ *     const assetsPath = await createDirectory('./app-data/assets/images', { mode: 0o775 });
+ *     if (assetsPath) {
+ *       console.log(`Assets images directory created at: ${assetsPath} with mode 0775`);
+ *     }
  *   } catch (error) {
- *     console.error(`Failed to create directory: ${error.message}`);
- *     // Handle specific error codes if necessary
+ *     console.error(`Failed to set up app directories: ${error.message}`);
+ *   }
+ * }
+ * // setupAppDirectories();
+ *
+ * @example
+ * // Example 2: Non-recursive directory creation (requires parent to exist)
+ * async function createSpecificFolder() {
+ *   try {
+ *     // First, ensure the parent directory exists (can use createDirectory itself)
+ *     await createDirectory('./app-data'); // Recursive by default, ensures './app-data' exists
+ *
+ *     // Now, create a subfolder non-recursively
+ *     await createDirectory('./app-data/config', { recursive: false });
+ *     console.log('Config folder created successfully (non-recursively).');
+ *   } catch (error) {
+ *     console.error(`Error in createSpecificFolder: ${error.message}`);
  *     if (error.code === 'EEXIST') {
- *       console.warn('Path already exists and is not a directory, or recursive is false.');
+ *       console.warn('Config folder already exists.');
+ *     } else if (error.code === 'ENOENT') {
+ *       console.warn('Parent directory for config folder does not exist.');
  *     }
  *   }
  * }
+ * // createSpecificFolder();
  *
- * // manageMyDirectory();
+ * @example
+ * // Example 3: Directory already exists with recursive: true (no error)
+ * async function createExisting() {
+ *   try {
+ *     await createDirectory('./app-data'); // First call (might create)
+ *     const result = await createDirectory('./app-data'); // Second call (already exists)
+ *     console.log('Attempted to create existing directory:', result === undefined ? 'No new path created' : result);
+ *   } catch (error) {
+ *     console.error('This should not happen if recursive is true and path is a directory:', error);
+ *   }
+ * }
+ * // createExisting();
  */
 export async function createDirectory(dirPath, options = { recursive: true }) {
-	// fs.mkdir with recursive: true by default will not throw if the directory already exists.
-	// It returns the first directory path created, or undefined if all paths already existed.
+	// Call Node.js's asynchronous `fs.promises.mkdir()` function.
+	// - `dirPath`: The path where the directory should be created.
+	// - `options`: An object that can specify options like:
+	//   - `recursive`: If `true`, parent directories will be created as needed.
+	//     If `false`, `mkdir` will fail if the parent path doesn't exist.
+	//     The default in this wrapper is `true`.
+	//   - `mode`: Sets the permissions for the created directory (e.g., `0o755`).
+	//
+	// Behavior with `recursive: true` (default):
+	// - If the directory (and all parents) already exists, the promise resolves,
+	//   and `fs.mkdir` returns `undefined` (or the path of the first directory created if any was).
+	// - If the path contains components that don't exist, they are created.
+	//
+	// Behavior with `recursive: false`:
+	// - If the parent path doesn't exist, it throws an `ENOENT` error.
+	// - If `dirPath` itself already exists, it throws an `EEXIST` error.
+	//
+	// The returned Promise from `fs.mkdir` resolves with:
+	// - `undefined` if `recursive` is `false` and successful.
+	// - The first directory path created if `recursive` is `true` and directories were made.
+	// - `undefined` if `recursive` is `true` and no new directory path was needed (all existed).
 	return fs.mkdir(dirPath, options);
 }
