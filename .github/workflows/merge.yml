@@ -24,7 +24,7 @@ jobs:
 
     steps:
       - name: Download PR Metadata Artifact
-        uses: dawidd6/action-download-artifact@216b2408f30059a88a101a88a9018b7e2c9134ed
+        uses: dawidd6/action-download-artifact@ac66b43f0e6a346234dd65d4d0c8fbb31cb316e5
         with:
           workflow_conclusion: success
           run_id: $GIT_ACTION
@@ -100,7 +100,7 @@ jobs:
           fi
 
       - name: Download and Apply Built Code Artifact
-        uses: dawidd6/action-download-artifact@216b2408f30059a88a101a88a9018b7e2c9134ed
+        uses: dawidd6/action-download-artifact@ac66b43f0e6a346234dd65d4d0c8fbb31cb316e5
         with:
           workflow_conclusion: success
           run_id: $GIT_ACTION
