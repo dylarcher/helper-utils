@@ -1,10 +1,10 @@
-# Workflow to integrate changes from PR Build, commit, version, and package
+---
 name: PR Integrate
 
 on:
   workflow_run:
     workflows:
-      - "PR Build" # Must match the 'name' field of the pr-build.yml workflow
+      - "PR Build"
     types:
       - completed
 
@@ -12,10 +12,8 @@ env:
   CI: true
   NODE_ENV: production
   NODE_OPTIONS: --max-old-space-size=4096
-  GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }} # For git operations
-  NPM_TOKEN: ${{ secrets.NPM_TOKEN }} # For npm publish
-  # GIT_RID for this workflow's run_id is available via github.run_id directly
-  GIT_REPO: ${{ github.repository }} # Full repo name, e.g. user/repo
+  GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GIT_REPO: ${{ github.repository }}
 
 jobs:
   integrate:
@@ -24,13 +22,15 @@ jobs:
     if: github.event.workflow_run.conclusion == 'success'
 
     permissions:
-      contents: write # Required to push commits and tags
-      packages: write # Required for npm publish (if it were to GitHub Packages)
+      contents: write
+      packages: write
 
     steps:
       - name: Download PR Metadata Artifact
-        uses: actions/download-artifact@v4
+        uses: dawidd6/action-download-artifact@v11
         with:
+          workflow_conclusion: success
+          run_id: ${{ github.event.workflow_run.id }}
           name: pr-details-${{ github.event.workflow_run.id }}
           path: pr_details_artifact
 
@@ -43,7 +43,6 @@ jobs:
           echo "GPR_INT=$GPR_INT" >> $GITHUB_ENV
           echo "HEAD_REF=$HEAD_REF" >> $GITHUB_ENV
           echo "HEAD_SHA=$HEAD_SHA" >> $GITHUB_ENV
-          # For GITHUB_OUTPUT if other steps need it via needs context (not used here)
           echo "GPR_INT=$GPR_INT" >> $GITHUB_OUTPUT
           echo "head_ref=$HEAD_REF" >> $GITHUB_OUTPUT
           echo "head_sha=$HEAD_SHA" >> $GITHUB_OUTPUT
@@ -51,41 +50,37 @@ jobs:
       - name: Checkout PR Branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ env.HEAD_REF }} # Checkout the PR branch itself
-          token: ${{ env.GIT_TOKEN }} # Ensure token is used for subsequent operations if needed
-          fetch-depth: 0 # Fetch full history
+          ref: ${{ steps.pr_vars.outputs.head_ref }}
+          token: ${{ env.GIT_TOKEN }}
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
-          registry-url: https://registry.npmjs.org # For npm version and publish
+          registry-url: https://registry.npmjs.org
           cache: npm
-
+        env:
+          NODE_AUTH_TOKEN: ${{ steps.pr_vars.outputs.NPM_TOKEN }}
       - name: Configure Git User and Synchronize Branch
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git remote set-url origin "https://x-access-token:${{ env.GIT_TOKEN }}@github.com/${{ env.GIT_REPO }}"
-
-          echo "Ensuring branch ${{ env.HEAD_REF }} is at commit ${{ env.HEAD_SHA }}"
-          # The checkout step already put us on HEAD_REF.
-          # Fetch to ensure our local HEAD_REF is aware of the commit if it was force-pushed or something unusual.
-          # This might be redundant if actions/checkout already fetched HEAD_REF properly.
-          git fetch origin "${{ env.HEAD_REF }}"
-          git reset --hard "${{ env.HEAD_SHA }}"
-          # Now, the current branch (${{ env.HEAD_REF }}) points to ${{ env.HEAD_SHA }},
-          # and the working directory matches the committed state of ${{ env.HEAD_SHA }}.
+          echo "Ensuring branch ${{ steps.pr_vars.outputs.head_ref }} is at commit ${{ steps.pr_vars.outputs.head_sha }}"
+          git fetch origin "${{ steps.pr_vars.outputs.head_ref }}"
+          git reset --hard "${{ steps.pr_vars.outputs.head_sha }}"
 
       - name: Download and Apply Built Code Artifact
-        uses: actions/download-artifact@v4
+        uses: dawidd6/action-download-artifact@v11
         with:
+          workflow_conclusion: success
+          run_id: ${{ github.event.workflow_run.id }}
           name: built-repo-${{ github.event.workflow_run.id }}
-          path: ./ # Download into the current checkout, overwriting files with the built state
-          # Now the working directory has the *built* files from HEAD_SHA.
+          path: ./
 
       - name: Install Dependencies
-        run: npm ci # Install devDependencies needed for npm version scripts, etc.
+        run: npm ci
 
       - name: Commit and Push Build Changes
         id: build_and_commit
@@ -95,17 +90,16 @@ jobs:
 
           git_reset() {
             if [ "$1" = "clear" ]; then
-              git reset > /dev/null 2>&1 # Unstage all
+              git reset > /dev/null 2>&1
             elif [ "$1" = "unstage" ] && [ -d "$2" ] && git diff --name-only --staged -- "$2" | grep -q .; then
               echo "Unstaging $2/ for the current commit."
-              git reset HEAD -- "$2" # Unstage specific directory
+              git reset HEAD -- "$2"
             fi
           }
 
-          # Commit 1: Lint/Format changes (all changes not in dist/ or coverage/)
           echo "Checking for lint/format changes…"
           git_reset clear
-          git add -A # Stage all changes from the build (already in working dir)
+          git add .
           git_reset unstage "dist"
           git_reset unstage "coverage"
           if ! git diff --staged --quiet; then
@@ -116,10 +110,9 @@ jobs:
             echo "No lint/format changes to commit."
           fi
 
-          # Commit 2: Test coverage results
           echo "Checking for test coverage changes…"
           git_reset clear
-          if [ -d "coverage" ]; then # Check if coverage dir exists from artifact
+          if [ -d "coverage" ]; then
             git add coverage/
             if ! git diff --staged --quiet; then
               echo "Committing test coverage results…"
@@ -132,10 +125,9 @@ jobs:
             echo "Coverage directory not found in artifact, skipping coverage commit."
           fi
 
-          # Commit 3: Distributable files
           echo "Checking for dist directory changes…"
           git_reset clear
-          if [ -d "dist" ]; then # Check if dist dir exists from artifact
+          if [ -d "dist" ]; then
             git add dist/
             if ! git diff --staged --quiet; then
               echo "Committing dist files…"
@@ -149,8 +141,8 @@ jobs:
           fi
 
           if [ "$ANY_COMMITS_MADE" = true ]; then
-            echo "Pushing build changes to ${{ env.HEAD_REF }}…"
-            git push origin "${{ env.HEAD_REF }}"
+            echo "Pushing build changes to ${{ steps.pr_vars.outputs.head_ref }}…"
+            git push origin "${{ steps.pr_vars.outputs.head_ref }}"
           else
             echo "No changes were committed by this step."
           fi
@@ -164,23 +156,22 @@ jobs:
             echo "skipped_all=true" >> $GITHUB_OUTPUT; exit 0
           fi; echo "skipped_all=false" >> $GITHUB_OUTPUT
 
-          BRANCH_NAME="${{ env.HEAD_REF }}"; VERSION_BUMP="minor"
+          BRANCH_NAME="${{ steps.pr_vars.outputs.head_ref }}"; VERSION_BUMP="minor"
           if [[ "$BRANCH_NAME" == fix/* ]]; then VERSION_BUMP="patch"; elif [[ "$BRANCH_NAME" == refac/* ]]; then VERSION_BUMP="major"; fi
           echo "Determined version bump: $VERSION_BUMP for branch $BRANCH_NAME"
 
           echo "Updating package version (triggers postversion script for push & publish)…"
-          npm version $VERSION_BUMP -m "chore(release): version %s for PR #${{ env.GPR_INT }}"
-          # 'postversion' script in package.json ("git push && git push --tags && npm run publish:npm") handles push and publish.
+          npm version $VERSION_BUMP -m "chore(release): version %s for PR #${{ steps.pr_vars.outputs.GPR_INT }}"
 
           echo "Compressing dist directory…"
           tar -czf dist.tar.gz dist; zip -r dist.zip dist
           LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`); echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
 
-      - name: Upload Distribution Archives
+      - name: Upload Distribution Archives Artifact
         if: steps.version_publish_compress.outputs.skipped_all != 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: distribution-archives-${{ github.run_id }} # Use current workflow's run_id for its own artifacts
+          name: distribution-archives-${{ github.run_id }}
           path: |
             dist.tar.gz
             dist.zip

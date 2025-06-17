@@ -143,6 +143,7 @@
     "yaml.format.enable": false,
     "yaml.validate": false,
     "cSpell.words": [
+        "dawidd",
         "jsonata",
         "keepachangelog",
         "monocart",
