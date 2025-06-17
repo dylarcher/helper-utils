@@ -34,6 +34,18 @@ jobs:
           repo: ${{ github.repository }}
           if_no_artifact_found: fail
 
+      - name: Debug Artifact Contents
+        run: |
+          ARTIFACT_DIR="${{ runner.temp }}/artifacts/pr_details_artifact"
+          echo "Artifact directory contents:"
+          ls -la "$ARTIFACT_DIR"
+          echo "GPR_INT content:"
+          cat "$ARTIFACT_DIR/GPR_INT" | hexdump -C
+          echo "HEAD_REF content:"
+          cat "$ARTIFACT_DIR/HEAD_REF" | hexdump -C
+          echo "HEAD_SHA content:"
+          cat "$ARTIFACT_DIR/HEAD_SHA" | hexdump -C
+
       - name: Load PR Metadata into Environment
         id: pr_vars
         run: |
@@ -42,35 +54,49 @@ jobs:
             echo "Required artifact files are missing or corrupted. Exiting."; exit 1
           fi
 
-          GPR_INT=$(cat "$ARTIFACT_DIR/GPR_INT" | tr -d '\n' | grep -E '^[0-9]+$' || echo "invalid")
-          HEAD_REF=$(cat "$ARTIFACT_DIR/HEAD_REF" | grep -E '^[a-zA-Z0-9/_-]+$' || echo "invalid")
-          HEAD_SHA=$(cat "$ARTIFACT_DIR/HEAD_SHA" | grep -E '^[a-f0-9]{40}$' || echo "invalid")
+          GPR_INT=$(cat "$ARTIFACT_DIR/GPR_INT" | tr -d '\n')
+          HEAD_REF=$(cat "$ARTIFACT_DIR/HEAD_REF" | tr -d '\n')
+          HEAD_SHA=$(cat "$ARTIFACT_DIR/HEAD_SHA" | tr -d '\n')
 
+          # Validate the values
           if [[ ! "$GPR_INT" =~ ^[0-9]+$ ]]; then
-            echo "Invalid GPR_INT value: $GPR_INT" >&2
+            echo "Invalid GPR_INT value: '$GPR_INT'" >&2
             exit 1
           fi
 
           if [[ ! "$HEAD_SHA" =~ ^[0-9a-f]{40}$ ]]; then
-            echo "Invalid HEAD_SHA value: $HEAD_SHA" >&2
+            echo "Invalid HEAD_SHA value: '$HEAD_SHA'" >&2
             exit 1
           fi
 
-          if [[ ! "$HEAD_REF" =~ ^[a-zA-Z0-9/_-]+$ ]]; then
-            echo "Invalid HEAD_REF value: $HEAD_REF" >&2
+          if [[ ! "$HEAD_REF" =~ ^[a-zA-Z0-9/_.-]+$ ]]; then
+            echo "Invalid HEAD_REF value: '$HEAD_REF'" >&2
             exit 1
           fi
 
-          echo "GPR_INT=$GPR_INT" >> $GITHUB_ENV
-          echo "HEAD_REF=$HEAD_REF" >> $GITHUB_ENV
-          echo "HEAD_SHA=$HEAD_SHA" >> $GITHUB_ENV
+          echo "Loaded PR metadata:"
+          echo "  GPR_INT: $GPR_INT"
+          echo "  HEAD_REF: $HEAD_REF"
+          echo "  HEAD_SHA: $HEAD_SHA"
 
+          # Set outputs for use in subsequent steps
           echo "GPR_INT=$GPR_INT" >> $GITHUB_OUTPUT
           echo "HEAD_REF=$HEAD_REF" >> $GITHUB_OUTPUT
           echo "HEAD_SHA=$HEAD_SHA" >> $GITHUB_OUTPUT
 
-          export HEAD_REF
-          export HEAD_SHA
+          # Also set as environment variables for shell scripts
+          {
+            echo "GPR_INT=$GPR_INT"
+            echo "HEAD_REF=$HEAD_REF"
+            echo "HEAD_SHA=$HEAD_SHA"
+          } >> $GITHUB_ENV
+
+      - name: Debug Environment Variables
+        run: |
+          echo "Debug: Values before checkout"
+          echo "HEAD_REF from step output: '${{ steps.pr_vars.outputs.HEAD_REF }}'"
+          echo "HEAD_SHA from step output: '${{ steps.pr_vars.outputs.HEAD_SHA }}'"
+          echo "GPR_INT from step output: '${{ steps.pr_vars.outputs.GPR_INT }}'"
 
       - name: Checkout PR Branch
         uses: actions/checkout@v4
