@@ -30,6 +30,7 @@
 		"dist",
 		"test",
 		"utils",
+		"scripts",
 		"src/**/*.spec.js",
 		"src/**/*.test.js"
 	],
