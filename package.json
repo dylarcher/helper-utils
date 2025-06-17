@@ -49,9 +49,6 @@
         "dist",
         "src"
     ],
-    "resolutions": {
-        "eslint-plugin-yaml": "1.1.2"
-    },
     "homepage": "https://dylarcher.github.io/js.helper-utils/",
     "keywords": [
         "helper",
@@ -81,14 +78,17 @@
         "type": "git",
         "url": "git+https://github.com/dylarcher/js.helper-utils.git"
     },
+    "resolutions": {
+        "eslint-plugin-yaml": "1.1.2"
+    },
     "scripts": {
         "build": "tsc",
         "changelog:released": "npx auto-changelog --package --output CHANGELOG.md --template keepachangelog --commit-limit false",
         "changelog:unreleased": "npx auto-changelog --commit-limit false --unreleased-only --template keepachangelog",
         "clean:c8": "npx rimraf coverage/tmp/",
         "clean:dist": "npx rimraf dist/",
-        "docs": "node docs/middleware/server.js",
         "clean:npm": "npx rimraf node_modules/ package-lock.json",
+        "docs": "node docs/middleware/server.js",
         "format": "npx prettier --config .github/presets/.prettierrc --ignore-unknown --no-error-on-unmatched-pattern",
         "format:check": "npm run format -- --check src",
         "format:write": "npm run format -- src --write",
