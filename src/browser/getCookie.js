@@ -53,9 +53,6 @@
  * // const nodeCookie = getCookie('anyCookie');
  * // console.log(nodeCookie); // Output: null
  */
-/**
- * @param {string} cookieName
- */
 export function getCookie(cookieName) {
 	// Check if the function is running in a browser environment with access to document.cookie.
 	// `typeof document === 'undefined'` handles server-side rendering or Node.js environments.

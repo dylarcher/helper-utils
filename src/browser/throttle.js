@@ -82,10 +82,6 @@
  * //   console.log(throttledFetcher('C')); // "Data for C" (after 100ms, executes)
  * // }, 150);
  */
-/**
- * @param {function(...*): *} func
- * @param {number} limit
- */
 export function throttle(func, limit) {
 	// `lastCallTime`: Timestamp (milliseconds since epoch) of the last time `func` was actually executed.
 	// Initialized to 0, allowing the first call to `func` to proceed immediately.
