@@ -1,8 +1,7 @@
 # js-helpers
 
 [![CodeQL](https://github.com/dylarcher/js.helper-utils/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/dylarcher/js.helper-utils/actions/workflows/github-code-scanning/codeql)
-[![Lint](https://github.com/dylarcher/js.helper-utils/actions/workflows/lint.yml/badge.svg)](https://github.com/dylarcher/js.helper-utils/actions/workflows/lint.yml)
-[![Format](https://github.com/dylarcher/js.helper-utils/actions/workflows/format.yml/badge.svg)](https://github.com/dylarcher/js.helper-utils/actions/workflows/format.yml)
+[![Validate](https://github.com/dylarcher/helper-utils/actions/workflows/validate.yml/badge.svg)](https://github.com/dylarcher/helper-utils/actions/workflows/validate.yml)
 [![Test](https://github.com/dylarcher/js.helper-utils/actions/workflows/test.yml/badge.svg)](https://github.com/dylarcher/js.helper-utils/actions/workflows/test.yml)
 [![Downloads](https://img.shields.io/npm/dm/js-helpers.svg)](https://www.npmjs.com/package/js-helpers)
 [![Latest](https://img.shields.io/github/last-commit/dylarcher/js.helper-utils.svg)](https://github.com/dylarcher/js.helper-utils/commits/main)
