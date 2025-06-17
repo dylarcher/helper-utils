@@ -80,7 +80,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
-          registry-url: https://registry.npmjs.org
           cache: npm
         env:
           NODE_AUTH_TOKEN: ${{ steps.pr_vars.outputs.NPM_TOKEN }}
@@ -205,12 +204,26 @@ jobs:
           if [[ "$BRANCH_NAME" == fix/* ]]; then VERSION_BUMP="patch";
           elif [[ "$BRANCH_NAME" == refac/* ]]; then VERSION_BUMP="major"; fi
           echo "Determined version bump: $VERSION_BUMP for branch $BRANCH_NAME"
-
           echo "Updating package version (triggers postversion script for push & publish)…"
           npm version "$VERSION_BUMP" -m "chore(release): version %s for PR #$GPR_INT"
-          tar -czf dist.tar.gz dist; zip -r dist.zip dist
+          echo "version_bump=$VERSION_BUMP" >> $GITHUB_OUTPUT
+          tar -czf dist.tar.gz dist;
+          echo "dist_tarball=dist.tar.gz" >> $GITHUB_OUTPUT
+          zip -r dist.zip dist
+          echo "dist_zip=dist.zip" >> $GITHUB_OUTPUT
           LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`);
           echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
+
+          if [[ steps.build_and_commit.outputs.any_commits_made == 'true' ]]; then
+            echo "Publishing package to GitHub Packages…"
+            npm publish --access public --registry https://npm.pkg.github.com
+            echo "Package published successfully."
+          else
+            echo "No changes to dist files, skipping package publish."
+          fi
+          echo "Package versioning and publishing completed."
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Upload Distribution Archives Artifact
         if: steps.version_publish_compress.outputs.skipped_all != 'true'
