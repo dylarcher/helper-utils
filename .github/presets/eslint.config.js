@@ -31,7 +31,7 @@ export default [
 			'res/**',
 			'utils/**',
 			'.*',
-			'scripts/**',
+			'scripts/temp/**',
 		],
 	},
 	// Base configurations
