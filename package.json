@@ -112,7 +112,7 @@
         "version:major": "npm version major -m \"chore: major release v%s\"",
         "version:minor": "npm version minor -m \"chore: minor release v%s\"",
         "version:patch": "npm version patch -m \"chore: patch release v%s\"",
-        "version:prerelease": "npm version prerelease --preid ${1:-alpha} -m \"chore: $1 pre-release v%s\""
+        "version:prerelease": "npm version prerelease --preid ${preid:-alpha} -m \"chore: ${preid} pre-release v%s\""
     },
     "sideEffects": false,
     "type": "module",
