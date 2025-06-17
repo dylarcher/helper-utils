@@ -1,6 +1,6 @@
 // scripts/generate-documentation.js
-import fs from 'fs/promises';
-import path from 'path';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 // --- Configuration ---
