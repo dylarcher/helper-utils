@@ -10,7 +10,6 @@ on:
 
 env:
   GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  GIT_REPO: ${{ github.repository }}
   GIT_ACTION: ${{ github.event.workflow_run.id }}
 
 jobs:
@@ -25,7 +24,7 @@ jobs:
 
     steps:
       - name: Download PR Metadata Artifact
-        uses: dawidd6/action-download-artifact@v11
+        uses: dawidd6/action-download-artifact@216b2408f30059a88a101a88a9018b7e2c9134ed
         with:
           workflow_conclusion: success
           run_id: $GIT_ACTION
@@ -35,26 +34,33 @@ jobs:
       - name: Load PR Metadata into Environment
         id: pr_vars
         run: |
-          GPR_INT=$(cat pr_details_artifact/GPR_INT | tr -d '\n' | sed 's/[^a-zA-Z0-9_-]//g')
-          HEAD_REF=$(cat pr_details_artifact/HEAD_REF | grep -E '^[a-zA-Z0-9/_-]+$' || echo "invalid")
-          HEAD_SHA=$(cat pr_details_artifact/HEAD_SHA | grep -E '^[a-f0-9]{40}$' || echo "invalid")
-
-          if [[ "$HEAD_SHA" =~ ^[0-9a-f]{40}$ ]]; then
-            echo "GPR_INT=$GPR_INT" >> $GITHUB_ENV
-            echo "HEAD_REF=$HEAD_REF" >> $GITHUB_ENV
-            echo "HEAD_SHA=$HEAD_SHA" >> $GITHUB_ENV
-          else
-            echo "Invalid HEAD_SHA value: $HEAD_SHA" >&2
-            exit 1
-          fi
-
           ARTIFACT_DIR="${{ runner.temp }}/artifacts/pr_details_artifact"
           if [ ! -f "$ARTIFACT_DIR/GPR_INT" ] || [ ! -f "$ARTIFACT_DIR/HEAD_REF" ] || [ ! -f "$ARTIFACT_DIR/HEAD_SHA" ]; then
             echo "Required artifact files are missing or corrupted. Exiting."; exit 1
           fi
-          GPR_INT=$(cat "$ARTIFACT_DIR/GPR_INT")
-          HEAD_REF=$(cat "$ARTIFACT_DIR/HEAD_REF")
-          HEAD_SHA=$(cat "$ARTIFACT_DIR/HEAD_SHA")
+
+          GPR_INT=$(cat "$ARTIFACT_DIR/GPR_INT" | tr -d '\n' | grep -E '^[0-9]+$' || echo "invalid")
+          HEAD_REF=$(cat "$ARTIFACT_DIR/HEAD_REF" | grep -E '^[a-zA-Z0-9/_-]+$' || echo "invalid")
+          HEAD_SHA=$(cat "$ARTIFACT_DIR/HEAD_SHA" | grep -E '^[a-f0-9]{40}$' || echo "invalid")
+
+          if [[ ! "$GPR_INT" =~ ^[0-9]+$ ]]; then
+            echo "Invalid GPR_INT value: $GPR_INT" >&2
+            exit 1
+          fi
+
+          if [[ ! "$HEAD_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "Invalid HEAD_SHA value: $HEAD_SHA" >&2
+            exit 1
+          fi
+
+          if [[ ! "$HEAD_REF" =~ ^[a-zA-Z0-9/_-]+$ ]]; then
+            echo "Invalid HEAD_REF value: $HEAD_REF" >&2
+            exit 1
+          fi
+
+          echo "GPR_INT=$GPR_INT" >> $GITHUB_ENV
+          echo "HEAD_REF=$HEAD_REF" >> $GITHUB_ENV
+          echo "HEAD_SHA=$HEAD_SHA" >> $GITHUB_ENV
 
           echo "GPR_INT=$GPR_INT" >> $GITHUB_OUTPUT
           echo "HEAD_REF=$HEAD_REF" >> $GITHUB_OUTPUT
@@ -83,7 +89,7 @@ jobs:
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git remote set-url origin "https://x-access-token:$GIT_TOKEN@github.com/$GIT_REPO"
+          git remote set-url origin "https://x-access-token:$GIT_TOKEN@github.com/${{ github.repository }}"
           echo "Ensuring branch $HEAD_REF is at commit $HEAD_SHA"
           git fetch origin "$HEAD_REF"
           if [[ "$HEAD_SHA" =~ ^[0-9a-f]{40}$ ]]; then
@@ -94,7 +100,7 @@ jobs:
           fi
 
       - name: Download and Apply Built Code Artifact
-        uses: dawidd6/action-download-artifact@v11
+        uses: dawidd6/action-download-artifact@216b2408f30059a88a101a88a9018b7e2c9134ed
         with:
           workflow_conclusion: success
           run_id: $GIT_ACTION
@@ -106,11 +112,12 @@ jobs:
           echo "Verifying artifact contents..."
           if [ ! -f "${{ runner.temp }}/built-repo-$GIT_ACTION/package.json" ] || [ ! -f "${{ runner.temp }}/built-repo-$GIT_ACTION/package-lock.json" ]; then
             echo "Error: Required files are missing from the artifact." >&2
+          if [ ! -f "${{ runner.temp }}/artifacts/built_repo_${{ env.GIT_ACTION }}/package.json" ] || [ ! -f "${{ runner.temp }}/artifacts/built_repo_${{ env.GIT_ACTION }}/package-lock.json" ]; then
+            echo "Error: Required files are missing from the artifact." >&2
             exit 1
           fi
-          cp "${{ runner.temp }}/built-repo-$GIT_ACTION/package.json" ./
-          cp "${{ runner.temp }}/built-repo-$GIT_ACTION/package-lock.json" ./
-          npm ci
+          cp "${{ runner.temp }}/artifacts/built_repo_${{ env.GIT_ACTION }}/package.json" ./
+          cp "${{ runner.temp }}/artifacts/built_repo_${{ env.GIT_ACTION }}/package-lock.json" ./
 
       - name: Commit and Push Build Changes
         id: build_and_commit
@@ -181,16 +188,27 @@ jobs:
             echo "skipped_all=true" >> $GITHUB_OUTPUT; exit 0
           fi; echo "skipped_all=false" >> $GITHUB_OUTPUT
 
-          BRANCH_NAME="$HEAD_REF"; VERSION_BUMP="minor"
+          BRANCH_NAME="$HEAD_REF"
+          if [[ ! "$BRANCH_NAME" =~ ^[a-zA-Z0-9/_-]+$ ]]; then
+            echo "Invalid branch name format: $BRANCH_NAME" >&2
+            exit 1
+          fi
+
+          if [[ ! "$GPR_INT" =~ ^[0-9]+$ ]]; then
+
+          if [[ ! "$GPR_INT" =~ ^[0-9]+$ ]]; then
+            echo "Invalid PR number format: $GPR_INT" >&2
+            exit 1
+          fi
+
           if [[ "$BRANCH_NAME" == fix/* ]]; then VERSION_BUMP="patch";
           elif [[ "$BRANCH_NAME" == refac/* ]]; then VERSION_BUMP="major"; fi
           echo "Determined version bump: $VERSION_BUMP for branch $BRANCH_NAME"
 
           echo "Updating package version (triggers postversion script for push & publish)…"
-          GPR_INT=$GPR_INT
-          npm version $VERSION_BUMP -m "chore(release): version %s for PR #$GPR_INT"
-
-          echo "Compressing dist directory…"
+          npm version "$VERSION_BUMP" -m "chore(release): version %s for PR #$GPR_INT"
+          echo "Updating package version (triggers postversion script for push & publish)…"
+          npm version "$VERSION_BUMP" -m "chore(release): version %s for PR #$GPR_INT"
           tar -czf dist.tar.gz dist; zip -r dist.zip dist
           LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`);
           echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
