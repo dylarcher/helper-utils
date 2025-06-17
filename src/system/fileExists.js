@@ -1,61 +1,102 @@
+// Import the `promises` API from Node.js's built-in 'fs' (file system) module.
+// This provides asynchronous file system methods that return Promises.
 import fs from 'node:fs/promises';
 
 /**
- * Asynchronously checks if a file system entry (file, directory, symlink, etc.)
- * exists at the given path.
- * This function uses `fs.access()` with the default mode (F_OK) to check for the
- * existence of the path. It does not distinguish between files and directories,
- * only whether something exists at the path.
+ * Asynchronously checks if a file system entry (e.g., a file, directory, or symbolic link)
+ * exists at the specified `filePath`.
+ *
+ * This function utilizes `fs.promises.access()` with the default mode `fs.constants.F_OK`.
+ * `fs.access(path, fs.constants.F_OK)` tests for the existence of the path. It does not
+ * check for read, write, or execute permissions, only whether something (a file, directory, etc.)
+ * exists at that path and is accessible to the current process.
+ *
+ * If `fs.access()` resolves successfully (meaning the path exists and is accessible for an
+ * existence check), this function returns `true`.
+ * If `fs.access()` throws an error (most commonly an `ENOENT` error, indicating the path
+ * does not exist), this function catches the error and returns `false`.
+ * Other less common errors from `fs.access` (e.g., `EACCES` if a component of the path
+ * denies search permission, though this is rare for a simple existence check) will also
+ * result in `false`.
+ *
  * This is a Node.js specific utility.
  *
+ * @async
  * @param {string} filePath - The absolute or relative path to the file system entry to check.
- * @returns {Promise<boolean>} A promise that resolves to `true` if the path exists,
- *   and `false` if the path does not exist or is inaccessible. Note that errors other
- *   than "not found" (e.g. permission errors that prevent even checking existence,
- *   though rare for F_OK) could theoretically lead to the catch block and a `false` return.
+ * @returns {Promise<boolean>} A Promise that resolves to:
+ *   - `true`: If a file system entry exists at `filePath` and is accessible.
+ *   - `false`: If no file system entry exists at `filePath`, or if it's inaccessible
+ *              in a way that `fs.access` with `F_OK` would throw (e.g., permission issue
+ *              on a parent directory preventing path resolution, though `ENOENT` is most common for non-existence).
  *
  * @example
- * // Create dummy files/dirs for example:
+ * // For these examples to run, you might need to create dummy files/directories.
  * // import { writeFile, mkdir, rm } from 'node:fs/promises';
- * // async function setupExamples() {
- * //   await writeFile('./example.txt', 'Hello content!');
- * //   await mkdir('./example_dir');
+ * // async function setupExampleFileSystem() {
+ * //   try { await writeFile('./temp-file.txt', 'content'); } catch(e) {}
+ * //   try { await mkdir('./temp-dir'); } catch(e) {}
  * // }
- * // async function cleanupExamples() {
- * //   await rm('./example.txt');
- * //   await rm('./example_dir', { recursive: true });
+ * // async function cleanupExampleFileSystem() {
+ * //   try { await rm('./temp-file.txt'); } catch(e) {}
+ * //   try { await rm('./temp-dir', { recursive: true }); } catch(e) {}
  * // }
  *
- * async function checkMyFiles() {
- *   // await setupExamples(); // Call this if running the example standalone
+ * async function demonstrateFileExists() {
+ *   // await setupExampleFileSystem(); // Run this if you want to test locally
  *
- *   const existingFilePath = './example.txt'; // Assume this file exists
- *   const existingDirPath = './example_dir';   // Assume this directory exists
- *   const nonExistentPath = './non_existent_file.txt';
+ *   const existingFile = './temp-file.txt'; // Assume this file has been created
+ *   const existingDir = './temp-dir';     // Assume this directory has been created
+ *   const nonExistent = './i-do-not-exist.dat';
+ *   const pathWithNoAccess = '/root/restricted-file'; // Assuming no access here
  *
- *   console.info(`Does "${existingFilePath}" exist?`, await fileExists(existingFilePath)); // true
- *   console.info(`Does "${existingDirPath}" exist?`, await fileExists(existingDirPath));   // true
- *   console.info(`Does "${nonExistentPath}" exist?`, await fileExists(nonExistentPath)); // false
+ *   console.log(`Checking for "${existingFile}":`, await fileExists(existingFile)); // Expected: true
+ *   console.log(`Checking for "${existingDir}":`, await fileExists(existingDir));   // Expected: true
+ *   console.log(`Checking for "${nonExistent}":`, await fileExists(nonExistent)); // Expected: false
  *
- *   // Example with an invalid path (e.g., containing null byte) might lead to fs.access throwing
- *   // try {
- *   //   console.info(await fileExists('path\0with_null_byte')); // false, fs.access throws
- *   // } catch(e) { // This function's catch handles it
- *   // }
+ *   // Note: For `pathWithNoAccess`, the result depends on OS permissions.
+ *   // If the path itself cannot be resolved due to permissions on parent dirs, it might
+ *   // also result in an error caught by fs.access, leading to `false`.
+ *   // console.log(`Checking for "${pathWithNoAccess}":`, await fileExists(pathWithNoAccess)); // Likely false
  *
- *   // await cleanupExamples(); // Call this if running the example standalone
+ *   // await cleanupExampleFileSystem(); // Clean up dummy files/dirs
  * }
  *
- * // checkMyFiles();
+ * // demonstrateFileExists();
+ *
+ * @example
+ * // Using with conditional logic
+ * async function processFile(filePath) {
+ *   if (await fileExists(filePath)) {
+ *     console.log(`File "${filePath}" exists. Proceeding with processing.`);
+ *     // const content = await fs.readFile(filePath, 'utf8');
+ *     // console.log(content.substring(0, 50) + "...");
+ *   } else {
+ *     console.warn(`File "${filePath}" does not exist. Skipping.`);
+ *   }
+ * }
+ * // processFile('./temp-file.txt');
+ * // processFile('./another-file.log');
  */
 export async function fileExists(filePath) {
 	try {
-		// fs.access with no mode defaults to F_OK (check for existence)
+		// Step 1: Attempt to access the file system entry using `fs.promises.access()`.
+		// - `filePath`: The path to the file or directory.
+		// - By default, if no `mode` argument is provided to `fs.access` (or if `fs.constants.F_OK` is used),
+		//   it checks for the existence of the file. It doesn't check permissions like read or write.
+		// - If `fs.access` is successful (i.e., the path exists and is accessible for this basic check),
+		//   the Promise it returns resolves with `undefined`.
 		await fs.access(filePath);
-		return true; // Path exists and is accessible
-	} catch (_error) {
-		// fs.access throws an error if any accessibility checks fail (e.g., ENOENT if not found)
-		// For fileExists, we primarily expect errors when the file doesn't exist.
-		return false; // Path does not exist or is not accessible
+
+		// Step 2: If `fs.access` resolves, it means the file/directory exists.
+		return true;
+	} catch (error) {
+		// Step 3: If `fs.access` rejects, an error occurred.
+		// - The most common error for an existence check is `ENOENT` (Error NO ENTry),
+		//   which means the file or directory at `filePath` does not exist.
+		// - Other errors could theoretically occur (e.g., `EACCES` if a parent directory
+		//   in the path is not searchable, though this is less common for a simple existence test).
+		// In any error case, we interpret it as the file/directory not being "found"
+		// or accessible in the way we are checking, so we return `false`.
+		return false;
 	}
 }

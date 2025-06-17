@@ -1,6 +1,6 @@
 // scripts/generate-documentation.js
-import fs from 'node:fs/promises';
-import path from 'node:path';
+import fs from 'fs/promises';
+import path from 'path';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 // --- Configuration ---
@@ -167,8 +167,7 @@ ${ex}
 	try {
 		console.log("Sending prompt to Gemini API. Prompt length:", prompt.length);
         if (prompt.length > 30000) { // Gemini Pro has a limit, this is a rough check
-            console.warn("Prompt is very long, splitting into sections to comply with API limits.");
-            prompt = splitPrompt(prompt, 30000); // Split the prompt into sections
+            console.warn("Prompt is very long, might exceed API limits. Consider summarizing or splitting data.");
         }
 		const result = await model.generateContent(prompt);
 		const response = await result.response;

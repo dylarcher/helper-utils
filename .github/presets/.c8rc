@@ -13,8 +13,6 @@
         "coverage/**/*",
         "utils/**/*",
         "dist/**/*",
-        "docs/**/*",
-        "scripts/**/*",
         "src/**/*.spec.js",
         "src/**/*.test.js"
     ],

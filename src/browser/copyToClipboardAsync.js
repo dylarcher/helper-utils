@@ -1,50 +1,100 @@
 /**
  * Asynchronously copies the provided text to the user's clipboard using the modern Clipboard API.
- * This API is generally available in secure contexts (HTTPS) and when the page is active.
+ * This function is designed for web browser environments.
  *
- * The returned Promise will:
- * - Resolve when the text has been successfully written to the clipboard.
- * - Reject if:
- *   - The Clipboard API (`navigator.clipboard`) is not available in the current browser or context.
- *   - The attempt to write to the clipboard fails (e.g., due to denied permissions,
- *     document not focused, or other browser/OS-level restrictions).
+ * The Clipboard API (`navigator.clipboard`) is generally available in secure contexts (HTTPS)
+ * and when the page (document) has focus. User permission may also be required by the browser,
+ * though `writeText` often benefits from a more lenient permission model than `readText`
+ * if initiated from a user gesture.
  *
- * @param {string} text - The text to be copied to the clipboard.
- * @returns {Promise<void>} A promise that resolves when copying is successful, or rejects with an error if it fails.
+ * @async
+ * @param {string} text - The text string to be copied to the clipboard. Can be an empty string.
+ *                        If not a string, `navigator.clipboard.writeText` might coerce it or throw an error;
+ *                        it's best to ensure `text` is a string.
+ * @returns {Promise<void>} A Promise that resolves if the text is successfully written to the clipboard.
+ *                          The Promise rejects with an Error if:
+ *                          1. The Clipboard API (`navigator.clipboard`) is not available (e.g., older browser, insecure context, specific browser settings).
+ *                          2. The attempt to write to the clipboard fails (e.g., document not focused, user denied permission,
+ *                             or other browser/OS-level restrictions). The error object in this case is typically a `DOMException`.
  *
  * @example
- * async function handleCopyText(textToCopy) {
+ * // Example 1: Basic successful copy
+ * async function copyMyData() {
  *   try {
- *     await copyToClipboardAsync(textToCopy);
- *     console.info('Text copied to clipboard successfully!');
- *     // You could show a success message to the user here.
+ *     await copyToClipboardAsync("This is important data!");
+ *     alert("Data copied to clipboard!");
  *   } catch (error) {
- *     console.error('Failed to copy text to clipboard:', error);
- *     // You could show an error message or provide a fallback mechanism here.
- *     // Common errors include:
- *     // - "Clipboard API not available..." (if navigator.clipboard is missing)
- *     // - DOMException if writeText fails (e.g. "Document is not focused", "User denied access to clipboard")
+ *     console.error("Copy failed:", error);
+ *     alert("Could not copy data. See console for details.");
  *   }
  * }
+ * // Call from a user-initiated event, like a button click:
+ * // myButton.addEventListener('click', copyMyData);
  *
- * // Usage:
- * // handleCopyText('Hello, world!');
- * // handleCopyText(''); // Copies an empty string
+ * @example
+ * // Example 2: Handling potential errors, like API unavailability or permission issues
+ * const shareButton = document.getElementById('share');
+ * shareButton.addEventListener('click', async () => {
+ *   const shareText = "Check out this page: " + window.location.href;
+ *   try {
+ *     await copyToClipboardAsync(shareText);
+ *     // Provide user feedback for success
+ *     shareButton.textContent = 'Copied!';
+ *     setTimeout(() => { shareButton.textContent = 'Share'; }, 2000);
+ *   } catch (err) {
+ *     // Provide user feedback for failure
+ *     console.error('Clipboard write failed: ', err.name, err.message);
+ *     if (err.message.includes('Clipboard API not available')) {
+ *       alert('Clipboard API is not supported in your browser or context.');
+ *     } else if (err.name === 'NotAllowedError') {
+ *       alert('Permission to access the clipboard was denied. Please allow access in your browser settings.');
+ *     } else if (err.name === 'SecurityError') {
+ *        alert('Clipboard access is restricted in this context (e.g. insecure HTTP or sandboxed iframe without allow-same-origin).');
+ *     } else {
+ *       alert('Failed to copy. Your browser might not have focus on the page or another issue occurred.');
+ *     }
+ *     // Optionally, implement a fallback method here (e.g., showing a text area for manual copy)
+ *   }
+ * });
+ *
+ * @example
+ * // Example 3: Copying an empty string
+ * async function copyEmpty() {
+ *   try {
+ *     await copyToClipboardAsync("");
+ *     console.log("Empty string copied to clipboard.");
+ *   } catch (error) {
+ *     console.error("Failed to copy empty string:", error);
+ *   }
+ * }
  */
 export async function copyToClipboardAsync(text) {
+	// First, check if the Clipboard API is available in the current environment.
+	// `typeof navigator === 'undefined'` handles cases where `navigator` itself is not defined (e.g., non-browser environments, though this is a browser utility).
+	// `!navigator.clipboard` checks if the clipboard property exists on the navigator object.
 	if (typeof navigator === 'undefined' || !navigator.clipboard) {
+		// If the API is not available, reject the promise with a specific error message.
+		// This allows the caller to handle this scenario, perhaps by using a fallback method.
 		return Promise.reject(
 			new Error(
-				'Clipboard API not available. Use a fallback or ensure secure context (HTTPS).',
+				'Clipboard API not available. Ensure you are in a secure context (HTTPS) and the browser supports it.',
 			),
 		);
 	}
+
 	try {
-		// The text parameter must be a string.
-		// navigator.clipboard.writeText will handle empty strings correctly.
+		// Attempt to write the provided text to the clipboard.
+		// `navigator.clipboard.writeText()` returns a Promise that resolves when the operation is successful.
+		// It's crucial that `text` is a string. While `writeText` might attempt to coerce other types,
+		// it's best practice to ensure it's a string before calling.
 		await navigator.clipboard.writeText(text);
+		// If `writeText` resolves, the copy operation was successful.
+		// The function implicitly returns a resolved promise with `undefined` value.
 	} catch (err) {
-		// The error (err) is often a DOMException.
+		// If `navigator.clipboard.writeText()` rejects, an error occurred.
+		// This error (err) is typically a DOMException, which can provide more details
+		// about the failure (e.g., "Document is not focused", "User denied permission to clipboard write access").
+		// Reject the promise with the error received from the Clipboard API.
 		return Promise.reject(err);
 	}
 }
