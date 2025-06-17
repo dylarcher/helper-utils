@@ -70,6 +70,18 @@ describe('decrypt(encryptedTextWithIv, key)', () => {
 		);
 	});
 
+	it('should throw error for invalid format (multiple colons)', () => {
+		const invalidFormat = 'iv:encrypted:extra';
+		assert.throws(
+			() => {
+				decrypt(invalidFormat, testKey);
+			},
+			{
+				message: 'Invalid encrypted text format. Expected ivHex:encryptedHex',
+			},
+		);
+	});
+
 	it('should throw error for invalid format (empty IV)', () => {
 		const invalidFormat = ':encryptedtext';
 
@@ -292,13 +304,13 @@ describe('decrypt(encryptedTextWithIv, key) - Additional Error Handling', () => 
 			'Should throw a wrapped error for non-hex IV part',
 		);
 	});
-	it('should handle crypto errors during decryption process', () => {
+	it('should handle crypto errors (e.g. invalid ciphertext hex) during decryption process', () => {
 		// Test crypto errors that might occur during the decryption process
 		const validIv = '1234567890abcdef1234567890abcdef';
 		const invalidCiphertext = 'notvalidhex';
 
 		assert.throws(
-			() => {
+			() => { // This will throw during decipher.update('notvalidhex', 'hex', 'utf8')
 				decrypt(`${validIv}:${invalidCiphertext}`, testKey);
 			},
 			{
@@ -307,14 +319,13 @@ describe('decrypt(encryptedTextWithIv, key) - Additional Error Handling', () => 
 		);
 	});
 
-	it('should handle error objects without message property', () => {
-		// Create a scenario that might trigger an error without standard message property
+	it('should handle crypto errors (e.g. short ciphertext) that might trigger "bad decrypt"', () => {
 		const validIv = '1234567890abcdef1234567890abcdef';
 		// Use a very short ciphertext that might cause internal crypto errors
 		const shortCiphertext = '12';
 
 		assert.throws(
-			() => {
+			() => { // This will likely throw "bad decrypt" or similar during decipher.final()
 				decrypt(`${validIv}:${shortCiphertext}`, testKey);
 			},
 			{
@@ -323,22 +334,8 @@ describe('decrypt(encryptedTextWithIv, key) - Additional Error Handling', () => 
 		);
 	});
 
-	it('should handle falsy error values in catch block', () => {
-		// This is a bit contrived but tests the 'Unknown error' fallback
-		const validIv = '1234567890abcdef1234567890abcdef';
-		// Try with completely invalid hex that might cause unexpected error types
-		const invalidHex = 'gggggggggggggggggggggggggggggggg';
-
-		assert.throws(
-			() => {
-				decrypt(`${validIv}:${invalidHex}`, testKey);
-			},
-			{
-				message: /Decryption failed:/,
-			},
-		);
-	});
-	it('should handle error without message property triggering Unknown error fallback', t => {
+	// Renamed for clarity and to ensure it tests the "Unknown error" path specifically
+	it('should use "Unknown error" when Buffer.from throws non-Error without message', t => {
 		// Use Node.js test mocking to replace the Buffer.from method temporarily
 		const originalBufferFrom = Buffer.from;
 
@@ -368,6 +365,81 @@ describe('decrypt(encryptedTextWithIv, key) - Additional Error Handling', () => 
 			);
 		} finally {
 			// Restore the original method
+			Buffer.from = originalBufferFrom;
+		}
+	});
+
+	it('should use "Unknown error" for non-Error object without message from Buffer.from', () => {
+		// Test case where the caught error is not an Error instance and has no message property
+		// This tests the fallback to 'Unknown error'
+		// We'll test this through Buffer.from error since we can't easily mock createDecipheriv
+
+		// Test with malformed hex that causes Buffer.from to throw
+		const malformedEncryptedWithIv = 'invalidhex:malformeddata';
+		const key = Buffer.from('0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef', 'hex');
+
+		// Mock Buffer.from to throw a non-Error object (this is a theoretical test scenario)
+		const originalBufferFrom = Buffer.from;
+		let callCount = 0;
+		
+		Buffer.from = function(...args) {
+			callCount++;
+			// On the first call (IV conversion), throw a non-Error object without message
+			if (callCount === 1 && args[1] === 'hex') {
+				throw { code: 'BUFFER_ERROR', details: 'hex conversion failed' };
+			}
+			// For other calls, use original Buffer.from
+			return originalBufferFrom.apply(this, args);
+		};
+
+		try {
+			assert.throws(
+				() => decrypt(malformedEncryptedWithIv, key),
+				(err) => {
+					return (
+						err instanceof Error &&
+						err.message.includes('Decryption failed: Unknown error')
+					);
+				},
+				'Should throw error with "Unknown error" message for non-Error objects without message',
+			);
+		} finally {
+			// Restore original function
+			Buffer.from = originalBufferFrom;
+		}
+	});
+
+	it('should use message from non-Error object if it has a string message property', () => {
+		// Test with a scenario where Buffer.from throws a non-Error object with a message property
+		const customErrorMessage = 'Custom error from a plain object';
+		const malformedEncryptedWithIv = 'invalidhex:malformeddata';
+		const key = Buffer.from('0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef', 'hex');
+
+		const originalBufferFrom = Buffer.from;
+		let callCount = 0;
+		
+		Buffer.from = function(...args) {
+			callCount++;
+			// On the first call (IV conversion), throw a non-Error object with message
+			if (callCount === 1 && args[1] === 'hex') {
+				const errObj = { message: customErrorMessage, code: 'CUSTOM_BUFFER_ERROR' };
+				throw errObj;
+			}
+			// For other calls, use original Buffer.from
+			return originalBufferFrom.apply(this, args);
+		};
+
+		try {
+			assert.throws(
+				() => decrypt(malformedEncryptedWithIv, key),
+				(errThrown) => {
+					assert.ok(errThrown instanceof Error, 'Outer thrown error should be an Error instance');
+					assert.strictEqual(errThrown.message, `Decryption failed: ${customErrorMessage}`);
+					return true;
+				},
+				'Should use message from non-Error object that has a message property');
+		} finally {
+			// Restore original Buffer.from function
 			Buffer.from = originalBufferFrom;
 		}
 	});

@@ -104,7 +104,8 @@ export function createElement(
 			// If value is `null` or `undefined`, setAttribute might behave differently across browsers/attributes,
 			// generally, it's better to explicitly not call setAttribute or use removeAttribute.
 			// However, common usage passes strings, numbers, or booleans.
-			if (value != null) { // Skip if value is null or undefined
+			if (value != null) {
+				// Skip if value is null or undefined
 				element.setAttribute(key, value);
 			}
 		}
@@ -139,7 +140,8 @@ export function createElement(
 		// If the child is a DOM Node (or an object that behaves like one, e.g., in some test environments),
 		// and it's not null/undefined, append it directly.
 		// The `child` check implicitly filters out `null` and `undefined`.
-		else if (child && typeof child.nodeType === 'number') { // Basic check for Node-like objects
+		else if (child && typeof child.nodeType === 'number') {
+			// Basic check for Node-like objects
 			parentElement.appendChild(child);
 		}
 		// Falsy values like null, undefined, or empty strings (if not caught by typeof string)

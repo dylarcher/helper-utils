@@ -110,7 +110,7 @@ export function debounce(func, delay) {
 				// can be easily missed as they don't propagate like synchronous errors.
 				// We avoid re-throwing the error, as it would become an uncaught exception
 				// in the asynchronous context of `setTimeout`.
-				console.error('Error in debounced function execution:', error);
+				console.error('Error in debounced function:', error);
 			}
 			// Once func has executed (or attempted to), the timeout is complete.
 			// timeoutId remains the ID of this completed timeout but a new call to the

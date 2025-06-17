@@ -103,7 +103,7 @@ export function toggleClass(element, className, force) {
 			//
 			// This function (`toggleClass`) itself returns `void`, not the result of `element.classList.toggle()`.
 			element.classList.toggle(className, force);
-		} catch (error) {
+		} catch (_error) {
 			// Step 3: Handle potential errors.
 			// `classList.toggle()` can throw an error if `className` contains invalid characters
 			// (like spaces), as class names must be single tokens.

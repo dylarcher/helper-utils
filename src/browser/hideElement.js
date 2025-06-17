@@ -70,7 +70,7 @@ export function hideElement(element) {
 			// This fallback is mostly for very old browsers or non-standard DOM implementations.
 			element.style.display = 'none';
 		}
-	} catch (error) {
+	} catch (_error) {
 		// Step 3: Handle potential errors.
 		// It's highly unlikely that setting `element.style.display` would throw an error
 		// for a valid HTML or SVG element, but this catch block provides robustness.

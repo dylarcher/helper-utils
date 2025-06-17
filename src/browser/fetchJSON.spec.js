@@ -459,7 +459,23 @@ describe('fetchJSON(url, options)', () => {
 		}
 	});
 
-	// ...existing code...
+	test('should handle error response where text() fails', async () => {
+		const errorResponse = {
+			ok: false,
+			status: 500,
+			statusText: 'Internal Server Error',
+			text: async () => {
+				throw new Error('Failed to read response body');
+			},
+		};
+
+		global.fetch = async () => errorResponse;
+
+		await assert.rejects(() => fetchJSON('https://api.example.com/error'), {
+			name: 'Error',
+			message: 'HTTP error 500: Internal Server Error. Body: [Could not read error response body]',
+		});
+	});
 });
 
 describe('Performance Tests for fetchJSON', () => {

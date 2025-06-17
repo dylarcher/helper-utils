@@ -77,7 +77,7 @@ export async function copyToClipboardAsync(text) {
 		// This allows the caller to handle this scenario, perhaps by using a fallback method.
 		return Promise.reject(
 			new Error(
-				'Clipboard API not available. Ensure you are in a secure context (HTTPS) and the browser supports it.',
+				'Clipboard API not available. Use a fallback or ensure secure context (HTTPS).',
 			),
 		);
 	}

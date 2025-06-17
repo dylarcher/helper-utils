@@ -61,7 +61,12 @@ export function hasClass(element, className) {
 	// Check if `element` is a valid DOM element with a `classList` property.
 	// The optional chaining `element?.classList` safely handles `element` being null or undefined.
 	// Also check if `className` is a non-empty string. `classList.contains('')` would throw.
-	if (!element?.classList || !className || typeof className !== 'string' || className.trim() === '') {
+	if (
+		!element?.classList ||
+		!className ||
+		typeof className !== 'string' ||
+		className.trim() === ''
+	) {
 		return false; // Invalid element or className, so it cannot have the class.
 	}
 
@@ -80,12 +85,11 @@ export function hasClass(element, className) {
 			// The initial check for `className` being empty or just whitespace should prevent this,
 			// but the try-catch is a fallback.
 			return element.classList.contains(className);
-		} else {
-			// If `element.classList.contains` is not a function (highly unlikely for valid Elements),
-			// we cannot determine if it has the class.
-			return false;
 		}
-	} catch (error) {
+		// If `element.classList.contains` is not a function (highly unlikely for valid Elements),
+		// we cannot determine if it has the class.
+		return false;
+	} catch (_error) {
 		// Step 3: Handle potential errors.
 		// `classList.contains()` can throw an error if `className` contains invalid characters
 		// (like spaces), as class names must be single tokens.

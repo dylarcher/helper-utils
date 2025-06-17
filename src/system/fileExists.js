@@ -89,7 +89,7 @@ export async function fileExists(filePath) {
 
 		// Step 2: If `fs.access` resolves, it means the file/directory exists.
 		return true;
-	} catch (error) {
+	} catch (_error) {
 		// Step 3: If `fs.access` rejects, an error occurred.
 		// - The most common error for an existence check is `ENOENT` (Error NO ENTry),
 		//   which means the file or directory at `filePath` does not exist.

@@ -94,7 +94,7 @@ export function setAttribute(element, attributeName, value) {
 		//
 		// If the attribute already exists, its value is updated. If it doesn't exist, it's created.
 		element.setAttribute(attributeName, value);
-	} catch (error) {
+	} catch (_error) {
 		// Step 3: Handle potential errors.
 		// `setAttribute` can throw a `DOMException` (e.g., `InvalidCharacterError`) if the `attributeName`
 		// contains invalid characters (like spaces, certain symbols, etc., depending on XML/HTML rules).

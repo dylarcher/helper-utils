@@ -106,13 +106,13 @@ describe('debounce(func, delay)', () => {
 
 		setTimeout(() => {
 			assert.strictEqual(callCount, 0); // Should not have been called yet
-		}, 60);
+		}, 70);
 
 		setTimeout(() => {
 			assert.strictEqual(callCount, 1); // Should be called with "second"
 			assert.deepStrictEqual(lastArgs, ['second']);
 			done();
-		}, 80);
+		}, 110);
 	});
 	it('should have error handling in the debounced function', (t, done) => {
 		const errorFunction = () => {

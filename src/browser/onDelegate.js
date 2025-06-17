@@ -133,7 +133,7 @@ export function onDelegate(
 						// - `evt`: Passes the original event object as an argument to the `callback`.
 						callback.call(target, evt);
 					}
-				} catch (error) {
+				} catch (_error) {
 					// Step 6: Handle errors from `target.matches(selector)`.
 					// The `matches()` method can throw a `SyntaxError` if the `selector` string
 					// is not a valid CSS selector.

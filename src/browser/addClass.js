@@ -53,13 +53,15 @@ export function addClass(element, ...classNames) {
 		//    - `Boolean(...)`: Converts the trimmed string (or falsy value) to a boolean.
 		//      Empty strings `''` become `false`, non-empty strings become `true`.
 		// This effectively removes any falsy or empty/whitespace-only class names.
-		const validClassNames = classNames.filter(className =>
-			Boolean(className && className.trim()),
-		);
+		const validClassNames = classNames
+			.filter(className =>
+				Boolean(className && typeof className === 'string' && className.trim()),
+			)
+			.map(className => className.trim());
 
 		// Only proceed if there are valid class names to add.
 		if (validClassNames.length > 0) {
-			// Use the spread operator to pass the filtered class names to element.classList.add().
+			// Use the spread operator to pass the filtered and trimmed class names to element.classList.add().
 			// `classList.add()` can take multiple arguments and will add each one as a class.
 			element.classList.add(...validClassNames);
 		}

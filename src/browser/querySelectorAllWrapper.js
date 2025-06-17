@@ -88,7 +88,7 @@ export function querySelectorAllWrapper(selector, container) {
 		// `Array.from()` converts the `NodeList` (or any iterable/array-like object) into a true `Array`.
 		// This allows the caller to immediately use any array methods on the result.
 		return Array.from(targetContainer.querySelectorAll(selector));
-	} catch (error) {
+	} catch (_error) {
 		// Step 4: Handle potential errors during `querySelectorAll`.
 		// `querySelectorAll` can throw an error (typically a `DOMException` with `SyntaxError`)
 		// if the provided `selector` string is not a valid CSS selector.

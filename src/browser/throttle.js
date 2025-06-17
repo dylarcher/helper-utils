@@ -116,11 +116,10 @@ export function throttle(func, limit) {
 
 			// Return the result of the executed function.
 			return lastResult;
-		} else {
-			// The call is throttled because not enough time has passed since the last execution.
-			// As per the function's design, return `undefined` for throttled calls.
-			// (An alternative design might return `lastResult` here, to provide the most recent successful value).
-			return undefined;
 		}
+		// The call is throttled because not enough time has passed since the last execution.
+		// As per the function's design, return `undefined` for throttled calls.
+		// (An alternative design might return `lastResult` here, to provide the most recent successful value).
+		return undefined;
 	};
 }

@@ -98,7 +98,7 @@
         "prepublishOnly": "npm run build",
         "publish:npm": "npm publish",
         "test": "node --no-warnings --test src/**/*.spec.js src/**/*.test.js",
-        "test:coverage": "c8 --config .github/presets/.c8rc --experimental-monocart --reporter=v8 --reporter=console-details -- npm run test",
+        "test:coverage": "c8 --config .github/presets/.c8rc --experimental-monocart --reporter v8 --reporter console-details -- npm run test",
         "test:debug": "npm test --inspect-brk",
         "test:watch": "npm test --watch",
         "update": "npm update && npm clean-install && npm run build",
@@ -106,7 +106,7 @@
         "version:major": "npm version major -m \"chore(release-major): v%s\"",
         "version:minor": "npm version minor -m \"chore(release-minor): v%s\"",
         "version:patch": "npm version patch -m \"chore(release-patch): v%s\"",
-        "version:prerelease": "npm version prerelease --preid=${1:-alpha} -m \"chore(pre-release): v%s\""
+        "version:prerelease": "npm version prerelease --preid ${1:-alpha} -m \"chore(pre-release): v%s\""
     },
     "type": "module",
     "types": "dist/index.d.ts",

@@ -83,7 +83,7 @@ export function findClosest(element, selector) {
 		// If a match is found, that element is returned.
 		// If no match is found after checking all ancestors, `closest()` returns `null`.
 		return element.closest(selector);
-	} catch (error) {
+	} catch (_error) {
 		// Catch potential errors. The most common error here is a `SyntaxError`
 		// if the provided `selector` string is not a valid CSS selector.
 		// Instead of letting the error propagate, we return `null` to indicate failure.

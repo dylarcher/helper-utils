@@ -178,7 +178,7 @@ export function fetchJSON(url, options = {}) {
 				try {
 					// Attempt to read the response body as text, as it might contain error details.
 					errorData = await response.text();
-				} catch (e) {
+				} catch (_e) {
 					// If reading the body fails, use a placeholder.
 					errorData = '[Could not read error response body]';
 				}
@@ -219,11 +219,8 @@ export function fetchJSON(url, options = {}) {
 			} catch (jsonError) {
 				// If response.json() fails (e.g. body is valid JSON but malformed, or empty string for some reason)
 				console.error('Failed to parse JSON response:', jsonError);
-				// Re-throw as a more specific error or return null, depending on desired strictness.
-				// For now, let it propagate as an error from response.json() or return null.
-				// Returning null might be safer if server sometimes sends invalid JSON on success.
-				throw new Error(`Failed to parse JSON response: ${jsonError.message}`);
-				// return null;
+				// Re-throw the original error to preserve error type (e.g., SyntaxError)
+				throw jsonError;
 			}
 		},
 	);

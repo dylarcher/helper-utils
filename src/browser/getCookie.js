@@ -53,7 +53,7 @@
  * // const nodeCookie = getCookie('anyCookie');
  * // console.log(nodeCookie); // Output: null
  */
-export function getCookie(name) {
+export function getCookie(cookieName) {
 	// Check if the function is running in a browser environment with access to document.cookie.
 	// `typeof document === 'undefined'` handles server-side rendering or Node.js environments.
 	// `!document.cookie` handles cases where `document` exists but `cookie` property is not available or empty.
@@ -91,11 +91,13 @@ export function getCookie(name) {
 
 			// Extract the cookie name. It's the part of the string before the first '='.
 			// Trim any whitespace around the extracted name.
-			const cookieName = trimmedCookie.substring(0, separatorIndex).trim();
+			const currentCookieName = trimmedCookie
+				.substring(0, separatorIndex)
+				.trim();
 
-			// Compare the extracted cookie name with the requested `name`.
+			// Compare the extracted cookie name with the requested `cookieName`.
 			// This comparison is case-sensitive.
-			if (cookieName === name) {
+			if (currentCookieName === cookieName) {
 				// If the names match, extract the cookie value.
 				// The value is everything after the first '='.
 				// Trim any whitespace around the extracted value.

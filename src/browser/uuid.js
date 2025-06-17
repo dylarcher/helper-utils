@@ -72,15 +72,15 @@ export function uuid() {
 		// Step 2: If available, call `crypto.randomUUID()`.
 		// This method directly returns a cryptographically strong Version 4 UUID string.
 		return crypto.randomUUID();
-	} else {
-		// Step 3: If `crypto.randomUUID` is not available, throw an error.
-		// This informs the caller that the preferred UUID generation method failed.
-		// The caller can then decide to catch this error and potentially use a fallback
-		// mechanism if wider compatibility (e.g., with very old browsers) is required.
-		// A common fallback might involve a math-random-based UUID generator, though
-		// such fallbacks are not as cryptographically strong.
-		throw new Error('crypto.randomUUID is not available in this browser.');
 	}
+	// Step 3: If `crypto.randomUUID` is not available, throw an error.
+	// This informs the caller that the preferred UUID generation method failed.
+	// The caller can then decide to catch this error and potentially use a fallback
+	// mechanism if wider compatibility (e.g., with very old browsers) is required.
+	// A common fallback might involve a math-random-based UUID generator, though
+	// such fallbacks are not as cryptographically strong.
+	throw new Error('crypto.randomUUID is not available in this browser.');
+
 	// Note: There's no explicit fallback to older or custom UUID generation methods
 	// in this function. It strictly relies on the modern `crypto.randomUUID()` API.
 }

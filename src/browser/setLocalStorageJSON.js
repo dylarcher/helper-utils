@@ -96,14 +96,7 @@ export function setLocalStorageJSON(key, value) {
 	// Step 2: Stringify the JavaScript value.
 	// `JSON.stringify()` serializes a JavaScript value into a JSON string.
 	// It can throw a `TypeError` if it encounters circular references within the `value`.
-	let stringified;
-	try {
-		stringified = JSON.stringify(value);
-	} catch (stringifyError) {
-		// If JSON.stringify fails (e.g. circular reference), re-throw the error.
-		throw stringifyError;
-	}
-
+	const stringified = JSON.stringify(value);
 
 	// Step 3: Handle cases where JSON.stringify returns `undefined`.
 	// `JSON.stringify()` returns `undefined` if the value passed to it is:
@@ -123,13 +116,7 @@ export function setLocalStorageJSON(key, value) {
 	// - `QuotaExceededError` (a `DOMException`): If the storage limit for the origin is exceeded.
 	// - Other errors if `localStorage` is disabled or access is denied.
 	// These errors are not caught here and will propagate to the caller.
-	try {
-		localStorage.setItem(key, finalValue);
-	} catch (setItemError) {
-		// If localStorage.setItem fails, re-throw the error.
-		throw setItemError;
-	}
-
+	localStorage.setItem(key, finalValue);
 
 	// Step 5: Return true on successful storage.
 	// This indicates that the `setItem` call was attempted without throwing an immediate error.

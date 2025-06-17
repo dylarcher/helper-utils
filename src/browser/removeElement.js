@@ -78,7 +78,7 @@ export function removeElement(element) {
 		// Note: A more modern alternative is `element.remove()`, which directly removes the element
 		// from its parent without needing to reference `parentNode`. However, this implementation
 		// uses `removeChild`. Example: `if (typeof element.remove === 'function') { element.remove(); }`
-	} catch (error) {
+	} catch (_error) {
 		// Step 3: Handle potential errors during removal.
 		// Errors are rare here if `element.parentNode` was valid moments before, but they could occur if:
 		// - The DOM was modified by another script between the `parentNode` check and this `removeChild` call,

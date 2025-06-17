@@ -98,7 +98,7 @@ export function querySelectorWrapper(selector, container) {
 		// - If a match is found, it returns that `Element` object.
 		// - If no match is found, it returns `null`.
 		return targetContainer.querySelector(selector);
-	} catch (error) {
+	} catch (_error) {
 		// Step 4: Handle potential errors during `querySelector`.
 		// `querySelector` can throw an error (typically a `DOMException` with `SyntaxError`)
 		// if the provided `selector` string is not a valid CSS selector.
