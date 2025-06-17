@@ -27,9 +27,11 @@ export default [
 		ignores: [
 			'dist/**',
 			'docs/**',
-			'coverage/**',
 			'node_modules/**',
-			'scripts/**', // Ignore build/utility scripts
+			'res/**',
+			'utils/**',
+			'.*',
+			'scripts/**',
 		],
 	},
 	// Base configurations
