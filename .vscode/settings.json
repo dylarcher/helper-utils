@@ -141,5 +141,13 @@
     "typescript.format.enable": false,
     "typescript.validate.enable": false,
     "yaml.format.enable": false,
-    "yaml.validate": false
+    "yaml.validate": false,
+    "cSpell.words": [
+        "dawidd",
+        "jsonata",
+        "keepachangelog",
+        "monocart",
+        "refac",
+        "stedi"
+    ]
 }

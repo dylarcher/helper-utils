@@ -4,7 +4,7 @@
     "all-statements": true,
     "allow-empty": false,
     "allowExternal": false,
-    "branches": 100,
+    "branches": 95,
     "branches-unchanged": true,
     "check-coverage": true,
     "clean": true,

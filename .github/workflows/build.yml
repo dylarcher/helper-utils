@@ -1,0 +1,69 @@
+---
+name: PR Build
+
+on:
+  pull_request:
+    types:
+      - edited
+      - opened
+      - reopened
+      - synchronize
+  workflow_dispatch:
+
+env:
+  HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+  HEAD_REF: ${{ github.event.pull_request.head.ref }}
+  GPR_INT: ${{ github.event.pull_request.number }}
+  GIT_REPO: ${{ github.repository }}
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout PR Code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: npm
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Check Formatting
+        run: npm run format:check
+
+      - name: Build Project (includes lint fixes, coverage, dist)
+        run: npm run build
+
+      - name: Archive Built Code
+        uses: actions/upload-artifact@v4
+        with:
+          name: built-repo-${{ github.run_id }}
+          path: |
+            .
+            !node_modules/
+          if-no-files-found: error
+
+      - name: Archive PR details
+        run: |
+          mkdir -p pr_details
+          echo "$GPR_INT" > pr_details/GPR_INT
+          echo "$HEAD_REF" > pr_details/HEAD_REF
+          echo "$HEAD_SHA" > pr_details/HEAD_SHA
+
+      - name: Upload PR details
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-details-${{ github.run_id }}
+          path: pr_details/
+          if-no-files-found: error

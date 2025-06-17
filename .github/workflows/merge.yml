@@ -1,0 +1,223 @@
+---
+name: PR Integrate
+
+on:
+  workflow_run:
+    workflows:
+      - "PR Build"
+    types:
+      - completed
+
+env:
+  GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GIT_ACTION: ${{ github.event.workflow_run.id }}
+
+jobs:
+  integrate:
+    name: Integrate, Commit, Version, and Package
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success'
+
+    permissions:
+      contents: write
+      packages: write
+
+    steps:
+      - name: Download PR Metadata Artifact
+        uses: dawidd6/action-download-artifact@ac66b43f0e6a346234dd65d4d0c8fbb31cb316e5
+        with:
+          workflow_conclusion: success
+          run_id: $GIT_ACTION
+          name: pr-details-$GIT_ACTION
+          path: ${{ runner.temp }}/artifacts/pr_details_artifact
+
+      - name: Load PR Metadata into Environment
+        id: pr_vars
+        run: |
+          ARTIFACT_DIR="${{ runner.temp }}/artifacts/pr_details_artifact"
+          if [ ! -f "$ARTIFACT_DIR/GPR_INT" ] || [ ! -f "$ARTIFACT_DIR/HEAD_REF" ] || [ ! -f "$ARTIFACT_DIR/HEAD_SHA" ]; then
+            echo "Required artifact files are missing or corrupted. Exiting."; exit 1
+          fi
+
+          GPR_INT=$(cat "$ARTIFACT_DIR/GPR_INT" | tr -d '\n' | grep -E '^[0-9]+$' || echo "invalid")
+          HEAD_REF=$(cat "$ARTIFACT_DIR/HEAD_REF" | grep -E '^[a-zA-Z0-9/_-]+$' || echo "invalid")
+          HEAD_SHA=$(cat "$ARTIFACT_DIR/HEAD_SHA" | grep -E '^[a-f0-9]{40}$' || echo "invalid")
+
+          if [[ ! "$GPR_INT" =~ ^[0-9]+$ ]]; then
+            echo "Invalid GPR_INT value: $GPR_INT" >&2
+            exit 1
+          fi
+
+          if [[ ! "$HEAD_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "Invalid HEAD_SHA value: $HEAD_SHA" >&2
+            exit 1
+          fi
+
+          if [[ ! "$HEAD_REF" =~ ^[a-zA-Z0-9/_-]+$ ]]; then
+            echo "Invalid HEAD_REF value: $HEAD_REF" >&2
+            exit 1
+          fi
+
+          echo "GPR_INT=$GPR_INT" >> $GITHUB_ENV
+          echo "HEAD_REF=$HEAD_REF" >> $GITHUB_ENV
+          echo "HEAD_SHA=$HEAD_SHA" >> $GITHUB_ENV
+
+          echo "GPR_INT=$GPR_INT" >> $GITHUB_OUTPUT
+          echo "HEAD_REF=$HEAD_REF" >> $GITHUB_OUTPUT
+          echo "HEAD_SHA=$HEAD_SHA" >> $GITHUB_OUTPUT
+
+          export HEAD_REF
+          export HEAD_SHA
+
+      - name: Checkout PR Branch
+        uses: actions/checkout@v4
+        with:
+          ref: $HEAD_REF
+          token: ${{ env.GIT_TOKEN }}
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          registry-url: https://registry.npmjs.org
+          cache: npm
+        env:
+          NODE_AUTH_TOKEN: ${{ steps.pr_vars.outputs.NPM_TOKEN }}
+
+      - name: Configure Git User and Synchronize Branch
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git remote set-url origin "https://x-access-token:$GIT_TOKEN@github.com/${{ github.repository }}"
+          echo "Ensuring branch $HEAD_REF is at commit $HEAD_SHA"
+          git fetch origin "$HEAD_REF"
+          if [[ "$HEAD_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            git reset --hard "$HEAD_SHA"
+          else
+            echo "Invalid HEAD_SHA value: $HEAD_SHA" >&2
+            exit 1
+          fi
+
+      - name: Download and Apply Built Code Artifact
+        uses: dawidd6/action-download-artifact@ac66b43f0e6a346234dd65d4d0c8fbb31cb316e5
+        with:
+          workflow_conclusion: success
+          run_id: $GIT_ACTION
+          name: built-repo-$GIT_ACTION
+          path: ${{ runner.temp }}/artifacts/built_repo_$GIT_ACTION
+
+      - name: Install Dependencies
+        run: |
+          echo "Verifying artifact contents..."
+          if [ ! -f "${{ runner.temp }}/built-repo-$GIT_ACTION/package.json" ] || [ ! -f "${{ runner.temp }}/built-repo-$GIT_ACTION/package-lock.json" ]; then
+            echo "Error: Required files are missing from the artifact." >&2
+          fi
+          if [ ! -f "${{ runner.temp }}/artifacts/built_repo_${{ env.GIT_ACTION }}/package.json" ] || [ ! -f "${{ runner.temp }}/artifacts/built_repo_${{ env.GIT_ACTION }}/package-lock.json" ]; then
+            echo "Error: Required files are missing from the artifact." >&2
+            exit 1
+          fi
+          cp "${{ runner.temp }}/artifacts/built_repo_${{ env.GIT_ACTION }}/package.json" ./
+          cp "${{ runner.temp }}/artifacts/built_repo_${{ env.GIT_ACTION }}/package-lock.json" ./
+
+      - name: Commit and Push Build Changes
+        id: build_and_commit
+        run: |
+          echo "Applying built changes (lint fixes, test coverage, dist generation)…"
+          ANY_COMMITS_MADE=false
+          git_reset() {
+            if [ "$1" = "clear" ]; then
+              git reset > /dev/null 2>&1
+            elif [ "$1" = "unstage" ] && [ -d "$2" ] && git diff --name-only --staged -- "$2" | grep -q .; then
+              echo "Unstaging $2/ for the current commit."
+              git reset HEAD -- "$2"
+            fi
+          }
+          echo "Checking for lint/format changes…"
+          git_reset clear
+          git add .
+          git_reset unstage "dist"
+          git_reset unstage "coverage"
+          if ! git diff --staged --quiet; then
+          echo "Committing lint/format changes…"
+            git commit -m "fix: aligns syntax to lint and format standards"
+            ANY_COMMITS_MADE=true
+          else
+            echo "No lint/format changes to commit."
+          fi
+          echo "Checking for test coverage changes…"
+          git_reset clear
+          if [ -d "coverage" ]; then
+            git add coverage/
+            if ! git diff --staged --quiet; then
+              echo "Committing test coverage results…"
+              git commit -m "chore: updates test coverage results"
+              ANY_COMMITS_MADE=true
+            else
+              echo "No new or modified test coverage results to commit."
+            fi
+          else
+            echo "Coverage directory not found in artifact, skipping coverage commit."
+          fi
+          echo "Checking for dist directory changes…"
+          git_reset clear
+          if [ -d "dist" ]; then
+            git add dist/
+            if ! git diff --staged --quiet; then
+              echo "Committing dist files…"
+              git commit -m "dist: updates type, source-map, and library files"
+              ANY_COMMITS_MADE=true
+            else
+              echo "No new or modified dist files to commit."
+            fi
+          else
+            echo "Dist directory not found in artifact, skipping dist commit."
+          fi
+          if [ "$ANY_COMMITS_MADE" = true ]; then
+            echo "Pushing build changes to $HEAD_REF…"
+            git push origin "$HEAD_REF"
+          else
+            echo "No changes were committed by this step."
+          fi
+          echo "any_commits_made=$ANY_COMMITS_MADE" >> $GITHUB_OUTPUT
+
+      - name: Version, Package, and Publish
+        id: version_publish_compress
+        run: |
+          if [ ! -d "dist" ] || [ ! -f "package.json" ]; then
+            echo "Dist directory or package.json not found. Skipping versioning, publishing, and compression."
+            echo "skipped_all=true" >> $GITHUB_OUTPUT; exit 0
+          fi; echo "skipped_all=false" >> $GITHUB_OUTPUT
+
+          BRANCH_NAME="$HEAD_REF"
+          if [[ ! "$BRANCH_NAME" =~ ^[a-zA-Z0-9/_-]+$ ]]; then
+            echo "Invalid branch name format: $BRANCH_NAME" >&2
+            exit 1
+          fi
+
+          if [[ ! "$GPR_INT" =~ ^[0-9]+$ ]]; then
+
+          if [[ ! "$GPR_INT" =~ ^[0-9]+$ ]]; then
+            echo "Invalid PR number format: $GPR_INT" >&2
+            exit 1
+          fi
+
+          if [[ "$BRANCH_NAME" == fix/* ]]; then VERSION_BUMP="patch";
+          elif [[ "$BRANCH_NAME" == refac/* ]]; then VERSION_BUMP="major"; fi
+          echo "Determined version bump: $VERSION_BUMP for branch $BRANCH_NAME"
+
+          echo "Updating package version (triggers postversion script for push & publish)…"
+          npm version "$VERSION_BUMP" -m "chore(release): version %s for PR #$GPR_INT"
+          tar -czf dist.tar.gz dist; zip -r dist.zip dist
+          LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`);
+          echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
+
+      - name: Upload Distribution Archives Artifact
+        if: steps.version_publish_compress.outputs.skipped_all != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: distribution-archives-${{ github.run_id }}
+          path: |
+            dist.tar.gz
+            dist.zip
+          if-no-files-found: error
