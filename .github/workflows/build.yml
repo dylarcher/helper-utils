@@ -42,7 +42,7 @@ jobs:
           cache: npm
 
       - name: Install Dependencies
-        run: npm ci
+        run: npm install
 
       - name: Check Formatting
         run: npm run format:check # Fails workflow if not formatted
