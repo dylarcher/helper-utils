@@ -1,15 +1,35 @@
+# This file uses the Citation File Format (CFF), a human- and machine-readable
+# format for providing citation metadata for software and datasets.
+# It helps researchers and developers easily cite the software they use.
+
+# Specifies the version of the CFF schema being used.
 cff-version: 1.2.0
+# A message displayed to users, often encouraging them to cite the software.
 message: If you use this software, please cite it as below.
+# A list of authors or contributors to the software.
 authors:
   - family-names: Archer
     given-names: Dylan
+    # ORCID iD provides a persistent digital identifier for researchers.
     orcid: https://orcid.org/0000-0002-1578-6401
+# The official title of the software.
 title: js.helper-utils
+# The version number of the software being cited.
+# This should ideally match a release tag in the repository.
 version: 2.0.0
+# The date when this version of the software was released.
+# Format: YYYY-MM-DD
 date-released: 2025-01-21
+# A URL where the software or more information about it can be found.
+# This is often the project's homepage or documentation site.
 url: https://github.com/dylarcher/js.helper-utils
+# The URL of the software's source code repository.
 repository-code: https://github.com/dylarcher/js.helper-utils
+# The license under which the software is distributed.
+# SPDX license identifiers (e.g., "MIT", "Apache-2.0") are recommended.
 license: MIT
+# A list of keywords that describe the software.
+# These help with discovery and categorization.
 keywords:
   - javascript
   - utilities

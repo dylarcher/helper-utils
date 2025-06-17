@@ -1,14 +1,47 @@
+# This is the root EditorConfig file. EditorConfig helps maintain consistent
+# coding styles for multiple developers working on the same project across
+# various editors and IDEs.
+# By setting `root = true`, EditorConfig will stop searching for .editorconfig
+# files in parent directories. This ensures that the settings defined in this
+# file are the definitive ones for this project.
 root = true
 
+# Universal settings for all files matched by the glob pattern.
+# This pattern `*.{cff,css,html,js,json,md,svg,ts,yml}` applies the following
+# rules to files with the specified extensions.
 [*.{cff,css,html,js,json,md,svg,ts,yml}]
+# Specifies the character set for the files.
+# `utf-8` is a universal character encoding that supports a wide range of characters
+# and is highly recommended for web and software development.
 charset = utf-8
+# Defines the line ending style.
+# `lf` (Line Feed) is the standard line ending for Unix-like systems (Linux, macOS).
+# Using a consistent line ending prevents issues with version control systems.
 end_of_line = lf
+# Sets the number of spaces used for indentation.
+# Here, indentation is set to 2 spaces.
 indent_size = 2
+# Defines the type of indentation.
+# `tab` means that actual tab characters will be used for indentation.
+# The display width of these tabs is controlled by `tab_width`.
 indent_style = tab
+# Ensures that files end with a single newline character.
+# This can prevent issues with some tools and scripts that process text files.
 insert_final_newline = true
+# Specifies the preferred type of quotes for strings (relevant for languages like JS/TS).
+# `single` means single quotes (e.g., 'string') are preferred over double quotes.
+# This is often a stylistic choice enforced by linters.
 quote_type = single
+# Sets the display width of a tab character.
+# When `indent_style = tab` is used, this ensures tabs are displayed as 2 spaces wide.
 tab_width = 2
+# Removes any whitespace characters (spaces or tabs) at the end of lines.
+# This helps keep the codebase clean and avoids unnecessary diffs in version control.
 trim_trailing_whitespace = true
 
+# Specific settings for Markdown files (`*.md`).
 [*.md]
+# Overrides the `trim_trailing_whitespace` setting for Markdown files.
+# In Markdown, trailing whitespace can sometimes be significant (e.g., for line breaks),
+# so it's often disabled.
 trim_trailing_whitespace = false
