@@ -12,7 +12,6 @@ on:
 
 env:
   CI: true
-  NODE_ENV: production
   NODE_OPTIONS: --max-old-space-size=4096
   GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   HEAD_SHA: ${{ github.event.pull_request.head.sha }}
@@ -42,7 +41,7 @@ jobs:
           cache: npm
 
       - name: Install Dependencies
-        run: npm install
+        run: npm ci
 
       - name: Check Formatting
         run: npm run format:check
