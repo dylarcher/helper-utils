@@ -1,4 +1,4 @@
-name: Documentation
+name: Generate API Documentation
 
 on:
   push:
@@ -7,33 +7,33 @@ on:
   workflow_dispatch: # Allows manual triggering
 
 jobs:
-  documentation:
-    name: Specification
+  generate_docs:
     runs-on: ubuntu-latest
     permissions:
       contents: write # Required to commit back to the repo
+
     steps:
-      - name: Prepare
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22.x' # Specify your desired Node.js version
           cache: 'npm'
 
-      - name: Install
+      - name: Install Dependencies
         run: |
           npm install @google/generative-ai
           echo "Installed @google/generative-ai"
 
-      - name: Generate
+      - name: Generate Documentation
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           node scripts/generate-documentation.js
 
-      - name: Deploy
+      - name: Commit and Push Documentation
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
