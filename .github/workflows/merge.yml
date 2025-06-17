@@ -207,8 +207,6 @@ jobs:
 
           echo "Updating package version (triggers postversion script for push & publish)…"
           npm version "$VERSION_BUMP" -m "chore(release): version %s for PR #$GPR_INT"
-          echo "Updating package version (triggers postversion script for push & publish)…"
-          npm version "$VERSION_BUMP" -m "chore(release): version %s for PR #$GPR_INT"
           tar -czf dist.tar.gz dist; zip -r dist.zip dist
           LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`);
           echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
