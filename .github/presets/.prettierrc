@@ -33,7 +33,7 @@
       "options": {
         "parser": "json"
       }
-    }
+    },
     {
       "files": "*.{json,jsonc,json5,jsonl}",
       "options": {
