@@ -143,6 +143,10 @@
     "yaml.format.enable": false,
     "yaml.validate": false,
     "cSpell.words": [
-        "refac"
+        "jsonata",
+        "keepachangelog",
+        "monocart",
+        "refac",
+        "stedi"
     ]
 }
