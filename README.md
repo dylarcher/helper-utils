@@ -1,8 +1,8 @@
 # js-helpers
 
 [![CodeQL](https://github.com/dylarcher/js.helper-utils/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/dylarcher/js.helper-utils/actions/workflows/github-code-scanning/codeql)
-[![Validate](https://github.com/dylarcher/helper-utils/actions/workflows/validate.yml/badge.svg)](https://github.com/dylarcher/helper-utils/actions/workflows/validate.yml)
-[![Test](https://github.com/dylarcher/js.helper-utils/actions/workflows/test.yml/badge.svg)](https://github.com/dylarcher/js.helper-utils/actions/workflows/test.yml)
+[![PR Build](https://github.com/dylarcher/helper-utils/actions/workflows/build.yml/badge.svg)](https://github.com/dylarcher/helper-utils/actions/workflows/build.yml)
+[![PR Integrate](https://github.com/dylarcher/helper-utils/actions/workflows/merge.yml/badge.svg)](https://github.com/dylarcher/helper-utils/actions/workflows/merge.yml)
 [![Downloads](https://img.shields.io/npm/dm/js-helpers.svg)](https://www.npmjs.com/package/js-helpers)
 [![Latest](https://img.shields.io/github/last-commit/dylarcher/js.helper-utils.svg)](https://github.com/dylarcher/js.helper-utils/commits/main)
 [![Size](https://img.shields.io/github/repo-size/dylarcher/js.helper-utils.svg)](https://github.com/dylarcher/js.helper-utils)
@@ -14,24 +14,22 @@ Node.js environments. (public npmjs library: [@darcher/js-helpers](https://www.n
 
 ## Table of Contents
 
-- [About The Project](#about-the-project)
-  - [Built With](#built-with)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-- [Usage](#usage)
-  - [Available Utility Methods](#available-utility-methods)
-    - [Browser Utilities](#browser-utilities)
-    - [System Utilities (Node.js)](#system-utilities-nodejs)
-- [Development](#development)
-  - [Project Structure](#project-structure)
-  - [Available Scripts](#available-scripts)
-  - [Running Tests](#running-tests)
-  - [Linting and Formatting](#linting-and-formatting)
-  - [Building the Project](#building-the-project)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
+- [js-helpers](#js-helpers)
+  - [Table of Contents](#table-of-contents)
+  - [About The Project](#about-the-project)
+    - [Built With](#built-with)
+  - [Getting Started](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
+  - [Usage](#usage)
+    - [Available Utility Methods](#available-utility-methods)
+      - [Browser Utilities](#browser-utilities)
+      - [System Utilities (Node.js)](#system-utilities-nodejs)
+  - [API Documentation](#api-documentation)
+  - [Development](#development)
+    - [Project Structure](#project-structure)
+    - [Available Scripts](#available-scripts)
+    - [Running Tests](#running-tests)
 
 ---
 
@@ -64,6 +62,7 @@ Make sure you have the following installed:
   ```sh
   node -v
   ```
+
 - npm (version >=10.8.2 recommended)
 
   ```sh
@@ -78,6 +77,7 @@ Make sure you have the following installed:
    git clone https://github.com/dylarcher/js.helper-utils.git
    cd js.helper-utils
    ```
+
 2. Install NPM packages:
 
    ```sh
@@ -105,17 +105,17 @@ import { addClass, readFileAsync } from '@dylarcher/js-helpers';
 // Example for a browser utility
 const myElement = document.getElementById('my-element');
 if (myElement) {
-	addClass(myElement, 'new-class', 'another-class');
+ addClass(myElement, 'new-class', 'another-class');
 }
 
 // Example for a system utility (if in a Node.js environment)
 async function logFile() {
-	try {
-		const content = await readFileAsync('path/to/my-file.txt');
-		console.info(content);
-	} catch (err) {
-		console.error('Error reading file:', err);
-	}
+ try {
+  const content = await readFileAsync('path/to/my-file.txt');
+  console.info(content);
+ } catch (err) {
+  console.error('Error reading file:', err);
+ }
 }
 logFile();
 ```
@@ -185,9 +185,9 @@ These functions are intended for use in a browser environment.
 import { createElement, addClass, setStyle } from '@dylarcher/js-helpers';
 
 const newDiv = createElement(
-	'div',
-	{ id: 'myDiv', 'data-custom': 'value' },
-	'Hello World!',
+ 'div',
+ { id: 'myDiv', 'data-custom': 'value' },
+ 'Hello World!',
 );
 addClass(newDiv, 'mt-2', 'p-4');
 setStyle(newDiv, { backgroundColor: 'lightblue', borderRadius: '5px' });
@@ -238,30 +238,30 @@ polyfills.
 
 ```javascript
 import {
-	writeFileAsync,
-	readFileAsync,
-	joinPaths,
-	createDirectory,
+ writeFileAsync,
+ readFileAsync,
+ joinPaths,
+ createDirectory,
 } from '@dylarcher/js-helpers';
 import { homedir } from 'os'; // Node.js core module
 
 async function manageFiles() {
-	const userHome = homedir();
-	const myAppDir = joinPaths(userHome, '.myApp');
-	const myFile = joinPaths(myAppDir, 'example.txt');
+ const userHome = homedir();
+ const myAppDir = joinPaths(userHome, '.myApp');
+ const myFile = joinPaths(myAppDir, 'example.txt');
 
-	try {
-		await createDirectory(myAppDir);
-		console.info('Directory created:', myAppDir);
+ try {
+  await createDirectory(myAppDir);
+  console.info('Directory created:', myAppDir);
 
-		await writeFileAsync(myFile, 'Hello from js-helpers!\nThis is a new line.');
-		console.info('File written:', myFile);
+  await writeFileAsync(myFile, 'Hello from js-helpers!\nThis is a new line.');
+  console.info('File written:', myFile);
 
-		const content = await readFileAsync(myFile, 'utf8');
-		console.info('File content:', content);
-	} catch (error) {
-		console.error('An error occurred:', error);
-	}
+  const content = await readFileAsync(myFile, 'utf8');
+  console.info('File content:', content);
+ } catch (error) {
+  console.error('An error occurred:', error);
+ }
 }
 
 manageFiles();
