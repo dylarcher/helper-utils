@@ -5,28 +5,31 @@ on:
   pull_request:
     types: [edited,opened,reopened,synchronize]
 
+env:
+  CI: true
+  NODE_ENV: test
+  NODE_OPTIONS: --max-old-space-size=4096
+  GEMINI_TOKEN: ${{ secrets.GEMINI_API_KEY }}
+  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GITHUB_REPOSITORY: ${{ github.repository }}
+
 jobs:
   validate:
-    name: Lint & Format
+    name: Checks
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: read
 
-    strategy:
-      fail-fast: true
-      matrix:
-        node-version: [22.x]
-
     steps:
-      - name: Checkout
+      - name: Consume
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          submodules: recursive
-          ref: ${{ github.event.pull_request.head.sha }} # Checkout the PR branch securely
+          ref: ${{ github.event.pull_request.head.sha }}
 
-      - name: Setup
+      - name: Prepare
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
@@ -34,7 +37,128 @@ jobs:
           cache: npm
 
       - name: Install
-        run: npm install
+        run: npm ci
 
-      - name: Checks
-        run: npm run lint:check
+      - name: Analyze
+        run: npm run format:check
+
+      - name: Configure
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
+
+          #* · The checkout action checks out the PR head SHA. We need to be on the branch for commits.
+          git fetch origin ${{ github.event.pull_request.head.ref }}
+          git checkout ${{ github.event.pull_request.head.ref }}
+
+      - name: Check-in
+        id: build_and_commit
+        run: |
+          echo "Running build process (lint fixes, test coverage, dist generation)…"
+
+          #* · Assumes 'npm run build' executes prebuild (lint fixes, test coverage) and then builds dist.
+          npm run build
+          ANY_COMMITS_MADE=false
+
+          #* · Commit 1: Lint/Format changes (non-dist, non-coverage files)
+          echo "Checking for lint/format changes…"
+          git reset > /dev/null 2>&1 #? Clear any prior staging
+          git add -A #? Stage all changes initially
+
+          #* · Unstage dist and coverage if they exist and have staged changes
+          #* · This ensures this commit only contains other (e.g. source file) changes.
+          if [ -d "dist" ] && git diff --name-only --staged -- "dist" | grep -q .; then
+            echo "Unstaging dist/ for lint commit."
+            git reset HEAD -- "dist"
+          fi
+          if [ -d "coverage" ] && git diff --name-only --staged -- "coverage" | grep -q .; then
+            echo "Unstaging coverage/ for lint commit."
+            git reset HEAD -- "coverage"
+          fi
+          if ! git diff --staged --quiet; then
+            echo "Committing lint/format changes…"
+            git commit -m "fix: aligns syntax to lint/format standards"
+            ANY_COMMITS_MADE=true
+          else
+            echo "No lint/format changes to commit."
+          fi
+
+          #* · Commit 2: Test coverage results
+          echo "Checking for test coverage changes…"
+          git reset > /dev/null 2>&1 #* · Clear any prior staging
+          if [ -d "coverage" ]; then
+            git add coverage/
+            if ! git diff --staged --quiet; then #? · Check if adding coverage dir staged anything
+              echo "Committing test coverage results…"
+              git commit -m "chore: updates test coverage results"
+              ANY_COMMITS_MADE=true
+            else
+              echo "No new or modified test coverage results to commit."
+            fi
+          else
+            echo "Coverage directory not found, skipping coverage commit."
+          fi
+
+          #* · Commit 3: Distributable files
+          echo "Checking for dist directory changes…"
+          git reset > /dev/null 2>&1 #? · Clear any prior staging
+          if [ -d "dist" ]; then
+            git add dist/
+            if ! git diff --staged --quiet; then #? · Check if adding dist dir staged anything
+              echo "Committing dist files…"
+              git commit -m "dist: updates type, source-map, and library files"
+              ANY_COMMITS_MADE=true
+            else
+              echo "No new or modified dist files to commit."
+            fi
+          else
+            echo "Dist directory not found, skipping dist commit."
+          fi
+          if [ "$ANY_COMMITS_MADE" = true ]; then
+            echo "Pushing committed changes to ${{ github.event.pull_request.head.ref }}…"
+            git push origin ${{ github.event.pull_request.head.ref }}
+          else
+            echo "No changes were committed by this step."
+          fi
+          echo "any_commits_made=$ANY_COMMITS_MADE" >> $GITHUB_OUTPUT
+
+      - name: Package
+        id: version_publish_compress
+        run: |
+          if [ ! -d "dist" ] || [ ! -f "package.json" ]; then
+            echo "Dist directory or package.json not found. Skipping versioning, publishing, and compression."
+            echo "skipped_all=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          echo "skipped_all=false" >> $GITHUB_OUTPUT
+          echo "Determining version bump type from branch: ${{ github.event.pull_request.head.ref }}…"
+          BRANCH_NAME="${{ github.event.pull_request.head.ref }}"
+          VERSION_BUMP="minor" #? · Default
+          if [[ "$BRANCH_NAME" == fix/* ]]; then
+            VERSION_BUMP="patch"
+          elif [[ "$BRANCH_NAME" == refac/* ]]; then
+            VERSION_BUMP="major"
+          fi
+          echo "Determined version bump: $VERSION_BUMP"
+          echo "Updating package version, creating tag, and preparing for publish via postversion script…"
+
+          #* · Assumes package.json contains: "postversion" script to handle versioning tasks.
+          npm version $VERSION_BUMP -m "chore(release): version %s for PR #${{ github.event.pull_request.number }}"
+          echo "Pushing version commit and tags to ${{ github.event.pull_request.head.ref }}…"
+          git push --follow-tags origin ${{ github.event.pull_request.head.ref }}
+          echo "Compressing dist directory…"
+          tar -czf dist.tar.gz dist
+          zip -r dist.zip dist
+          LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+          echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
+
+      - name: Distribute
+        if: steps.version_publish_compress.outputs.skipped_all != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: distribution-archives
+          path: |
+            dist.tar.gz
+            dist.zip
+          if-no-files-found: error
