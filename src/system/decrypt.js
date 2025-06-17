@@ -136,7 +136,10 @@ export function decrypt(encryptedTextWithIv, key) {
 		const errorMessage =
 			error instanceof Error
 				? error.message
-				: error && typeof error.message === 'string'
+				: error &&
+					  typeof error === 'object' &&
+					  'message' in error &&
+					  typeof error.message === 'string'
 					? error.message
 					: 'Unknown error';
 		throw new Error(`Decryption failed: ${errorMessage}`);

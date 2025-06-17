@@ -22,11 +22,11 @@
  *
  * @template TArgs - An array of types for the arguments of the function `func`.
  * @template TReturn - The return type of the function `func`.
- * @param {(...args: TArgs) => TReturn} func - The function to throttle.
+ * @param {function(...*): *} func - The function to throttle.
  * @param {number} limit - The minimum time interval (in milliseconds) that must pass between
  *                         invocations of `func`. If `0`, `func` is called immediately on every invocation.
  *                         Must be a non-negative number.
- * @returns {(...args: TArgs) => TReturn | undefined} A new throttled function.
+ * @returns {function(...*): (* | undefined)} A new throttled function.
  *   - When `func` is executed, its return value is returned.
  *   - When a call is throttled (ignored), `undefined` is returned.
  *
@@ -81,6 +81,10 @@
  * // setTimeout(() => {
  * //   console.log(throttledFetcher('C')); // "Data for C" (after 100ms, executes)
  * // }, 150);
+ */
+/**
+ * @param {function(...*): *} func
+ * @param {number} limit
  */
 export function throttle(func, limit) {
 	// `lastCallTime`: Timestamp (milliseconds since epoch) of the last time `func` was actually executed.

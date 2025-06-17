@@ -93,7 +93,7 @@ export function setAttribute(element, attributeName, value) {
 		//   `setAttribute('aria-hidden', true)` results in `aria-hidden="true"`.
 		//
 		// If the attribute already exists, its value is updated. If it doesn't exist, it's created.
-		element.setAttribute(attributeName, value);
+		element.setAttribute(attributeName, String(value));
 	} catch (_error) {
 		// Step 3: Handle potential errors.
 		// `setAttribute` can throw a `DOMException` (e.g., `InvalidCharacterError`) if the `attributeName`

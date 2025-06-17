@@ -14,7 +14,7 @@
  * If a cookie is found, its value is returned. If the cookie name exists but has no value
  * (e.g., "myCookie="), an empty string is returned.
  *
- * @param {string} name - The name of the cookie to retrieve.
+ * @param {string} cookieName - The name of the cookie to retrieve.
  * @returns {string | null} The value of the cookie if found.
  *                          Returns an empty string (`""`) if the cookie exists but has no assigned value.
  *                          Returns `null` if the cookie with the specified name is not found,
@@ -52,6 +52,9 @@
  * // Scenario 6: In a Node.js environment (no document.cookie)
  * // const nodeCookie = getCookie('anyCookie');
  * // console.log(nodeCookie); // Output: null
+ */
+/**
+ * @param {string} cookieName
  */
 export function getCookie(cookieName) {
 	// Check if the function is running in a browser environment with access to document.cookie.

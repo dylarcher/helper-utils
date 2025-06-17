@@ -39,14 +39,10 @@ async function findJsFiles(dir) {
 async function parseJsDoc(filePath, fileContent) {
     const jsdocs = [];
     // Regex to find JSDoc blocks /** ... */
-    const jsDocRegex = /\/\*\*\s*
-([\s\S]*?)
-\s*\*\//g;
+    const jsDocRegex = /\/\*\*\s*([\s\S]*?)\s*\*\//g;
     // Regex to find function/method signatures following a JSDoc block
     // This is a simplified regex and might need adjustments for complex cases
-    const codeSignatureRegex = /export\s+(async\s+)?function\s+([a-zA-Z0-9_]+)\s*\(([\s\S]*?)\)\s*{|\*\/\s*export\s+const\s+([a-zA-Z0-9_]+)\s*=\s*(async\s+)?\(([\s\S]*?)\)\s*=>\s*{|\*\/\s*export\s+class\s+([a-zA-Z0-9_]+)\s*{([\s\S]*?)}\s*(?:
-\s*(?:async\s+)?(?:get\s+|set\s+)?([a-zA-Z0-9_]+)\s*\(([\s\S]*?)\)\s*{)?/g;
-
+    const codeSignatureRegex = /export\s+(async\s+)?function\s+([a-zA-Z0-9_]+)\s*\(([\s\S]*?)\)\s*{|\*\/\s*export\s+const\s+([a-zA-Z0-9_]+)\s*=\s*(async\s+)?\(([\s\S]*?)\)\s*=>\s*{|\*\/\s*export\s+class\s+([a-zA-Z0-9_]+)\s*{([\s\S]*?)}\s*(?:\s*(?:async\s+)?(?:get\s+|set\s+)?([a-zA-Z0-9_]+)\s*\(([\s\S]*?)\)\s*{)?/g;
 
     let match;
     let lastIndex = 0;

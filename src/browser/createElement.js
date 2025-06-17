@@ -106,7 +106,8 @@ export function createElement(
 			// However, common usage passes strings, numbers, or booleans.
 			if (value != null) {
 				// Skip if value is null or undefined
-				element.setAttribute(key, value);
+				// Convert value to string for setAttribute
+				element.setAttribute(key, String(value));
 			}
 		}
 	}
