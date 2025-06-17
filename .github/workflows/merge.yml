@@ -112,6 +112,7 @@ jobs:
           echo "Verifying artifact contents..."
           if [ ! -f "${{ runner.temp }}/built-repo-$GIT_ACTION/package.json" ] || [ ! -f "${{ runner.temp }}/built-repo-$GIT_ACTION/package-lock.json" ]; then
             echo "Error: Required files are missing from the artifact." >&2
+          fi
           if [ ! -f "${{ runner.temp }}/artifacts/built_repo_${{ env.GIT_ACTION }}/package.json" ] || [ ! -f "${{ runner.temp }}/artifacts/built_repo_${{ env.GIT_ACTION }}/package-lock.json" ]; then
             echo "Error: Required files are missing from the artifact." >&2
             exit 1
