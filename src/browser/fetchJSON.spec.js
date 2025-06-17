@@ -296,7 +296,10 @@ describe('fetchJSON(url, options)', () => {
 
 	test('should handle custom headers being preserved when body is not object', async () => {
 		const stringBody = 'text data';
-		const customHeaders = { 'X-Custom-Header': 'custom-value', 'Content-Type': 'text/plain' };
+		const customHeaders = {
+			'X-Custom-Header': 'custom-value',
+			'Content-Type': 'text/plain',
+		};
 		const mockResponse = {
 			ok: true,
 			status: 200,
@@ -391,7 +394,9 @@ describe('fetchJSON(url, options)', () => {
 		};
 		responseWithMixedCaseHeader.headers.get = key => {
 			// Simulate browser behavior where headers are case-insensitive
-			const headers = new Map([['Content-Type', 'application/json; charset=utf-8']]);
+			const headers = new Map([
+				['Content-Type', 'application/json; charset=utf-8'],
+			]);
 			// Return the value regardless of case
 			for (const [headerKey, headerValue] of headers.entries()) {
 				if (headerKey.toLowerCase() === key.toLowerCase()) {
@@ -411,18 +416,21 @@ describe('fetchJSON(url, options)', () => {
 		// This test ensures the actual Promise.try method is invoked
 		// Store the original Promise.try if it exists
 		const originalTry = Promise.try;
-		
+
 		// Mock Promise.try to track its usage
 		let promiseTryCalled = false;
-		Promise.try = function(callback) {
+		Promise.try = function (callback) {
 			promiseTryCalled = true;
-			return originalTry ? originalTry.call(this, callback) : new Promise((resolve) => {
-				try {
-					resolve(callback());
-				} catch (e) {
-					throw e;
-				}
-			});
+			return originalTry
+				? originalTry.call(this, callback)
+				: new Promise(resolve => {
+						try {
+							resolve(callback());
+						} catch (error) {
+							console.error('Error in Promise.try mock:', error);
+							throw error;
+						}
+					});
 		};
 
 		try {
@@ -438,7 +446,7 @@ describe('fetchJSON(url, options)', () => {
 			global.fetch = async () => mockResponse;
 
 			const result = await fetchJSON('https://api.example.com/data');
-			
+
 			assert.strictEqual(promiseTryCalled, true);
 			assert.deepStrictEqual(result, { promiseTryTest: true });
 		} finally {
